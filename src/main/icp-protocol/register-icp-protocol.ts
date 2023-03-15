@@ -15,7 +15,7 @@ export const icpProtocolScheme: Electron.CustomScheme = {
 };
 
 export function registerIcpProtocol(): void {
-  protocol.registerBufferProtocol('icp', async (request, respond) => {
+  protocol.interceptBufferProtocol('https', async (request, respond) => {
     const response = await icpRequestHandler(request);
 
     return respond(response);

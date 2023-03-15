@@ -12,7 +12,7 @@
     >
       <app-webview
         [id]="dapp.canisterId"
-        [src]="'icp:' + dapp.canisterId"
+        [src]="dapp.url ?? 'https://' + dapp.canisterId + '.ic0.app'"
       ></app-webview>
     </ng-template>
   </ng-container>

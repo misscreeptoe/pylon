@@ -1,2 +1,2 @@
-export * from './icp-protocol-url';
+export * from './ic-http-request-url';
 export * from './register-icp-protocol';

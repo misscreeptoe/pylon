@@ -27,6 +27,7 @@ export class CanisterAgent {
     method: string,
     url: string,
     headers: Record<string, string>,
+    body?: Buffer,
   ): Promise<HttpResponse> {
     const requestHeaders = Object.entries(headers);
     requestHeaders.push(['Accept-Encoding', 'gzip, deflate, identity']);
@@ -34,8 +35,7 @@ export class CanisterAgent {
     const httpRequest: HttpRequest = {
       url,
       method,
-      // [TODO] - support POST request bodies
-      body: [],
+      body: body ?? [],
       headers: requestHeaders,
     };
 

@@ -1,12 +1,7 @@
 import { app, BrowserWindow, screen, protocol, nativeTheme } from 'electron';
 import * as path from 'path';
 import fetch from 'node-fetch';
-import {
-  getIcpProtocolRedirectUrl,
-  icpProtocolScheme,
-  registerIcpProtocol,
-  shouldRedirectToIcpProtocolUrl,
-} from './icp-protocol';
+import { icpProtocolScheme, registerIcpProtocol } from './icp-protocol';
 
 global.fetch = fetch as any;
 
@@ -65,23 +60,6 @@ function createWindow(): void {
     browserWindow.loadURL(url.href);
   }
 
-  browserWindow.webContents.session.webRequest.onBeforeRequest(
-    {
-      urls: ['http://*/*', 'https://*/*'],
-    },
-    (details, callback) => {
-      if (shouldRedirectToIcpProtocolUrl(details.url)) {
-        const redirectURL = getIcpProtocolRedirectUrl(details.url);
-
-        return callback({
-          redirectURL,
-        });
-      }
-
-      return callback({});
-    },
-  );
-
   // Emitted when the window is closed.
   browserWindow.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -89,10 +67,31 @@ function createWindow(): void {
     // when you should delete the corresponding element.
     browserWindow = null;
   });
+
+  browserWindow.webContents.addListener(
+    'did-attach-webview',
+    (_event, webcontents) => {
+      webcontents.setWindowOpenHandler((details) => ({
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          autoHideMenuBar: true,
+        },
+      }));
+    },
+  );
 }
 
 try {
-  protocol.registerSchemesAsPrivileged([icpProtocolScheme]);
+  protocol.registerSchemesAsPrivileged([
+    icpProtocolScheme,
+    {
+      scheme: 'https',
+      privileges: {
+        secure: true,
+        standard: true,
+      },
+    },
+  ]);
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
@@ -100,7 +99,8 @@ try {
   app.whenReady().then(() => {
     registerIcpProtocol();
 
-    // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
+    // Added 400 ms to fix the black background issue while using transparent window.
+    // More detais at https://github.com/electron/electron/issues/15947
     setTimeout(createWindow, 400);
 
     app.on('activate', () => {

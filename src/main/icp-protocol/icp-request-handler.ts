@@ -1,37 +1,36 @@
 import { CanisterAgent } from '../canister-agent';
 import { decodeBody } from './decode-body';
-import { icpHttpsFallbackHandler } from './icp-https-fallback-handler';
-import { parseIcpProtocolUrl } from './icp-protocol-url';
+import { forwardStandardHttpRequest } from './forward-standard-http-request';
+import { tryParseIcHttpRequestUrl } from './ic-http-request-url';
 import { streamBody } from './stream-body';
 
-const DEFAULT_DFINITY_GATEWAY = 'https://ic0.app';
+const DEFAULT_DFINITY_GATEWAY = 'https://icp-api.io';
 
 export async function icpRequestHandler(
   request: Electron.ProtocolRequest,
 ): Promise<Electron.ProtocolResponse> {
   try {
-    // [TODO] - add support for named canisters
-    const url = parseIcpProtocolUrl(request.url);
+    const parsedIcHttpRequestUrl = tryParseIcHttpRequestUrl(request.url);
 
-    if (!url) {
-      return await icpHttpsFallbackHandler(request);
+    if (!parsedIcHttpRequestUrl) {
+      return await forwardStandardHttpRequest(request);
     }
 
     const canisterActor = new CanisterAgent(
       DEFAULT_DFINITY_GATEWAY,
-      url.canisterPrincipal,
+      parsedIcHttpRequestUrl.canisterPrincipal,
     );
 
     const canisterResponse = await canisterActor.httpRequest(
       request.method,
-      url.path,
+      parsedIcHttpRequestUrl.path,
       request.headers,
     );
 
     const body = await streamBody(
       canisterActor.getAgent(),
       canisterResponse,
-      url.canisterPrincipal,
+      parsedIcHttpRequestUrl.canisterPrincipal,
     );
 
     // [TODO] - certify asset

@@ -28,7 +28,7 @@ async function streamRemainingChunks(
     }
 
     const callbackResponse = await queryNextChunk(
-      tokenOpt[0],
+      tokenOpt,
       agent,
       canisterId,
       callBackFunc,
