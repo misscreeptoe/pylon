@@ -7,6 +7,7 @@ specifiers:
   '@angular-eslint/eslint-plugin': ^15.0.0
   '@angular-eslint/eslint-plugin-template': ^15.0.0
   '@angular-eslint/template-parser': ^15.0.0
+  '@angular/cdk': ^15.2.2
   '@angular/cli': ^15.0.0
   '@angular/common': ^15.0.0
   '@angular/compiler': ^15.0.0
@@ -32,10 +33,8 @@ specifiers:
   '@typescript-eslint/parser': 5.40.0
   bootstrap: 5.3.0-alpha1
   conventional-changelog-cli: 2.2.2
-  electron: ^23.1.3
+  electron: 23.1.3
   electron-builder: 23.6.0
-  electron-debug: 3.2.0
-  electron-reloader: 1.2.3
   eslint: 8.25.0
   eslint-plugin-import: 2.26.0
   eslint-plugin-jsdoc: 39.3.6
@@ -63,6 +62,7 @@ specifiers:
   zone.js: ~0.12.0
 
 dependencies:
+  '@angular/cdk': 15.2.2_fbpzarz5tzwyhbfyo4dgitdwqu
   '@dfinity/agent': 0.15.1_o332s3si3py6vkgnbhdn3dfmha
   '@dfinity/candid': 0.15.1_o6ib7qqltxpe7qrskddglns2ga
   '@dfinity/principal': 0.15.1_o6ib7qqltxpe7qrskddglns2ga
@@ -100,8 +100,6 @@ devDependencies:
   conventional-changelog-cli: 2.2.2
   electron: 23.1.3
   electron-builder: 23.6.0
-  electron-debug: 3.2.0
-  electron-reloader: 1.2.3
   eslint: 8.25.0
   eslint-plugin-import: 2.26.0_zb5prbqp7qzcgafjm73dfpyyvm
   eslint-plugin-jsdoc: 39.3.6_eslint@8.25.0
@@ -441,6 +439,21 @@ packages:
       - supports-color
     dev: true
 
+  /@angular/cdk/15.2.2_fbpzarz5tzwyhbfyo4dgitdwqu:
+    resolution: {integrity: sha512-mgh8QCJUmxVNT+vX7A3GDp48NVZ/CUrBBXN7ZGYs8hrupLyHLerjadWX8pRa7XIOJzreoOOdHH5THc51+SCGJw==}
+    peerDependencies:
+      '@angular/common': ^15.0.0 || ^16.0.0
+      '@angular/core': ^15.0.0 || ^16.0.0
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      '@angular/common': 15.0.4_2kx3gifw2v5d4j22ydwztvu5ey
+      '@angular/core': 15.0.4_rxjs@7.8.0+zone.js@0.12.0
+      rxjs: 7.8.0
+      tslib: 2.4.1
+    optionalDependencies:
+      parse5: 7.1.2
+    dev: false
+
   /@angular/cli/15.0.4:
     resolution: {integrity: sha512-dQEus458EvBYZuM10UPO/1BYshV3cprY4os6uQj6YLdEwOogElkAedUILgtTYOo3jrwc+qjefHVJbz6R+xJCOg==}
     engines: {node: ^14.20.0 || ^16.13.0 || >=18.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
@@ -480,7 +493,6 @@ packages:
       '@angular/core': 15.0.4_rxjs@7.8.0+zone.js@0.12.0
       rxjs: 7.8.0
       tslib: 2.4.1
-    dev: true
 
   /@angular/compiler-cli/15.0.4_ewn2ril7hiljdjavj4fhvjxokq:
     resolution: {integrity: sha512-e6Jt4qkIiyqBg8ZlpcQaQtQ5OAnfl8gfkJnIwSvvCg0mPCJv+ZkQAL5s3SpzzM5jd7Nr0jBq3zd2Fv0eKW2ayw==}
@@ -529,7 +541,6 @@ packages:
       rxjs: 7.8.0
       tslib: 2.4.1
       zone.js: 0.12.0
-    dev: true
 
   /@angular/forms/15.0.4_xkplghntscucsztvq3p7ejhl3e:
     resolution: {integrity: sha512-3Ft/p2ug/zp2p0g2rhLq9v/5F1G11xa+YujAKL5kOFa0zUoroDG6n4b6VEcsGWmDE9NR7Vkiys9rHckiJUluHg==}
@@ -4497,13 +4508,6 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
-  /date-time/3.1.0:
-    resolution: {integrity: sha512-uqCUKXE5q1PNBXjPqvwhwJf9SwMoAHBgWJ6DcrnS5o+W2JOiIILl0JEdVD8SGujrNS02GGxgwAg2PN2zONgtjg==}
-    engines: {node: '>=6'}
-    dependencies:
-      time-zone: 1.0.0
-    dev: true
-
   /dateformat/3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
     dev: true
@@ -4862,34 +4866,6 @@ packages:
       - supports-color
     dev: true
 
-  /electron-debug/3.2.0:
-    resolution: {integrity: sha512-7xZh+LfUvJ52M9rn6N+tPuDw6oRAjxUj9SoxAZfJ0hVCXhZCsdkrSt7TgXOiWiEOBgEV8qwUIO/ScxllsPS7ow==}
-    dependencies:
-      electron-is-dev: 1.2.0
-      electron-localshortcut: 3.2.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /electron-is-accelerator/0.1.2:
-    resolution: {integrity: sha512-fLGSAjXZtdn1sbtZxx52+krefmtNuVwnJCV2gNiVt735/ARUboMl8jnNC9fZEqQdlAv2ZrETfmBUsoQci5evJA==}
-    dev: true
-
-  /electron-is-dev/1.2.0:
-    resolution: {integrity: sha512-R1oD5gMBPS7PVU8gJwH6CtT0e6VSoD0+SzSnYpNm+dBkcijgA+K7VAMHDfnRq/lkKPZArpzplTW6jfiMYosdzw==}
-    dev: true
-
-  /electron-localshortcut/3.2.1:
-    resolution: {integrity: sha512-DWvhKv36GsdXKnaFFhEiK8kZZA+24/yFLgtTwJJHc7AFgDjNRIBJZ/jq62Y/dWv9E4ypYwrVWN2bVrCYw1uv7Q==}
-    dependencies:
-      debug: 4.3.4
-      electron-is-accelerator: 0.1.2
-      keyboardevent-from-electron-accelerator: 2.0.0
-      keyboardevents-areequal: 0.2.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /electron-osx-sign/0.6.0:
     resolution: {integrity: sha512-+hiIEb2Xxk6eDKJ2FFlpofCnemCbjbT5jz+BKGpVBrRNT3kWTGs4DfNX6IzGwgi33hUcXF+kFs9JW+r6Wc1LRg==}
     engines: {node: '>=4.0.0'}
@@ -4918,16 +4894,6 @@ packages:
       mime: 2.6.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /electron-reloader/1.2.3:
-    resolution: {integrity: sha512-aDnACAzNg0QvQhzw7LYOx/nVS10mEtbuG6M0QQvNQcLnJEwFs6is+EGRCnM+KQlQ4KcTbdwnt07nd7ZjHpY4iw==}
-    dependencies:
-      chalk: 4.1.2
-      chokidar: 3.5.3
-      date-time: 3.1.0
-      electron-is-dev: 1.2.0
-      find-up: 5.0.0
     dev: true
 
   /electron-to-chromium/1.4.284:
@@ -5027,6 +4993,12 @@ packages:
   /entities/2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
     dev: true
+
+  /entities/4.4.0:
+    resolution: {integrity: sha512-oYp7156SP8LkeGD0GF85ad1X9Ai79WtRsZ2gxJqtBuzH+98YUV6jkHEKlZkMbcrjJjIVJNIDP/3WL9wQkoPbWA==}
+    engines: {node: '>=0.12'}
+    dev: false
+    optional: true
 
   /env-paths/2.2.1:
     resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
@@ -7298,14 +7270,6 @@ packages:
       - utf-8-validate
     dev: true
 
-  /keyboardevent-from-electron-accelerator/2.0.0:
-    resolution: {integrity: sha512-iQcmNA0M4ETMNi0kG/q0h/43wZk7rMeKYrXP7sqKIJbHkTU8Koowgzv+ieR/vWJbOwxx5nDC3UnudZ0aLSu4VA==}
-    dev: true
-
-  /keyboardevents-areequal/0.2.2:
-    resolution: {integrity: sha512-Nv+Kr33T0mEjxR500q+I6IWisOQ0lK1GGOncV0kWE6n4KFmpcu7RUX5/2B0EUtX51Cb0HjZ9VJsSY3u4cBa0kw==}
-    dev: true
-
   /keypress/0.1.0:
     resolution: {integrity: sha512-x0yf9PL/nx9Nw9oLL8ZVErFAk85/lslwEP7Vz7s5SI1ODXZIgit3C5qyWjw4DxOuO/3Hb4866SQh28a1V1d+WA==}
     dev: true
@@ -8499,6 +8463,14 @@ packages:
     resolution: {integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==}
     dev: true
 
+  /parse5/7.1.2:
+    resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
+    requiresBuild: true
+    dependencies:
+      entities: 4.4.0
+    dev: false
+    optional: true
+
   /parseurl/1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
@@ -9250,7 +9222,6 @@ packages:
     resolution: {integrity: sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==}
     dependencies:
       tslib: 2.4.1
-    dev: true
 
   /safe-buffer/5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
@@ -10059,11 +10030,6 @@ packages:
     resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
     dev: true
 
-  /time-zone/1.0.0:
-    resolution: {integrity: sha512-TIsDdtKo6+XrPtiTm1ssmMngN1sAhyKnTO2kunQWqNPWIVvCm15Wmw4SWInwTVgJ5u/Tr04+8Ei9TNcw4x4ONA==}
-    engines: {node: '>=4'}
-    dev: true
-
   /timers-browserify/2.0.12:
     resolution: {integrity: sha512-9phl76Cqm6FhSX9Xe1ZUAMLtm1BLkKj2Qd5ApyWkXzsMRaA7dgr81kf4wJmQf/hAvg8EEyJxDo3du/0KlhPiKQ==}
     engines: {node: '>=0.6.0'}
@@ -10190,7 +10156,6 @@ packages:
 
   /tslib/2.4.1:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
-    dev: true
 
   /tsutils/3.21.0_typescript@4.8.4:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
@@ -10934,4 +10899,3 @@ packages:
     resolution: {integrity: sha512-XtC+I5dXU14HrzidAKBNMqneIVUykLEAA1x+v4KVrd6AUPWlwYORF8KgsVqvgdHiKZ4BkxxjvYi/ksEixTPR0Q==}
     dependencies:
       tslib: 2.4.1
-    dev: true

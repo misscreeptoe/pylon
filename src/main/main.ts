@@ -47,10 +47,6 @@ function createWindow(): void {
   nativeTheme.themeSource = 'dark';
 
   if (serve) {
-    const debug = require('electron-debug');
-    debug();
-
-    require('electron-reloader')(module);
     browserWindow.loadURL('http://localhost:4200');
   } else {
     const url = new URL(
