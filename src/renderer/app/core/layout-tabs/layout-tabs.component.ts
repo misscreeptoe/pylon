@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { NavComponent, NavItemDirective } from '../../ui';
 import { DashboardComponent } from '../dashboard';
 import { WebviewComponent } from '../webview';
-import { DappsManagerService } from '../dapps-manager';
 import { Observable } from 'rxjs';
-import { DappListing } from '../../model';
+import { Tab, TabsStore } from '../store/tabs-store.service';
+import { ImmutableArray } from '../../utils';
 
 @Component({
   selector: 'app-layout-tabs',
@@ -22,15 +22,21 @@ import { DappListing } from '../../model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutTabsComponent implements OnInit {
-  public dapps$: Observable<DappListing[]>;
+  public tabs$: Observable<ImmutableArray<Tab>>;
+  public activeTab$: Observable<number>;
 
-  constructor(private readonly dappsManagerService: DappsManagerService) {}
+  constructor(private readonly tabsStore: TabsStore) {}
 
   public ngOnInit(): void {
-    this.dapps$ = this.dappsManagerService.dapps$;
+    this.tabs$ = this.tabsStore.tabs$;
+    this.activeTab$ = this.tabsStore.activeTab$;
   }
 
-  public onTabCloseClicked(dappListing: DappListing): void {
-    this.dappsManagerService.closeDapp(dappListing);
+  public onTabCloseClicked(tab: Tab): void {
+    this.tabsStore.removeTab(tab);
+  }
+
+  public onActiveTabChange(id: number): void {
+    this.tabsStore.setActiveTab(id);
   }
 }

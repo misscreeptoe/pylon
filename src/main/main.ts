@@ -1,4 +1,11 @@
-import { app, BrowserWindow, screen, protocol, nativeTheme } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  screen,
+  protocol,
+  nativeTheme,
+  TitleBarOverlayOptions,
+} from 'electron';
 import * as path from 'path';
 import fetch from 'node-fetch';
 import { icpProtocolScheme, registerIcpProtocol } from './icp-protocol';
@@ -8,28 +15,38 @@ global.fetch = fetch as any;
 const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');
 
+interface ThemeOptions {
+  backgroundColor: string;
+  titleBarOverlay: TitleBarOverlayOptions;
+}
+
+function getThemeOptions(): ThemeOptions {
+  const height = 40;
+
+  return nativeTheme.shouldUseDarkColors
+    ? {
+        backgroundColor: '#212529',
+        titleBarOverlay: {
+          color: '#212529',
+          symbolColor: '#adb5bd',
+          height,
+        },
+      }
+    : {
+        backgroundColor: '#fff',
+        titleBarOverlay: {
+          color: '#fff',
+          symbolColor: '#212529',
+          height,
+        },
+      };
+}
+
 function createWindow(): void {
   const size = screen.getPrimaryDisplay().workAreaSize;
 
-  // [TODO] - Remove hard coded theme in production
-  nativeTheme.themeSource = 'dark';
-  const themingOptions: Electron.BrowserWindowConstructorOptions =
-    nativeTheme.shouldUseDarkColors
-      ? {
-          backgroundColor: '#212529',
-          titleBarOverlay: {
-            color: '#212529',
-            symbolColor: '#adb5bd',
-          },
-        }
-      : {
-          titleBarOverlay: {
-            color: '#fff',
-          },
-        };
-
   let browserWindow = new BrowserWindow({
-    ...themingOptions,
+    ...getThemeOptions(),
     x: 0,
     y: 0,
     width: size.width,
@@ -44,7 +61,13 @@ function createWindow(): void {
     },
   });
   browserWindow.setMenuBarVisibility(false);
-  nativeTheme.themeSource = 'dark';
+
+  nativeTheme.addListener('updated', () => {
+    const { backgroundColor, titleBarOverlay } = getThemeOptions();
+
+    browserWindow.setBackgroundColor(backgroundColor);
+    browserWindow.setTitleBarOverlay(titleBarOverlay);
+  });
 
   if (serve) {
     browserWindow.loadURL('http://localhost:4200');

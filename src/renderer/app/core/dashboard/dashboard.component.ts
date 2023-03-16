@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DappListing } from '../../model';
 import { RowComponent, ColumnComponent, ContainerComponent } from '../../ui';
 import { DappListingCardComponent } from '../dapp-listing-card';
-import { DappsManagerService } from '../dapps-manager';
+import { TabsStore } from '../store/tabs-store.service';
 
 const DAPP_LISTINGS: DappListing[] = [
   {
@@ -52,10 +52,11 @@ const DAPP_LISTINGS: DappListing[] = [
   {
     name: 'Taggr',
     canisterId: '6qfxa-ryaaa-aaaai-qbhsq-cai',
-    description:
-      'Decentralized social media network.',
+    description: 'Decentralized social media network.',
   },
 ];
+
+const IC_DOMAIN = 'ic0.app';
 
 @Component({
   selector: 'app-dashboard',
@@ -73,9 +74,15 @@ const DAPP_LISTINGS: DappListing[] = [
 export class DashboardComponent {
   public dappListings = DAPP_LISTINGS;
 
-  constructor(private readonly dappsManagerService: DappsManagerService) {}
+  constructor(private readonly tabsStore: TabsStore) {}
 
   public async onOpenDapp(dappListing: DappListing): Promise<void> {
-    this.dappsManagerService.openDapp(dappListing);
+    const url =
+      dappListing.url ?? `https://${dappListing.canisterId}.${IC_DOMAIN}`;
+
+    this.tabsStore.addTab({
+      url,
+      title: dappListing.name,
+    });
   }
 }
