@@ -12,7 +12,7 @@ import {
 })
 export class NavItemDirective {
   @Input()
-  public id: string;
+  public id: number;
 
   @Input()
   public title: string;

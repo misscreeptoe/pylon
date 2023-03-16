@@ -6,6 +6,12 @@
   height: 100%;
 }
 
+.nav {
+  height: calc(
+    env(titlebar-area-height, var(--fallback-title-bar-height)) + #{$nav-tabs-border-width}
+  );
+}
+
 .nav-item {
   position: relative;
   max-width: 200px;
@@ -13,7 +19,7 @@
 }
 
 .nav-link {
-  height: env(titlebar-area-height, var(--fallback-title-bar-height));
+  height: 100%;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;

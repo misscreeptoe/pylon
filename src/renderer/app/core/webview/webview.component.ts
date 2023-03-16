@@ -17,7 +17,7 @@ import { WebviewDirective } from './webview.directive';
 })
 export class WebviewComponent implements AfterViewInit {
   @Input()
-  public id: string;
+  public id: number;
 
   @Input()
   public src: string;

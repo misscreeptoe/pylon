@@ -3,6 +3,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  EventEmitter,
+  Input,
+  Output,
   QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -21,11 +24,19 @@ export class NavComponent implements AfterContentInit {
   @ContentChildren(NavItemDirective)
   public navItems!: QueryList<NavItemDirective>;
 
-  public tabActiveStatus: Record<string, boolean> = {};
-  public currentActiveTab: string = null;
+  @Output()
+  public activeTabChange = new EventEmitter<number>();
+
+  public tabActiveStatus: Record<number, boolean> = {};
+  public currentActiveTab: number | null = null;
+
+  @Input()
+  public set activeTab(activeTab: number) {
+    this.currentActiveTab = activeTab;
+  }
 
   public ngAfterContentInit(): void {
-    this.currentActiveTab = this.navItems.first.id ?? null;
+    this.currentActiveTab = this.navItems.first?.id ?? null;
 
     this.navItems.changes.subscribe(() => {
       this.updateTabActiveStatus();
@@ -34,13 +45,10 @@ export class NavComponent implements AfterContentInit {
     this.updateTabActiveStatus();
   }
 
-  public isTabSelected(navItem: NavItemDirective): boolean {
-    return this.tabActiveStatus[navItem.id];
-  }
-
   public setTabActive(navItem: NavItemDirective): void {
     this.currentActiveTab = navItem.id;
     this.updateTabActiveStatus();
+    this.activeTabChange.emit(this.currentActiveTab);
   }
 
   public onCloseButtonClicked(navItem: NavItemDirective): void {
@@ -54,7 +62,7 @@ export class NavComponent implements AfterContentInit {
       this.tabActiveStatus[navItem.id] = false;
     });
 
-    if (this.currentActiveTab) {
+    if (this.currentActiveTab !== null) {
       this.tabActiveStatus[this.currentActiveTab] = true;
     }
   }
