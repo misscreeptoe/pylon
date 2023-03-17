@@ -17,8 +17,8 @@ export function decodeBody(
   const encoding = getContentEncoding(headers);
 
   switch (encoding) {
-    case 'identity':
     case '':
+    case 'identity':
       return Buffer.from(body);
     case 'gzip':
     case 'deflate':
