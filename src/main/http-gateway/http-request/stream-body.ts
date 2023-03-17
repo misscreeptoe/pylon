@@ -1,4 +1,3 @@
-import { Principal } from '@dfinity/principal';
 import { IDL } from '@dfinity/candid';
 import { HttpAgent, QueryResponse, QueryResponseStatus } from '@dfinity/agent';
 import {
@@ -7,14 +6,14 @@ import {
   StreamingStrategy,
   Token,
   streamingCallbackHttpResponse,
-} from '../canister-http-interface';
-import { isJsonObject } from '../candid';
+  isJsonObject,
+} from '../../http-gateway';
 
 const MAX_CALLBACKS = 1000;
 
 async function streamRemainingChunks(
   agent: HttpAgent,
-  canisterId: Principal,
+  canisterId: string,
   streamingStrategy: StreamingStrategy,
 ): Promise<Uint8Array> {
   let remainingChunks = new Uint8Array(0);
@@ -64,7 +63,7 @@ async function streamRemainingChunks(
 async function queryNextChunk(
   token: Token,
   agent: HttpAgent,
-  canisterId: Principal,
+  canisterId: string,
   callBackFunc: string,
 ): Promise<QueryResponse> {
   const tokenType = token.type();
@@ -89,7 +88,7 @@ function isStreamingCallbackResponse(
 export async function streamBody(
   agent: HttpAgent,
   response: HttpResponse,
-  canisterId: Principal,
+  canisterId: string,
 ): Promise<Uint8Array> {
   let buffer = new Uint8Array(0);
   const firstChunk = new Uint8Array(response.body);

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { getRequestBody } from '../electron';
+import { getRequestBody } from '../../electron';
 
 /**
  * Forwards a request as a standard HTTP request,

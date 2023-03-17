@@ -10,10 +10,9 @@ const canisterIdMapping = {
 };
 
 /**
- * An `icp:` URL brokend down into its consituent parts.
+ * A parsed IC request URL broken down into its consituent parts.
  */
 export interface IcHttpRequestUrl {
-  canisterPrincipal: Principal;
   canisterId: string;
   path: string;
 }
@@ -34,9 +33,8 @@ export function tryParseIcHttpRequestUrl(url: string): IcHttpRequestUrl | null {
     const canisterPrincipal = Principal.fromText(canisterId);
 
     return {
-      canisterId,
+      canisterId: canisterPrincipal.toText(),
       path: pathname,
-      canisterPrincipal,
     };
   } catch {
     return null;
