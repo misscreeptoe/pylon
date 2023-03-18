@@ -1,12 +1,15 @@
 import { app, BrowserWindow, screen, protocol } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import fetch from 'node-fetch';
 import {
   getIcpProtocolRedirectUrl,
   icpProtocolScheme,
   registerIcpProtocol,
   shouldRedirectToIcpProtocol,
 } from './icp-protocol';
+
+global.fetch = fetch as any;
 
 const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');

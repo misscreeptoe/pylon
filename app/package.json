@@ -9,6 +9,9 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
+    "@dfinity/agent": "^0.15.1",
+    "@dfinity/candid": "^0.15.1",
+    "@dfinity/principal": "^0.15.1",
     "node-fetch": "^2.6.7"
   },
   "devDependencies": {
