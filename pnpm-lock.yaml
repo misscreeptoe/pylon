@@ -43,6 +43,7 @@ specifiers:
   node-polyfill-webpack-plugin: 2.0.1
   npm-run-all: 4.1.5
   playwright: 1.27.1
+  prettier: ^2.8.1
   rxjs: ~7.8.0
   ts-node: 10.9.1
   tslib: ^2.4.0
@@ -100,6 +101,7 @@ devDependencies:
   node-polyfill-webpack-plugin: 2.0.1_webpack@5.75.0
   npm-run-all: 4.1.5
   playwright: 1.27.1
+  prettier: 2.8.1
   ts-node: 10.9.1_o6ib7qqltxpe7qrskddglns2ga
   typescript: 4.8.4
   wait-on: 6.0.1
@@ -8595,6 +8597,12 @@ packages:
   /prepend-http/2.0.0:
     resolution: {integrity: sha512-ravE6m9Atw9Z/jjttRUZ+clIXogdghyZAuWJ3qEzjT+jI/dL1ifAqhZeC5VHzQp1MSt1+jxKkFNemj/iO7tVUA==}
     engines: {node: '>=4'}
+    dev: true
+
+  /prettier/2.8.1:
+    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /pretty-bytes/5.6.0:

@@ -1,0 +1,10 @@
+# Angular
+.angular
+
+# pnpm
+pnpm-lock.yaml
+
+# Build artifacts
+dist
+app/main.js
+app/main.js.map

@@ -36,11 +36,11 @@ Why two package.json ? This project follow [Electron Builder two package.json st
 
 ## Commands
 
-| Command                  | Description                                                                                           |
-| ------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `npm start`              | Run the dev server                                                                                    |
-| `npm run electron:local` | Builds your application and start electron locally                                                    |
-| `npm run electron:build` | Builds your application and creates an app consumable based on your operating system                  |
+| Command                  | Description                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| `npm start`              | Run the dev server                                                                   |
+| `npm run electron:local` | Builds your application and start electron locally                                   |
+| `npm run electron:build` | Builds your application and creates an app consumable based on your operating system |
 
 ## Project structure
 
