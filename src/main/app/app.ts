@@ -1,5 +1,9 @@
 import { BrowserWindow, app, protocol } from 'electron';
-import { icProtocolScheme, registerIcProtocol } from '../protocols';
+import {
+  icProtocolScheme,
+  registerIcMetadataProtocol,
+  registerIcProtocol,
+} from '../protocols';
 import { AppWindow } from './app-window';
 
 export class App {
@@ -15,6 +19,7 @@ export class App {
     await app.whenReady();
 
     registerIcProtocol();
+    registerIcMetadataProtocol();
 
     this.window = new AppWindow();
 

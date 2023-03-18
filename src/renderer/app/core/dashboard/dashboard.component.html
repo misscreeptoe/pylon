@@ -1,8 +1,10 @@
-<app-container vertical-spacing>
-  <ng-container *ngFor="let dapp of dappListings">
-    <app-dapp-listing-card [dappListing]="dapp" (openDapp)="onOpenDapp(dapp)">
-    </app-dapp-listing-card>
+<app-container vertical-spacing class="dashboard-container">
+  <h1 class="dashboard-title display-3">Pylon</h1>
 
-    <br />
-  </ng-container>
+  <div class="dapp-listings-container">
+    <ng-container *ngFor="let dapp of dappListings">
+      <app-dapp-listing-card class="dapp-listing" [dappListing]="dapp" (openDapp)="onOpenDapp(dapp)">
+      </app-dapp-listing-card>
+    </ng-container>
+  </div>
 </app-container>
