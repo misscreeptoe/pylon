@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { DappListing } from '../../model';
-import { CardComponent } from '../card';
+import { CardComponent } from '../../ui';
 
 @Component({
   selector: 'app-dapp-listing-card',
