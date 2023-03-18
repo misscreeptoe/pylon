@@ -9,18 +9,24 @@ const DAPP_LISTINGS: DappListing[] = [
   {
     name: 'NNS',
     canisterId: 'qoctq-giaaa-aaaaa-aaaea-cai',
-    description: 'Asset Management and Voting for the Network Nervous System',
+    description: 'Asset Management and Voting for the Network Nervous System.',
   },
   {
     name: 'Internet Identity',
     canisterId: 'rdmx6-jaaaa-aaaaa-aaadq-cai',
-    description: 'Anonymous blockchain authentication framework',
+    description: 'Anonymous blockchain authentication framework.',
   },
   {
     name: 'DSCVR',
     canisterId: 'h5aet-waaaa-aaaab-qaamq-cai',
     description:
-      'A decentralized social news aggregator built on the Internet Computer',
+      'A decentralized social news aggregator built on the Internet Computer.',
+  },
+  {
+    name: 'Distrikt',
+    canisterId: 'az5sd-cqaaa-aaaae-aaarq-cai',
+    description:
+      'A decentralized, professional social media network that empowers users to own and control their identity and data.',
   },
 ];
 

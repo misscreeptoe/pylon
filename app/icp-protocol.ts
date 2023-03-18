@@ -1,6 +1,6 @@
 import { protocol } from 'electron';
-import { Readable } from 'stream';
 import { CanisterAgent } from './canister-agent';
+import * as pako from 'pako';
 
 export const icpProtocolScheme: Electron.CustomScheme = {
   scheme: 'icp',
@@ -42,6 +42,29 @@ export function getIcpProtocolRedirectUrl(url: string): string {
 
 const DEFAULT_DFINITY_GATEWAY = 'https://ic0.app';
 
+function decodeBody(body: Uint8Array, encoding: string): Uint8Array {
+  switch (encoding) {
+    case 'identity':
+    case '':
+      return body;
+    case 'gzip':
+    case 'deflate':
+      return pako.inflate(body);
+    default:
+      throw new Error(`Unsupported encoding: "${encoding}"`);
+  }
+}
+
+function getContentEncoding(headers: Record<string, string>): string {
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase().trim() === 'content-encoding') {
+      return value.trim();
+    }
+  }
+
+  return '';
+}
+
 export function registerIcpProtocol(): void {
   protocol.registerBufferProtocol('icp', async (protocolRequest, respond) => {
     const icpProtocolUrl = parseIcpProtocolUrl(protocolRequest.url);
@@ -53,6 +76,7 @@ export function registerIcpProtocol(): void {
     const canisterResponse = await canisterActor.httpRequest(
       protocolRequest.method,
       icpProtocolUrl.path,
+      protocolRequest.headers,
     );
 
     // [TODO] - certify asset
@@ -63,9 +87,13 @@ export function registerIcpProtocol(): void {
         ...accum,
         [name]: value,
       }),
-      {},
+      {} as Record<string, string>,
     );
-    const data = Buffer.from(canisterResponse.body);
+    const encoding = getContentEncoding(headers);
+
+    const body = new Uint8Array(canisterResponse.body);
+    const decodedBody = decodeBody(body, encoding);
+    const data = Buffer.from(decodedBody ?? body);
 
     const protocolResponse: Electron.ProtocolResponse = {
       statusCode,

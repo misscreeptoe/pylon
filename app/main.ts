@@ -40,10 +40,8 @@ function createWindow(): void {
     y: 0,
     width: size.width,
     height: size.height,
-    backgroundColor: '#212529',
     title: 'Pylon',
     titleBarStyle: 'hidden',
-    titleBarOverlay: true,
     webPreferences: {
       webviewTag: true,
       nodeIntegration: true,

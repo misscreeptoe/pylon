@@ -12,9 +12,11 @@
     "@dfinity/agent": "^0.15.1",
     "@dfinity/candid": "^0.15.1",
     "@dfinity/principal": "^0.15.1",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "pako": "^2.1.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.2"
+    "@types/node-fetch": "^2.6.2",
+    "@types/pako": "^2.0.0"
   }
 }

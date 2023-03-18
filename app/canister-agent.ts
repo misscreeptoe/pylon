@@ -20,12 +20,19 @@ export class CanisterAgent {
     });
   }
 
-  public async httpRequest(method: string, url: string): Promise<HttpResponse> {
+  public async httpRequest(
+    method: string,
+    url: string,
+    headers: Record<string, string>,
+  ): Promise<HttpResponse> {
+    const requestHeaders = Object.entries(headers);
+    requestHeaders.push(['Accept-Encoding', 'gzip, deflate, identity']);
+
     const httpRequest: HttpRequest = {
       url,
       method,
       body: [],
-      headers: [],
+      headers: requestHeaders,
     };
 
     return await this.actor.http_request(httpRequest);

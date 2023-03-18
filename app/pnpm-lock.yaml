@@ -5,16 +5,20 @@ specifiers:
   '@dfinity/candid': ^0.15.1
   '@dfinity/principal': ^0.15.1
   '@types/node-fetch': ^2.6.2
+  '@types/pako': ^2.0.0
   node-fetch: ^2.6.7
+  pako: ^2.1.0
 
 dependencies:
   '@dfinity/agent': 0.15.1_pnrvgmowzh6wbtsoczkeddf5di
   '@dfinity/candid': 0.15.1
   '@dfinity/principal': 0.15.1
   node-fetch: 2.6.7
+  pako: 2.1.0
 
 devDependencies:
   '@types/node-fetch': 2.6.2
+  '@types/pako': 2.0.0
 
 packages:
 
@@ -110,6 +114,10 @@ packages:
 
   /@types/node/18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
+    dev: true
+
+  /@types/pako/2.0.0:
+    resolution: {integrity: sha512-10+iaz93qR5WYxTo+PMifD5TSxiOtdRaxBf7INGGXMQgTCu8Z/7GYWYFUOS3q/G0nE5boj1r4FEB+WSy7s5gbA==}
     dev: true
 
   /acorn-walk/8.2.0:
@@ -251,6 +259,10 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
+
+  /pako/2.1.0:
+    resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
     dev: false
 
   /readable-stream/3.6.0:
