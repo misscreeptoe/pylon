@@ -1,4 +1,3 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
 /dist
@@ -6,10 +5,11 @@
 /out-tsc
 /app-builds
 /release
-main.js
+app/**/*.js
+app/**/*.js.map
 src/**/*.js
+src/**/*.js.map
 !src/karma.conf.js
-*.js.map
 
 # dependencies
 node_modules

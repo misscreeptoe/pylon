@@ -1,19 +1,15 @@
 import { app, BrowserWindow, screen, protocol } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
-import { Readable } from 'stream';
+import {
+  getIcpProtocolRedirectUrl,
+  icpProtocolScheme,
+  registerIcpProtocol,
+  shouldRedirectToIcpProtocol,
+} from './icp-protocol';
 
 const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');
-
-function intoStream(text: string) {
-  return new Readable({
-    read() {
-      this.push(text);
-      this.push(null);
-    },
-  });
-}
 
 function createWindow(): void {
   const size = screen.getPrimaryDisplay().workAreaSize;
@@ -58,19 +54,16 @@ function createWindow(): void {
     {
       urls: ['http://*/*', 'https://*/*'],
     },
-    (_details, callback) => {
-      // [TODO] - detect URLs meant for the IC
+    (details, callback) => {
+      if (shouldRedirectToIcpProtocol(details.url)) {
+        const redirectURL = getIcpProtocolRedirectUrl(details.url);
 
-      // replace URL protocol
-      // const redirectURL = details.url.replace(/^https?:\/\//, 'icp:');
+        return callback({
+          redirectURL,
+        });
+      }
 
-      // redirect to the ICP protocol
-      // callback({
-      //   redirectURL,
-      // });
-
-      // allow non-IC requests through as normal
-      callback({});
+      return callback({});
     },
   );
 
@@ -84,37 +77,13 @@ function createWindow(): void {
 }
 
 try {
-  protocol.registerSchemesAsPrivileged([
-    {
-      scheme: 'icp',
-      privileges: {
-        standard: true,
-        secure: true,
-        allowServiceWorkers: true,
-        supportFetchAPI: true,
-        corsEnabled: true,
-        stream: true,
-        bypassCSP: true,
-      },
-    },
-  ]);
+  protocol.registerSchemesAsPrivileged([icpProtocolScheme]);
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
-    protocol.registerStreamProtocol('icp', async (protocolRequest, respond) => {
-      // [TODO] - fetch requested asset
-      console.log('ICP request', protocolRequest);
-
-      // [TODO] - certify asset
-
-      return respond({
-        statusCode: 404,
-        headers: { 'Content-Type': 'text/html' },
-        data: intoStream(`<h1>File not found</h1>`),
-      });
-    });
+    registerIcpProtocol();
 
     // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
     setTimeout(createWindow, 400);
