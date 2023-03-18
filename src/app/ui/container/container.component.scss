@@ -1,9 +1,8 @@
+@use 'sass:map';
 @import 'common';
 @import 'bootstrap/scss/containers';
 
 :host {
-  --#{$prefix}gutter-y: #{$container-padding-y};
-
   display: block;
 }
 
@@ -16,7 +15,6 @@
 }
 
 :host([vertical-spacing]) {
-  --#{$prefix}gutter-y: #{$container-padding-y};
-
-  padding-top: var(--#{$prefix}gutter-y);
+  padding-top: map.get($spacers, 5);
+  padding-bottom: map.get($spacers, 5);
 }

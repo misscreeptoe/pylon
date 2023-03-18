@@ -25,7 +25,7 @@ specifiers:
   '@types/webpack': ^5.28.0
   '@typescript-eslint/eslint-plugin': 5.40.0
   '@typescript-eslint/parser': 5.40.0
-  bootstrap: 5.2.3
+  bootstrap: 5.3.0-alpha1
   conventional-changelog-cli: 2.2.2
   electron: 21.1.1
   electron-builder: 23.6.0
@@ -65,7 +65,7 @@ dependencies:
   '@angular/platform-browser-dynamic': 15.0.4_hnn6v3m7xpfwy5wugozvutqsyi
   '@angular/router': 15.0.4_xkplghntscucsztvq3p7ejhl3e
   '@popperjs/core': 2.11.6
-  bootstrap: 5.2.3_@popperjs+core@2.11.6
+  bootstrap: 5.3.0-alpha1_@popperjs+core@2.11.6
   rxjs: 7.8.0
   tslib: 2.4.1
   zone.js: 0.12.0
@@ -3397,8 +3397,8 @@ packages:
     dev: true
     optional: true
 
-  /bootstrap/5.2.3_@popperjs+core@2.11.6:
-    resolution: {integrity: sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==}
+  /bootstrap/5.3.0-alpha1_@popperjs+core@2.11.6:
+    resolution: {integrity: sha512-ABZpKK4ObS3kKlIqH+ZVDqoy5t/bhFG0oHTAzByUdon7YIom0lpCeTqRniDzJmbtcWkNe800VVPBiJgxSYTYew==}
     peerDependencies:
       '@popperjs/core': ^2.11.6
     dependencies:

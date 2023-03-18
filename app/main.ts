@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, protocol } from 'electron';
+import { app, BrowserWindow, screen, protocol, nativeTheme } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import fetch from 'node-fetch';
@@ -33,6 +33,10 @@ function createWindow(): void {
       contextIsolation: false, // false if you want to run e2e test with Spectron
     },
   });
+
+  console.log('isDarkMode', nativeTheme.shouldUseDarkColors);
+  nativeTheme.themeSource = 'dark';
+  console.log('isDarkMode', nativeTheme.shouldUseDarkColors);
 
   if (serve) {
     const debug = require('electron-debug');
