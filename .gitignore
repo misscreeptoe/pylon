@@ -5,11 +5,6 @@
 /out-tsc
 /app-builds
 /release
-app/**/*.js
-app/**/*.js.map
-src/**/*.js
-src/**/*.js.map
-!src/karma.conf.js
 
 # dependencies
 node_modules

@@ -13,20 +13,20 @@
         }
       },
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "src/renderer",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/renderer",
-            "index": "src/index.html",
-            "main": "src/main.ts",
+            "index": "src/renderer/index.html",
+            "main": "src/renderer/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "src/renderer/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": ["src/renderer/favicon.ico", "src/renderer/assets"],
+            "styles": ["src/renderer/styles.scss"],
             "scripts": [],
             "customWebpackConfig": {
               "path": "./webpack.config.ts",
@@ -37,7 +37,7 @@
             "production": {
               "outputHashing": "all",
               "stylePreprocessorOptions": {
-                "includePaths": ["src/styles"]
+                "includePaths": ["src/renderer/styles"]
               }
             },
             "development": {
@@ -48,7 +48,7 @@
               "sourceMap": true,
               "namedChunks": true,
               "stylePreprocessorOptions": {
-                "includePaths": ["src/styles"]
+                "includePaths": ["src/renderer/styles"]
               }
             }
           },
@@ -77,13 +77,13 @@
         "test": {
           "builder": "@angular-builders/custom-webpack:karma",
           "options": {
-            "main": "src/test.ts",
+            "main": "src/renderer/test.ts",
             "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "tsConfig": "src/renderer/tsconfig.spec.json",
+            "karmaConfig": "src/renderer/karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": ["src/renderer/favicon.ico", "src/renderer/assets"],
+            "styles": ["src/renderer/styles.scss"],
             "customWebpackConfig": {
               "path": "./webpack.config.ts",
               "replaceDuplicatePlugins": true
@@ -93,7 +93,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/renderer/**/*.ts",
+              "src/renderer/**/*.html"
+            ]
           }
         }
       }
