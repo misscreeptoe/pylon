@@ -1,23 +1,26 @@
 import { Actor, ActorSubclass, HttpAgent } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
-import { idlFactory } from './canister-http-interface/canister-http-interface';
 import {
   HttpRequest,
   HttpResponse,
   _SERVICE,
-} from './canister-http-interface/canister-http-interface-types';
+  idlFactory,
+} from './canister-http-interface';
 
 export class CanisterAgent {
   private readonly actor: ActorSubclass<_SERVICE>;
+  private readonly agent: HttpAgent;
 
-  constructor(host: string, canisterId: string) {
-    const principal = Principal.fromText(canisterId);
-
-    const agent = new HttpAgent({ host });
+  constructor(host: string, principal: Principal) {
+    this.agent = new HttpAgent({ host });
     this.actor = Actor.createActor<_SERVICE>(idlFactory, {
-      agent,
+      agent: this.agent,
       canisterId: principal,
     });
+  }
+
+  public getAgent(): HttpAgent {
+    return this.agent;
   }
 
   public async httpRequest(
@@ -31,6 +34,7 @@ export class CanisterAgent {
     const httpRequest: HttpRequest = {
       url,
       method,
+      // [TODO] - support POST request bodies
       body: [],
       headers: requestHeaders,
     };

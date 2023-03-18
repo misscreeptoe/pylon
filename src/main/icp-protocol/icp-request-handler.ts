@@ -1,41 +1,60 @@
 import { CanisterAgent } from '../canister-agent';
 import { decodeBody } from './decode-body';
+import { icpHttpsFallbackHandler } from './icp-https-fallback-handler';
 import { parseIcpProtocolUrl } from './icp-protocol-url';
+import { streamBody } from './stream-body';
 
 const DEFAULT_DFINITY_GATEWAY = 'https://ic0.app';
 
 export async function icpRequestHandler(
   request: Electron.ProtocolRequest,
 ): Promise<Electron.ProtocolResponse> {
-  const url = parseIcpProtocolUrl(request.url);
-  const canisterActor = new CanisterAgent(
-    DEFAULT_DFINITY_GATEWAY,
-    url.canisterId,
-  );
+  try {
+    // [TODO] - add support for named canisters
+    const url = parseIcpProtocolUrl(request.url);
 
-  const canisterResponse = await canisterActor.httpRequest(
-    request.method,
-    url.path,
-    request.headers,
-  );
+    if (!url) {
+      return await icpHttpsFallbackHandler(request);
+    }
 
-  // [TODO] - certify asset
+    const canisterActor = new CanisterAgent(
+      DEFAULT_DFINITY_GATEWAY,
+      url.canisterPrincipal,
+    );
 
-  const statusCode = canisterResponse.status_code;
-  const headers = canisterResponse.headers.reduce(
-    (accum, [name, value]) => ({
-      ...accum,
-      [name]: value,
-    }),
-    {} as Record<string, string>,
-  );
+    const canisterResponse = await canisterActor.httpRequest(
+      request.method,
+      url.path,
+      request.headers,
+    );
 
-  const body = new Uint8Array(canisterResponse.body);
-  const data = decodeBody(body, headers);
+    const body = await streamBody(
+      canisterActor.getAgent(),
+      canisterResponse,
+      url.canisterPrincipal,
+    );
 
-  return {
-    statusCode,
-    headers,
-    data,
-  };
+    // [TODO] - certify asset
+
+    const statusCode = canisterResponse.status_code;
+    const headers = canisterResponse.headers.reduce(
+      (accum, [name, value]) => ({
+        ...accum,
+        [name]: value,
+      }),
+      {} as Record<string, string>,
+    );
+
+    const data = decodeBody(body, headers);
+
+    return {
+      statusCode,
+      headers,
+      data,
+    };
+  } catch {
+    return {
+      data: '',
+    };
+  }
 }
