@@ -1,7 +1,6 @@
-import { Principal } from '@dfinity/principal';
 import { protocol } from 'electron';
 import { Readable } from 'stream';
-import { createCanisterActor } from './agent';
+import { CanisterAgent } from './canister-agent';
 
 export const icpProtocolScheme: Electron.CustomScheme = {
   scheme: 'icp',
@@ -24,7 +23,7 @@ export interface IcpProtocolUrl {
 export function parseIcpProtocolUrl(url: string): IcpProtocolUrl {
   let urlWithoutProtocol = url.replace(/^icp:\/?\/?/, '');
   let [canisterId, ...rest] = urlWithoutProtocol.split('/');
-  let path = rest.join('/') || '/';
+  let path = `/${rest.join('/')}`;
 
   return {
     canisterId,
@@ -44,31 +43,36 @@ export function getIcpProtocolRedirectUrl(url: string): string {
 const DEFAULT_DFINITY_GATEWAY = 'https://ic0.app';
 
 export function registerIcpProtocol(): void {
-  protocol.registerStreamProtocol('icp', async (protocolRequest, respond) => {
+  protocol.registerBufferProtocol('icp', async (protocolRequest, respond) => {
     const icpProtocolUrl = parseIcpProtocolUrl(protocolRequest.url);
-    const canisterPrincipal = Principal.fromText(icpProtocolUrl.canisterId);
-    const canisterActor = await createCanisterActor(
+    const canisterActor = new CanisterAgent(
       DEFAULT_DFINITY_GATEWAY,
-      canisterPrincipal,
+      icpProtocolUrl.canisterId,
     );
 
-    // [TODO] - fetch requested asset
+    const canisterResponse = await canisterActor.httpRequest(
+      protocolRequest.method,
+      icpProtocolUrl.path,
+    );
 
     // [TODO] - certify asset
 
-    return respond({
-      statusCode: 404,
-      headers: { 'Content-Type': 'text/html' },
-      data: intoStream(`<h1>File not found</h1>`),
-    });
-  });
-}
+    const statusCode = canisterResponse.status_code;
+    const headers = canisterResponse.headers.reduce(
+      (accum, [name, value]) => ({
+        ...accum,
+        [name]: value,
+      }),
+      {},
+    );
+    const data = Buffer.from(canisterResponse.body);
 
-function intoStream(text: string) {
-  return new Readable({
-    read() {
-      this.push(text);
-      this.push(null);
-    },
+    const protocolResponse: Electron.ProtocolResponse = {
+      statusCode,
+      headers,
+      data,
+    };
+
+    return respond(protocolResponse);
   });
 }
