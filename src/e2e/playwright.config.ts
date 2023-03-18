@@ -1,5 +1,6 @@
-/** @type {import('@playwright/test').PlaywrightTestConfig} */
-const config = {
+import { PlaywrightTestConfig } from '@playwright/test';
+
+const config: PlaywrightTestConfig = {
   testDir: '.',
   timeout: 45000,
   outputDir: './screenshots',

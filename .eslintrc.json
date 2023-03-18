@@ -10,10 +10,10 @@
       "files": ["*.ts"],
       "parserOptions": {
         "project": [
-          "./tsconfig.serve.json",
+          "./src/main/tsconfig.app.json",
           "./src/renderer/tsconfig.app.json",
           "./src/renderer/tsconfig.spec.json",
-          "./e2e/tsconfig.e2e.json"
+          "./src/e2e/tsconfig.e2e.json"
         ],
         "createDefaultProgram": true
       },

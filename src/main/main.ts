@@ -1,6 +1,5 @@
 import { app, BrowserWindow, screen, protocol, nativeTheme } from 'electron';
 import * as path from 'path';
-import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {
   getIcpProtocolRedirectUrl,

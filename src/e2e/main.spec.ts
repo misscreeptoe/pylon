@@ -5,7 +5,7 @@ import {
   _electron as electron,
 } from 'playwright';
 import { test, expect } from '@playwright/test';
-const PATH = require('path');
+import * as path from 'path';
 
 test.describe('Check Home Page', async () => {
   let app: ElectronApplication;
@@ -15,8 +15,8 @@ test.describe('Check Home Page', async () => {
   test.beforeAll(async () => {
     app = await electron.launch({
       args: [
-        PATH.join(__dirname, '../app/main.js'),
-        PATH.join(__dirname, '../app/package.json'),
+        path.join(__dirname, '../../dist/main/main.js'),
+        path.join(__dirname, '../../package.json'),
       ],
     });
     context = app.context();
@@ -68,7 +68,7 @@ test.describe('Check Home Page', async () => {
   });
 
   test.afterAll(async () => {
-    await context.tracing.stop({ path: 'e2e/tracing/trace.zip' });
+    await context.tracing.stop({ path: 'dist/e2e/trace.zip' });
     await app.close();
   });
 });
