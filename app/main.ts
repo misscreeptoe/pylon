@@ -1,9 +1,19 @@
 import { app, BrowserWindow, screen, protocol } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Readable } from 'stream';
 
 const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');
+
+function intoStream(text: string) {
+  return new Readable({
+    read() {
+      this.push(text);
+      this.push(null);
+    },
+  });
+}
 
 function createWindow(): void {
   const size = screen.getPrimaryDisplay().workAreaSize;
@@ -99,7 +109,11 @@ try {
 
       // [TODO] - certify asset
 
-      return respond({});
+      return respond({
+        statusCode: 404,
+        headers: { 'Content-Type': 'text/html' },
+        data: intoStream(`<h1>File not found</h1>`),
+      });
     });
 
     // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
