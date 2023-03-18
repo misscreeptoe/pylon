@@ -1,0 +1,33 @@
+<ul class="nav nav-tabs" role="tablist">
+  <ng-container *ngFor="let navItem of navItems">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        type="button"
+        role="tab"
+        (click)="setTabActive(navItem)"
+        [id]="navItem.id + '-tab'"
+        [class.active]="tabActiveStatus[navItem.id]"
+        [attr.aria-selected]="tabActiveStatus[navItem.id]"
+        [attr.aria-controls]="navItem.id"
+      >
+        {{ navItem.title }}
+      </button>
+    </li>
+  </ng-container>
+</ul>
+
+<div class="tab-content">
+  <ng-container *ngFor="let navItem of navItems">
+    <div
+      class="tab-pane"
+      tabindex="0"
+      role="tabpanel"
+      [id]="navItem.id"
+      [class.active]="tabActiveStatus[navItem.id]"
+      [attr.aria-labelledby]="navItem.id + '-tab'"
+    >
+      <ng-container [ngTemplateOutlet]="navItem.templateRef"></ng-container>
+    </div>
+  </ng-container>
+</div>

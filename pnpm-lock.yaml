@@ -18,6 +18,7 @@ specifiers:
   '@angular/platform-browser-dynamic': ^15.0.0
   '@angular/router': ^15.0.0
   '@playwright/test': 1.27.1
+  '@popperjs/core': ^2.11.6
   '@types/jasmine': 4.3.0
   '@types/jasminewd2': 2.0.10
   '@types/node': 18.11.0
@@ -63,7 +64,8 @@ dependencies:
   '@angular/platform-browser': 15.0.4_wcjhsjedbutghxn65tv34lliyq
   '@angular/platform-browser-dynamic': 15.0.4_hnn6v3m7xpfwy5wugozvutqsyi
   '@angular/router': 15.0.4_xkplghntscucsztvq3p7ejhl3e
-  bootstrap: 5.2.3
+  '@popperjs/core': 2.11.6
+  bootstrap: 5.2.3_@popperjs+core@2.11.6
   rxjs: 7.8.0
   tslib: 2.4.1
   zone.js: 0.12.0
@@ -2149,6 +2151,10 @@ packages:
       playwright-core: 1.27.1
     dev: true
 
+  /@popperjs/core/2.11.6:
+    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
+    dev: false
+
   /@schematics/angular/15.0.4:
     resolution: {integrity: sha512-4l4WZlr9MnhXo2B7eLczttgkeq8Agm3zfiX0trYkOdYqLtzOKxPiI+RrZSsfIDmmLSE1EillZ3PtDImMzAgQPg==}
     engines: {node: ^14.20.0 || ^16.13.0 || >=18.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
@@ -3391,10 +3397,12 @@ packages:
     dev: true
     optional: true
 
-  /bootstrap/5.2.3:
+  /bootstrap/5.2.3_@popperjs+core@2.11.6:
     resolution: {integrity: sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==}
     peerDependencies:
       '@popperjs/core': ^2.11.6
+    dependencies:
+      '@popperjs/core': 2.11.6
     dev: false
 
   /brace-expansion/1.1.11:
