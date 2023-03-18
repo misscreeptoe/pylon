@@ -5,7 +5,7 @@
 - [Install Pre-Commit](https://pre-commit.com/)
 - [Install Commitizen](https://commitizen-tools.github.io/commitizen/)
 
-Install Electron renderer process dependencies:
+Install dependencies:
 
 ```bash
 pnpm install
@@ -16,15 +16,6 @@ Install Angular CLI:
 ```bash
 npm install -g @angular/cli
 ```
-
-Install Electron main process dependencies:
-
-```bash
-cd app/
-pnpm install
-```
-
-Why two package.json ? This project follow [Electron Builder two package.json structure](https://www.electron.build/tutorials/two-package-structure) in order to optimize final bundle and be still able to use Angular `ng add` feature.
 
 ## Commands
 

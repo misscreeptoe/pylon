@@ -59,15 +59,10 @@ function createWindow(): void {
     require('electron-reloader')(module);
     browserWindow.loadURL('http://localhost:4200');
   } else {
-    // Path when running electron executable
-    let pathIndex = './index.html';
+    const url = new URL(
+      path.join('file:', __dirname, '..', 'renderer', 'index.html'),
+    );
 
-    if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
-      // Path when running electron in local folder
-      pathIndex = '../dist/index.html';
-    }
-
-    const url = new URL(path.join('file:', __dirname, pathIndex));
     browserWindow.loadURL(url.href);
   }
 
