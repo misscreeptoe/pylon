@@ -24,6 +24,7 @@ specifiers:
   '@types/webpack': ^5.28.0
   '@typescript-eslint/eslint-plugin': 5.40.0
   '@typescript-eslint/parser': 5.40.0
+  bootstrap: 5.2.3
   conventional-changelog-cli: 2.2.2
   electron: 21.1.1
   electron-builder: 23.6.0
@@ -62,6 +63,7 @@ dependencies:
   '@angular/platform-browser': 15.0.4_wcjhsjedbutghxn65tv34lliyq
   '@angular/platform-browser-dynamic': 15.0.4_hnn6v3m7xpfwy5wugozvutqsyi
   '@angular/router': 15.0.4_xkplghntscucsztvq3p7ejhl3e
+  bootstrap: 5.2.3
   rxjs: 7.8.0
   tslib: 2.4.1
   zone.js: 0.12.0
@@ -3388,6 +3390,12 @@ packages:
     resolution: {integrity: sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==}
     dev: true
     optional: true
+
+  /bootstrap/5.2.3:
+    resolution: {integrity: sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==}
+    peerDependencies:
+      '@popperjs/core': ^2.11.6
+    dev: false
 
   /brace-expansion/1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}

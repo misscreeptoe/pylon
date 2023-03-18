@@ -1,6 +1,6 @@
 # Pylon
 
-Decentralized Internet Computer gateway.
+A trustless Internet Computer gateway.
 
 ## Introduction
 

@@ -13,6 +13,8 @@ function createWindow(): void {
     y: 0,
     width: size.width,
     height: size.height,
+    backgroundColor: '#212529',
+    title: 'Pylon',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: serve,
