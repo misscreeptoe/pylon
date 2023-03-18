@@ -20,6 +20,6 @@
 
 .dapp-listing {
   &:not(:last-child) {
-    margin-right: map.get($spacers, 3);
+    margin-right: map.get($spacers, 4);
   }
 }

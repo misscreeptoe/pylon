@@ -40,3 +40,20 @@ export function tryParseIcHttpRequestUrl(url: string): IcRequestUrl | null {
     return null;
   }
 }
+
+/**
+ * Determines if the given URL is a known Internet Identity URL.
+ *
+ * @param url The URL to check.
+ * @returns True if the URL is a known Internet Identity URL, false otherwise.
+ */
+export function isInternetIdentityUrl(url: string): boolean {
+  const { hostname } = new URL(url);
+
+  return [
+    'rdmx6-jaaaa-aaaaa-aaadq-cai.ic0.app',
+    'identity.ic0.app',
+    'identity.icp0.io',
+    'identity.internetcomputer.org',
+  ].includes(hostname);
+}

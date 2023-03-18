@@ -1,7 +1,9 @@
 import { ProtocolRequest, ProtocolResponse } from 'electron';
-import { makeIcHttpRequest } from '../../http-gateway';
+import {
+  makeIcHttpRequest,
+  tryParseIcHttpRequestUrl,
+} from '../../http-gateway';
 import { forwardStandardHttpRequest } from './forward-standard-http-request';
-import { tryParseIcHttpRequestUrl } from './ic-http-request-url';
 
 export async function icRequestHandler(
   request: ProtocolRequest,

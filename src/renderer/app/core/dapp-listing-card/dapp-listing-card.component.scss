@@ -4,6 +4,9 @@
 $card-width: 80px;
 
 .dapp-card {
+  color: var(--bs-heading-color, inherit);
+  text-decoration: none;
+  display: block;
   width: $card-width;
 
   &:hover {
@@ -24,5 +27,5 @@ $card-width: 80px;
   -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: map.get($spacers, 1);
+  margin-top: map.get($spacers, 2);
 }
