@@ -1,16 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   OnChanges,
-  Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DappListing } from '../../model';
 import { CardComponent } from '../../ui';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
+const IC_DOMAIN = 'ic0.app';
 
 @Component({
   selector: 'app-dapp-listing-card',
@@ -24,9 +24,7 @@ export class DappListingCardComponent implements OnChanges {
   @Input()
   public dappListing?: DappListing;
 
-  @Output()
-  public openDapp = new EventEmitter<DappListing>();
-
+  public url?: string;
   public faviconUrl?: SafeUrl;
 
   constructor(private readonly domSanitizer: DomSanitizer) {}
@@ -36,10 +34,10 @@ export class DappListingCardComponent implements OnChanges {
       this.faviconUrl = this.domSanitizer.bypassSecurityTrustUrl(
         `ic-metadata:${this.dappListing.canisterId}/icon`,
       );
-    }
-  }
 
-  public onCardClicked(): void {
-    this.openDapp.emit(this.dappListing);
+      this.url =
+        this.dappListing.url ??
+        `https://${this.dappListing.canisterId}.${IC_DOMAIN}`;
+    }
   }
 }

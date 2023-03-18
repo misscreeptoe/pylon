@@ -1,5 +1,5 @@
 <ng-container *ngIf="dappListing">
-  <div class="dapp-card" (click)="onCardClicked()" [title]="dappListing.name">
+  <a class="dapp-card" [href]="url" target="_blank" [title]="dappListing.name">
     <img
       class="dapp-icon"
       [src]="faviconUrl"
@@ -7,5 +7,5 @@
     />
 
     <p class="dapp-title">{{ dappListing.name }}</p>
-  </div>
+  </a>
 </ng-container>

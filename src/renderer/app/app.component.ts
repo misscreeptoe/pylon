@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LayoutComponent } from './core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ElectronService, LayoutComponent } from './core';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +8,10 @@ import { LayoutComponent } from './core';
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor(private readonly electronService: ElectronService) {}
+
+  public ngOnInit(): void {
+    this.electronService.initIpcEvents();
+  }
+}
