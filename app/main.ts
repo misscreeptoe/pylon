@@ -6,7 +6,7 @@ import {
   getIcpProtocolRedirectUrl,
   icpProtocolScheme,
   registerIcpProtocol,
-  shouldRedirectToIcpProtocol,
+  shouldRedirectToIcpProtocolUrl,
 } from './icp-protocol';
 
 global.fetch = fetch as any;
@@ -76,7 +76,7 @@ function createWindow(): void {
       urls: ['http://*/*', 'https://*/*'],
     },
     (details, callback) => {
-      if (shouldRedirectToIcpProtocol(details.url)) {
+      if (shouldRedirectToIcpProtocolUrl(details.url)) {
         const redirectURL = getIcpProtocolRedirectUrl(details.url);
 
         return callback({
