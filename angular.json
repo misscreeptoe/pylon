@@ -35,7 +35,10 @@
           },
           "configurations": {
             "production": {
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "stylePreprocessorOptions": {
+                "includePaths": ["src/styles"]
+              }
             },
             "development": {
               "buildOptimizer": false,
