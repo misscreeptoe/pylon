@@ -3,21 +3,12 @@
     <app-dashboard></app-dashboard>
   </ng-template>
 
-  <ng-template appNavItem id="qoctq-giaaa-aaaaa-aaaea-cai" title="NNS">
-    <app-webview
-      id="qoctq-giaaa-aaaaa-aaaea-cai"
-      src="icp:qoctq-giaaa-aaaaa-aaaea-cai"
-    ></app-webview>
-  </ng-template>
-
-  <ng-template
-    appNavItem
-    id="rdmx6-jaaaa-aaaaa-aaadq-cai"
-    title="Internet Identity"
-  >
-    <app-webview
-      id="rdmx6-jaaaa-aaaaa-aaadq-cai"
-      src="icp:rdmx6-jaaaa-aaaaa-aaadq-cai"
-    ></app-webview>
-  </ng-template>
+  <ng-container *ngFor="let dapp of dapps$ | async">
+    <ng-template appNavItem [id]="dapp.canisterId" [title]="dapp.name">
+      <app-webview
+        [id]="dapp.canisterId"
+        [src]="'icp:' + dapp.canisterId"
+      ></app-webview>
+    </ng-template>
+  </ng-container>
 </app-nav>

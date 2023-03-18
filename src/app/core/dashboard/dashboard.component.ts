@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DappListing } from '../../model';
 import { RowComponent, ColumnComponent, ContainerComponent } from '../../ui';
 import { DappListingCardComponent } from '../dapp-listing-card';
+import { DappsManagerService } from '../dapps-manager';
 
 const DAPP_LISTINGS: DappListing[] = [
   {
@@ -14,6 +15,12 @@ const DAPP_LISTINGS: DappListing[] = [
     name: 'Internet Identity',
     canisterId: 'rdmx6-jaaaa-aaaaa-aaadq-cai',
     description: 'Anonymous blockchain authentication framework',
+  },
+  {
+    name: 'DSCVR',
+    canisterId: 'h5aet-waaaa-aaaab-qaamq-cai',
+    description:
+      'A decentralized social news aggregator built on the Internet Computer',
   },
 ];
 
@@ -33,5 +40,9 @@ const DAPP_LISTINGS: DappListing[] = [
 export class DashboardComponent {
   public dappListings = DAPP_LISTINGS;
 
-  public async onOpenDapp(_dappListing: DappListing): Promise<void> {}
+  constructor(private readonly dappsManagerService: DappsManagerService) {}
+
+  public async onOpenDapp(dappListing: DappListing): Promise<void> {
+    this.dappsManagerService.openDapp(dappListing);
+  }
 }
