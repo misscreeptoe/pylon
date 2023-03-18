@@ -7,11 +7,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavItemDirective } from './nav-item.directive';
+import { CloseButtonComponent } from '../close-button';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CloseButtonComponent],
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,10 @@ export class NavComponent implements AfterContentInit {
   public setTabActive(navItem: NavItemDirective): void {
     this.currentActiveTab = navItem.id;
     this.updateTabActiveStatus();
+  }
+
+  public onCloseButtonClicked(navItem: NavItemDirective): void {
+    navItem.onCloseClicked();
   }
 
   private updateTabActiveStatus(): void {

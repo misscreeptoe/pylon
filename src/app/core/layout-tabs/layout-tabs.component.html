@@ -4,7 +4,12 @@
   </ng-template>
 
   <ng-container *ngFor="let dapp of dapps$ | async">
-    <ng-template appNavItem [id]="dapp.canisterId" [title]="dapp.name">
+    <ng-template
+      appNavItem
+      [id]="dapp.canisterId"
+      [title]="dapp.name"
+      (closeClick)="onTabCloseClicked(dapp)"
+    >
       <app-webview
         [id]="dapp.canisterId"
         [src]="'icp:' + dapp.canisterId"

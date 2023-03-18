@@ -23,6 +23,12 @@ export class DappsManagerService {
     this.emit();
   }
 
+  public closeDapp(dappListing: DappListing): void {
+    this.dapps.splice(this.dapps.indexOf(dappListing), 1);
+
+    this.emit();
+  }
+
   private emit(): void {
     this.dappsSubject.next(this.dapps);
   }

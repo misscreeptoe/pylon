@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import 'common';
 @import 'bootstrap/scss/nav';
 
@@ -7,6 +8,20 @@
 
 .nav-item {
   background-color: $gray-800;
+  position: relative;
+  max-width: 200px;
+  width: 100%;
+}
+
+.nav-link {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+  padding-right: calc(
+    #{$btn-close-width} + #{$btn-close-padding-x * 2} + #{$nav-link-padding-x}
+  );
 }
 
 :host,
@@ -15,4 +30,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.nav-close-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: calc(
+    #{math.div($btn-close-padding-x, 2)} + #{math.div($nav-link-padding-x, 2)}
+  );
 }

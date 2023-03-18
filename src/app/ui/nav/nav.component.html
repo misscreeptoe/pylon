@@ -13,6 +13,13 @@
       >
         {{ navItem.title }}
       </button>
+
+      <ng-container *ngIf="tabActiveStatus[navItem.id]">
+        <app-close-button
+          class="nav-close-button"
+          (click)="onCloseButtonClicked(navItem)"
+        ></app-close-button>
+      </ng-container>
     </li>
   </ng-container>
 </ul>

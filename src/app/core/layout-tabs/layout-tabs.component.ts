@@ -29,4 +29,8 @@ export class LayoutTabsComponent implements OnInit {
   public ngOnInit(): void {
     this.dapps$ = this.dappsManagerService.dapps$;
   }
+
+  public onTabCloseClicked(dappListing: DappListing): void {
+    this.dappsManagerService.closeDapp(dappListing);
+  }
 }

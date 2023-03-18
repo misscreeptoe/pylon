@@ -1,4 +1,10 @@
-import { Directive, Input, TemplateRef } from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+} from '@angular/core';
 
 @Directive({
   selector: '[appNavItem]',
@@ -11,5 +17,12 @@ export class NavItemDirective {
   @Input()
   public title: string;
 
+  @Output()
+  public closeClick = new EventEmitter<void>();
+
   constructor(public readonly templateRef: TemplateRef<unknown>) {}
+
+  public onCloseClicked(): void {
+    this.closeClick.emit();
+  }
 }
