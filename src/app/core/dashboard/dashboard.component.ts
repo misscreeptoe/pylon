@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DappListing } from '../model';
-import { RowComponent, ColumnComponent, ContainerComponent } from '../ui';
-import { DappListingCardComponent } from '../core';
+import { DappListing } from '../../model';
+import { RowComponent, ColumnComponent, ContainerComponent } from '../../ui';
+import { DappListingCardComponent } from '../dapp-listing-card';
 
 const DAPP_LISTINGS: DappListing[] = [
   {

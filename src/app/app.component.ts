@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { ElectronService } from './core';
-import { NavComponent, NavItemDirective } from './ui';
+import { ElectronService, LayoutComponent } from './core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, NavComponent, NavItemDirective],
+  imports: [LayoutComponent],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
