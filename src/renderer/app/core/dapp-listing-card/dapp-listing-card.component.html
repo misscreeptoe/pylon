@@ -1,6 +1,11 @@
 <ng-container *ngIf="dappListing">
-  <div (click)="onCardClicked()">
-    <p>{{ dappListing.name }}</p>
-    <p>{{ dappListing.canisterId }}</p>
+  <div class="dapp-card" (click)="onCardClicked()" [title]="dappListing.name">
+    <img
+      class="dapp-icon"
+      [src]="faviconUrl"
+      [alt]="dappListing.name + ' icon'"
+    />
+
+    <p class="dapp-title">{{ dappListing.name }}</p>
   </div>
 </ng-container>

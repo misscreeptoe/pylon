@@ -12,7 +12,7 @@ const canisterIdMapping = {
 /**
  * A parsed IC request URL broken down into its consituent parts.
  */
-export interface IcHttpRequestUrl {
+export interface IcRequestUrl {
   canisterId: string;
   path: string;
 }
@@ -21,10 +21,10 @@ export interface IcHttpRequestUrl {
  * Parses a standard URL that is intended for a canister that implements the `http_request` interface.
  * It will return the canister ID and request path.
  *
- * @param url The URL to parsed,
- * @returns The url parsed into its consituent parts, or null if parsing failed.
+ * @param url The URL to parse.
+ * @returns The URL parsed into its consituent parts, or `null` if parsing failed.
  */
-export function tryParseIcHttpRequestUrl(url: string): IcHttpRequestUrl | null {
+export function tryParseIcHttpRequestUrl(url: string): IcRequestUrl | null {
   const { hostname, pathname } = new URL(url);
 
   const canisterId = canisterIdMapping[hostname] ?? hostname.split('.')?.[0];

@@ -62,6 +62,7 @@ const IC_DOMAIN = 'ic0.app';
   ],
   standalone: true,
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {

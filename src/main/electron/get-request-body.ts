@@ -1,4 +1,9 @@
-import { UploadData, UploadFile, UploadRawData } from 'electron';
+import {
+  ProtocolRequest,
+  UploadData,
+  UploadFile,
+  UploadRawData,
+} from 'electron';
 
 export type ElectronUploadData = UploadData | UploadFile | UploadRawData;
 
@@ -71,9 +76,7 @@ function isUploadRawData(
  * @param request The [request]{@link Electron.ProtocolRequest} object to extract the body from.
  * @returns The extracted body as a {@link Buffer} if it exists, `null` otherwise.
  */
-export function getRequestBody(
-  request: Electron.ProtocolRequest,
-): Buffer | null {
+export function getRequestBody(request: ProtocolRequest): Buffer | null {
   // [TODO] - in what scenarios is there more than one element in this array?
   const uploadData = request.uploadData?.[0] ?? null;
 
