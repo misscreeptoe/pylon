@@ -13,6 +13,7 @@
 }
 
 .nav-link {
+  height: env(titlebar-area-height, var(--fallback-title-bar-height));
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -21,6 +22,10 @@
   padding-right: calc(
     #{$btn-close-width} + #{$btn-close-padding-x * 2} + #{$nav-link-padding-x}
   );
+  padding-left: $nav-link-padding-x;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: $font-size-sm;
 }
 
 :host,

@@ -17,7 +17,25 @@ const serve = args.some((val) => val === '--serve');
 function createWindow(): void {
   const size = screen.getPrimaryDisplay().workAreaSize;
 
+  // [TODO] - Remove hard coded theme in production
+  nativeTheme.themeSource = 'dark';
+  const themingOptions: Electron.BrowserWindowConstructorOptions =
+    nativeTheme.shouldUseDarkColors
+      ? {
+          backgroundColor: '#212529',
+          titleBarOverlay: {
+            color: '#212529',
+            symbolColor: '#adb5bd',
+          },
+        }
+      : {
+          titleBarOverlay: {
+            color: '#fff',
+          },
+        };
+
   let browserWindow = new BrowserWindow({
+    ...themingOptions,
     x: 0,
     y: 0,
     width: size.width,
@@ -33,10 +51,8 @@ function createWindow(): void {
       contextIsolation: false, // false if you want to run e2e test with Spectron
     },
   });
-
-  console.log('isDarkMode', nativeTheme.shouldUseDarkColors);
+  browserWindow.setMenuBarVisibility(false);
   nativeTheme.themeSource = 'dark';
-  console.log('isDarkMode', nativeTheme.shouldUseDarkColors);
 
   if (serve) {
     const debug = require('electron-debug');
