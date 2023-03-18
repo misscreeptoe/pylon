@@ -1,0 +1,8 @@
+@import 'common';
+
+@include make-grid-columns();
+
+:host {
+  @include make-col-ready();
+  @extend .col;
+}

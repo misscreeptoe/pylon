@@ -1,0 +1,15 @@
+<app-container vertical-spacing>
+  <h2>Wallet dApps</h2>
+
+  <app-row>
+    <ng-container *ngFor="let dapp of dappListings">
+      <app-column>
+        <app-dapp-listing-card
+          [dappListing]="dapp"
+          (openDapp)="onOpenDapp(dapp)"
+        >
+        </app-dapp-listing-card>
+      </app-column>
+    </ng-container>
+  </app-row>
+</app-container>

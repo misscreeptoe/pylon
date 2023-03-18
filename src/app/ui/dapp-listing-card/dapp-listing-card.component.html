@@ -1,0 +1,7 @@
+<ng-container *ngIf="dappListing">
+  <app-card (click)="onCardClicked()">
+    <h3 cardTitle>{{ dappListing.name }}</h3>
+    <h4 class="h5" cardSubtitle>{{ dappListing.canisterId }}</h4>
+    <ng-container cardText>{{ dappListing.description }}</ng-container>
+  </app-card>
+</ng-container>

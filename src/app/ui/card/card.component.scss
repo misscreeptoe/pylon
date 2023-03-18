@@ -1,0 +1,10 @@
+@import 'common';
+@import 'bootstrap/scss/card';
+
+:host {
+  @extend .card;
+}
+
+.card-subtitle {
+  color: $gray-500;
+}

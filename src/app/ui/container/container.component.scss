@@ -1,0 +1,22 @@
+@import 'common';
+@import 'bootstrap/scss/containers';
+
+:host {
+  --#{$prefix}gutter-y: #{$container-padding-y};
+
+  display: block;
+}
+
+:host(:not([full-width])) {
+  @extend .container;
+}
+
+:host([full-width]) {
+  @extend .container-fluid;
+}
+
+:host([vertical-spacing]) {
+  --#{$prefix}gutter-y: #{$container-padding-y};
+
+  padding-top: var(--#{$prefix}gutter-y);
+}
