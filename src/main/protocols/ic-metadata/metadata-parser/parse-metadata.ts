@@ -7,15 +7,15 @@ import { parseTitle } from './parse-title';
 export interface Metadata {
   title: string | null;
   description: string | null;
-  icon: string | null;
-  image: string | null;
+  iconUrl: string | null;
+  imageUrl: string | null;
 }
 
 export function parseMetadata($: CheerioAPI, canisterId: string): Metadata {
   return {
     title: parseTitle($),
     description: parseDescription($),
-    icon: parseIcon($, canisterId),
-    image: parseImage($, canisterId),
+    iconUrl: parseIcon($, canisterId),
+    imageUrl: parseImage($, canisterId),
   };
 }

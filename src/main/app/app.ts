@@ -1,4 +1,5 @@
 import { BrowserWindow, app, protocol } from 'electron';
+import { mkdir } from 'node:fs/promises';
 import {
   icProtocolScheme,
   registerIcMetadataProtocol,
@@ -16,6 +17,7 @@ export class App {
   private async init(): Promise<void> {
     protocol.registerSchemesAsPrivileged([icProtocolScheme]);
 
+    await this.setAppSessionDirectory();
     await app.whenReady();
 
     registerIcProtocol();
@@ -25,6 +27,18 @@ export class App {
 
     app.on('activate', this.onAppActivate.bind(this));
     app.on('window-all-closed', this.onAllWindowClosed.bind(this));
+  }
+
+  private async setAppSessionDirectory(): Promise<void> {
+    const currentSessionDirectory = app.getPath('sessionData');
+    const userDirectory = app.getPath('userData');
+
+    if (currentSessionDirectory === userDirectory) {
+      const newSessionDirectory = `${userDirectory}/session`;
+      await mkdir(newSessionDirectory, { recursive: true });
+
+      app.setPath('sessionData', newSessionDirectory);
+    }
   }
 
   private onAppActivate(): void {

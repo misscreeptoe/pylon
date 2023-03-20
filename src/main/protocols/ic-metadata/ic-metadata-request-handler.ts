@@ -1,9 +1,6 @@
 import { ProtocolRequest, ProtocolResponse } from 'electron';
-import * as cheerio from 'cheerio';
-import { makeIcHttpRequest } from '../../http-gateway';
 import { tryParseIcMetadataRequestUrl } from './ic-metadata-request-url';
-import { parseMetadata } from './metadata-parser';
-import { getResponseBody } from '../../electron';
+import { fetchMetadata } from './fetch-metadata';
 
 export async function icMetadataRequestHandler(
   request: ProtocolRequest,
@@ -17,29 +14,16 @@ export async function icMetadataRequestHandler(
     };
   }
 
-  const response = await makeIcHttpRequest(
+  const metadata = await fetchMetadata(
+    request,
     parsedIcMetadataRequestUrl.canisterId,
-    {
-      ...request,
-      url: '/',
-    },
   );
 
-  const responseBody = getResponseBody(response);
-  const $ = cheerio.load(responseBody);
-
-  const metadata = parseMetadata($, parsedIcMetadataRequestUrl.canisterId);
   switch (parsedIcMetadataRequestUrl.method) {
     case 'icon':
-      const iconResponse = await makeIcHttpRequest(
-        parsedIcMetadataRequestUrl.canisterId,
-        {
-          ...request,
-          url: metadata.icon,
-        },
-      );
-
-      return iconResponse;
+      return {
+        data: Buffer.from(metadata.icon),
+      };
 
     case 'title':
       return {
