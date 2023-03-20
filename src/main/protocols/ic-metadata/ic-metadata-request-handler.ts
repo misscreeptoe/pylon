@@ -40,5 +40,10 @@ export async function icMetadataRequestHandler(
       );
 
       return iconResponse;
+
+    case 'title':
+      return {
+        data: Buffer.from(metadata.title),
+      };
   }
 }

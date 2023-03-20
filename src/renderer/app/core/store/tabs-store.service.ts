@@ -47,7 +47,7 @@ export class TabsStore extends Store<TabState> {
         tabs: tabs.push({
           id,
           url: createTab.url ?? null,
-          title: createTab.title ?? 'Directory',
+          title: createTab.title ?? 'New Tab',
         }),
       };
     });

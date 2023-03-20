@@ -1,11 +1,11 @@
-<ng-container *ngIf="dappListing">
-  <a class="dapp-card" [href]="url" target="_blank" [title]="dappListing.name">
+<ng-container *ngIf="dappListing && title$ | async as title">
+  <a class="dapp-card" [href]="url" target="_blank" [title]="title">
     <img
       class="dapp-icon"
       [src]="faviconUrl"
       [alt]="dappListing.name + ' icon'"
     />
 
-    <p class="dapp-title">{{ dappListing.name }}</p>
+    <p class="dapp-title">{{ title }}</p>
   </a>
 </ng-container>
