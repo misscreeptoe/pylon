@@ -37,6 +37,7 @@ export const idlFactory = ({ IDL }) => {
     upgrade: IDL.Opt(IDL.Bool),
     streaming_strategy: IDL.Opt(StreamingStrategy),
     status_code: IDL.Nat16,
+    certificate_version: IDL.Nat8,
   });
 
   return IDL.Service({
