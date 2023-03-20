@@ -1,16 +1,35 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
+import { Principal } from '@dfinity/principal';
+import {
+  getMinVerificationVersion,
+  getMaxVerificationVersion,
+  verifyRequestResponsePair,
+  CertificationResult,
+} from '@dfinity/response-verification';
 import { ProtocolRequest, ProtocolResponse } from 'electron';
-import { getRequestBody } from '../../electron';
+import {
+  getRequestBody,
+  getResponseBody,
+  getResponseHeaders,
+} from '../../electron';
 import {
   HeaderField,
   HttpRequest,
+  HttpResponse,
   idlFactory,
   _SERVICE,
 } from '../canister-http-interface';
 import { decodeBody } from './decode-body';
 import { streamBody } from './stream-body';
+import {
+  makeHttpRequestUpdate,
+  shouldUpgradeToUpdateCall,
+} from './upgrade-to-update';
 
-const DEFAULT_DFINITY_GATEWAY = 'https://icp-api.io';
+const DEFAULT_API_GATEWAY = 'https://icp-api.io';
+const DEFAULT_HTTP_GATEWAY = 'https://ic0.app';
+
+const FORBIDDEN_REQUEST_HEADERS = ['if-none-match'];
 
 export interface Request {
   canisterId: string;
@@ -20,47 +39,120 @@ export interface Request {
   headers: Record<string, string>;
 }
 
-function getRequestHeaders(headers: Record<string, string>): HeaderField[] {
-  const requestHeaders = Object.entries(headers);
-
-  return [...requestHeaders, ['Accept-Encoding', 'gzip, deflate, identity']];
+function requestHasHeader(headers: string[], headerName: string): boolean {
+  return Object.keys(headers).some(
+    (header) => header.toLowerCase() === headerName.toLowerCase(),
+  );
 }
 
-function getResponseHeaders(headers: HeaderField[]): Record<string, string> {
-  return headers.reduce(
-    (accum, [name, value]) => ({
-      ...accum,
-      [name]: value,
-    }),
-    {} as Record<string, string>,
+function getRequestHeaders(url: URL, request: ProtocolRequest): HeaderField[] {
+  const requestHeaders = Object.entries(request.headers).filter(
+    ([key, _value]) => !FORBIDDEN_REQUEST_HEADERS.includes(key.toLowerCase()),
   );
+  const headerKeys = Object.keys(request.headers);
+
+  if (!requestHasHeader(headerKeys, 'host')) {
+    requestHeaders.push(['Host', url.hostname]);
+  }
+
+  if (!requestHasHeader(headerKeys, 'accept-encoding')) {
+    requestHeaders.push(['Accept-Encoding', 'gzip, deflate, identity']);
+  }
+
+  return requestHeaders;
+}
+
+function verifyResponse(
+  canisterId: string,
+  rootKey: ArrayBuffer,
+  request: HttpRequest,
+  response: HttpResponse,
+  minVerificationVersion: number,
+): CertificationResult {
+  const currentTimeMs = Date.now();
+  const currentTimeNs = BigInt(currentTimeMs * 1_000_000);
+  const maxCertOffsetNs = BigInt(5 * 60 * 1_000_000_000);
+
+  return verifyRequestResponsePair(
+    {
+      url: request.url,
+      headers: request.headers,
+      method: request.method,
+    },
+    {
+      statusCode: response.status_code,
+      headers: response.headers,
+      body: new Uint8Array(response.body),
+    },
+    Principal.fromText(canisterId).toUint8Array(),
+    currentTimeNs,
+    maxCertOffsetNs,
+    new Uint8Array(rootKey),
+    minVerificationVersion,
+  );
+}
+
+function getHttpRequest(
+  url: URL,
+  request: ProtocolRequest,
+  certificateVersion: number,
+): HttpRequest {
+  const requestHeaders = getRequestHeaders(url, request);
+  const requestBody = getRequestBody(request);
+
+  return {
+    url: url.pathname,
+    method: request.method,
+    body: requestBody ?? [],
+    headers: requestHeaders,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    certificate_version: certificateVersion,
+  };
 }
 
 export async function makeIcHttpRequest(
   canisterId: string,
   request: ProtocolRequest,
 ): Promise<ProtocolResponse> {
-  const agent = new HttpAgent({ host: DEFAULT_DFINITY_GATEWAY });
+  const url = new URL(request.url, DEFAULT_HTTP_GATEWAY);
+  const minVerificationVersion = getMinVerificationVersion();
+  const maxVerificationVersion = getMaxVerificationVersion();
+
+  const agent = new HttpAgent({ host: DEFAULT_API_GATEWAY });
   const actor = Actor.createActor<_SERVICE>(idlFactory, {
     agent,
     canisterId,
   });
 
-  const requestHeaders = getRequestHeaders(request.headers);
-  const requestBody = getRequestBody(request);
+  const httpRequest = getHttpRequest(url, request, maxVerificationVersion);
+  const httpResponse = await actor.http_request(httpRequest);
 
-  const httpRequest: HttpRequest = {
-    url: request.url,
-    method: request.method,
-    body: requestBody ?? [],
-    headers: requestHeaders,
-  };
+  if (shouldUpgradeToUpdateCall(httpResponse)) {
+    return await makeHttpRequestUpdate(agent, actor, canisterId, httpRequest);
+  }
 
-  const response = await actor.http_request(httpRequest);
+  const body = await streamBody(agent, httpResponse, canisterId);
 
-  const statusCode = response.status_code;
-  const responseHeaders = getResponseHeaders(response.headers);
-  const body = await streamBody(agent, response, canisterId);
+  const verificationResult = verifyResponse(
+    canisterId,
+    agent.rootKey,
+    {
+      ...httpRequest,
+      body,
+    },
+    httpResponse,
+    minVerificationVersion,
+  );
+
+  if (!verificationResult.passed) {
+    return {
+      statusCode: 500,
+      data: 'Response failed verification',
+    };
+  }
+
+  const statusCode = httpResponse.status_code;
+  const responseHeaders = getResponseHeaders(httpResponse.headers);
   const decodedBody = decodeBody(body, responseHeaders);
 
   return {

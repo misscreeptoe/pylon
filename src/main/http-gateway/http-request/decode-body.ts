@@ -11,7 +11,7 @@ function getContentEncoding(headers: Record<string, string>): string {
 }
 
 export function decodeBody(
-  body: Uint8Array,
+  body: Buffer,
   headers: Record<string, string>,
 ): Buffer {
   const encoding = getContentEncoding(headers);
@@ -19,7 +19,7 @@ export function decodeBody(
   switch (encoding) {
     case '':
     case 'identity':
-      return Buffer.from(body);
+      return body;
     case 'gzip':
     case 'deflate':
       return Buffer.from(pako.inflate(body));

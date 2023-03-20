@@ -89,10 +89,9 @@ export async function streamBody(
   agent: HttpAgent,
   response: HttpResponse,
   canisterId: string,
-): Promise<Uint8Array> {
-  let buffer = new Uint8Array(0);
-  const firstChunk = new Uint8Array(response.body);
-  buffer = Buffer.concat([buffer, firstChunk]);
+): Promise<Buffer> {
+  let buffer = Buffer.alloc(0);
+  buffer = Buffer.concat([buffer, new Uint8Array(response.body)]);
 
   if (response.streaming_strategy.length !== 0) {
     const nextChunk = await streamRemainingChunks(
@@ -104,5 +103,5 @@ export async function streamBody(
     buffer = Buffer.concat([buffer, nextChunk]);
   }
 
-  return new Uint8Array(buffer);
+  return buffer;
 }

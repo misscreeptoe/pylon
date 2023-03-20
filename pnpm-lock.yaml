@@ -21,6 +21,7 @@ specifiers:
   '@dfinity/agent': ^0.15.1
   '@dfinity/candid': ^0.15.1
   '@dfinity/principal': ^0.15.1
+  '@dfinity/response-verification': ^0.1.0
   '@playwright/test': 1.27.1
   '@popperjs/core': ^2.11.6
   '@types/jasmine': 4.3.0
@@ -67,6 +68,7 @@ dependencies:
   '@dfinity/agent': 0.15.1_o332s3si3py6vkgnbhdn3dfmha
   '@dfinity/candid': 0.15.1_o6ib7qqltxpe7qrskddglns2ga
   '@dfinity/principal': 0.15.1_o6ib7qqltxpe7qrskddglns2ga
+  '@dfinity/response-verification': 0.1.0
   cheerio: 1.0.0-rc.12
   node-fetch: 2.6.7
   pako: 2.1.0
@@ -1890,6 +1892,10 @@ packages:
       - '@swc/wasm'
       - '@types/node'
       - typescript
+    dev: false
+
+  /@dfinity/response-verification/0.1.0:
+    resolution: {integrity: sha512-ZEycXyK6ruygRyfolrjGzU0PVs68soikE3PjbLGDZ1iTYVMT/vc9kQgEpkZRYZlDanxnD4OoAJE7fHKJhf4/bA==}
     dev: false
 
   /@discoveryjs/json-ext/0.5.7:

@@ -15,10 +15,7 @@ export async function icRequestHandler(
       return await forwardStandardHttpRequest(request);
     }
 
-    return await makeIcHttpRequest(parsedIcHttpRequestUrl.canisterId, {
-      ...request,
-      url: parsedIcHttpRequestUrl.path,
-    });
+    return await makeIcHttpRequest(parsedIcHttpRequestUrl.canisterId, request);
   } catch {
     // [TODO]: Handle error
     return {
