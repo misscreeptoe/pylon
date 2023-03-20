@@ -5,10 +5,11 @@ import {
   OnChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { SafeUrl } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 import { DappListing } from '../../model';
 import { CardComponent } from '../../ui';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MetadataService } from '../metadata';
 
 const IC_DOMAIN = 'ic0.app';
 
@@ -26,18 +27,18 @@ export class DappListingCardComponent implements OnChanges {
 
   public url?: string;
   public faviconUrl?: SafeUrl;
+  public title$?: Observable<string>;
 
-  constructor(private readonly domSanitizer: DomSanitizer) {}
+  constructor(private readonly metadataService: MetadataService) {}
 
   public ngOnChanges(): void {
     if (this.dappListing) {
-      this.faviconUrl = this.domSanitizer.bypassSecurityTrustUrl(
-        `ic-metadata:${this.dappListing.canisterId}/icon`,
-      );
+      const { canisterId } = this.dappListing;
 
-      this.url =
-        this.dappListing.url ??
-        `https://${this.dappListing.canisterId}.${IC_DOMAIN}`;
+      this.faviconUrl = this.metadataService.getFaviconUrl(canisterId);
+      this.title$ = this.metadataService.getTitle(canisterId);
+
+      this.url = this.dappListing.url ?? `https://${canisterId}.${IC_DOMAIN}`;
     }
   }
 }

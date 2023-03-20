@@ -3,7 +3,7 @@ import { ipcRenderer, webFrame } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import { IpcEventType, OpenTabIpcEvent } from '../../../ipc';
-import { TabsStore } from '../store/tabs-store.service';
+import { TabsStore } from '../store';
 
 @Injectable({
   providedIn: 'root',

@@ -4,7 +4,7 @@ import { NavComponent, NavItemDirective } from '../../ui';
 import { DashboardComponent } from '../dashboard';
 import { WebviewComponent } from '../webview';
 import { Observable } from 'rxjs';
-import { Tab, TabsStore } from '../store/tabs-store.service';
+import { Tab, TabsStore } from '../store';
 import { ImmutableArray } from '../../utils';
 
 @Component({
