@@ -8,10 +8,10 @@ import {
 export type ElectronUploadData = UploadData | UploadFile | UploadRawData;
 
 /**
- * Determines if the provided object matches the {@link UploadData} interface.
+ * Determines if the provided object matches the `UploadData` interface.
  *
  * @param uploadData The object to check.
- * @returns `true` if the object matches the {@link UploadData} interface, `false` otherwise.
+ * @returns `true` if the object matches the `UploadData` interface, `false` otherwise.
  */
 function isUploadData(
   uploadData: ElectronUploadData,
@@ -20,17 +20,17 @@ function isUploadData(
     typeof uploadData === 'object' &&
     'bytes' in uploadData &&
     uploadData.bytes instanceof Buffer &&
-    // UploadData does not have the `type` property but RawData does,
+    // `UploadData` does not have the `type` property but RawData does,
     // this is the only differentiating property between these two types.
     !('type' in uploadData)
   );
 }
 
 /**
- * Determines if the provided object matches the {@link UploadFile} interface.
+ * Determines if the provided object matches the `UploadFile` interface.
  *
  * @param uploadFile The object to check.
- * @returns `true` if the object matches the {@link UploadFile} interface, `false` otherwise.
+ * @returns `true` if the object matches the `UploadFile` interface, `false` otherwise.
  */
 function isUploadFile(
   uploadFile: ElectronUploadData,
@@ -52,10 +52,10 @@ function isUploadFile(
 }
 
 /**
- * Determines if the provided object matches the {@link UploadRawData} interface.
+ * Determines if the provided object matches the `UploadRawData` interface.
  *
  * @param uploadRawData The object to check.
- * @returns `true` if the provided object matches the UploadRawData interface, `false` otherwise.
+ * @returns `true` if the provided object matches the `UploadRawData` interface, `false` otherwise.
  */
 function isUploadRawData(
   uploadRawData: ElectronUploadData,
@@ -71,10 +71,10 @@ function isUploadRawData(
 }
 
 /**
- * Extracts the body from the provided [request]{@link Electron.ProtocolRequest} object as a {@link Buffer}.
+ * Extracts the body from the provided `ProtocolRequest` object as a `Buffer`.
  *
- * @param request The [request]{@link Electron.ProtocolRequest} object to extract the body from.
- * @returns The extracted body as a {@link Buffer} if it exists, `null` otherwise.
+ * @param request The `ProtocolRequest` object to extract the body from.
+ * @returns The extracted body as a `Buffer` if it exists, `null` otherwise.
  */
 export function getRequestBody(request: ProtocolRequest): Buffer | null {
   // [TODO] - in what scenarios is there more than one element in this array?

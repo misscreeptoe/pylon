@@ -1,5 +1,5 @@
 import { CustomScheme, protocol } from 'electron';
-import { icRequestHandler } from './ic-request-handler';
+import { icRequestHandler } from './request-handlers';
 
 export const icProtocolScheme: CustomScheme = {
   scheme: 'https',

@@ -1,3 +1,4 @@
+import { Principal } from '@dfinity/principal';
 import { ProtocolRequest } from 'electron';
 import { getResponseBody } from '../../electron';
 import { makeIcHttpRequest } from '../../http-gateway';
@@ -9,7 +10,7 @@ export interface EnrichedMetadata extends Metadata {
 
 export async function enrichMetadata(
   request: ProtocolRequest,
-  canisterId: string,
+  canisterId: Principal,
   metadata: Metadata,
 ): Promise<EnrichedMetadata> {
   const iconResponse = await makeIcHttpRequest(canisterId, {

@@ -9,7 +9,7 @@ import {
 import { IpcEventType, OpenTabIpcEvent } from '../ipc';
 import {
   isInternetIdentityUrl,
-  tryParseIcHttpRequestUrl,
+  getCanisterIdFromDomain,
 } from '../http-gateway';
 import { getThemeOptions } from './window-theme';
 import { getWindowUrl } from './window-url';
@@ -73,10 +73,10 @@ export class AppWindow {
   }
 
   private onWindowOpen(details: HandlerDetails): ReturnType<WindowOpenHandler> {
-    const parsedIcHttpRequestUrl = tryParseIcHttpRequestUrl(details.url);
+    const canisterId = getCanisterIdFromDomain(details.url);
 
     // open URLs that are not for the IC in the default system browser
-    if (!parsedIcHttpRequestUrl) {
+    if (!canisterId) {
       shell.openExternal(details.url);
 
       return {

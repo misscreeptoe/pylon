@@ -1,4 +1,5 @@
 import { ActorSubclass, HttpAgent } from '@dfinity/agent';
+import { Principal } from '@dfinity/principal';
 import { ProtocolResponse } from 'electron';
 import { getResponseHeaders } from '../../electron';
 import {
@@ -16,7 +17,7 @@ export function shouldUpgradeToUpdateCall(response: HttpResponse): boolean {
 export async function makeHttpRequestUpdate(
   agent: HttpAgent,
   actor: ActorSubclass<_SERVICE>,
-  canisterId: string,
+  canisterId: Principal,
   httpRequest: HttpRequest,
 ): Promise<ProtocolResponse> {
   const response = await actor.http_request_update(httpRequest);

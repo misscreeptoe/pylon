@@ -1,6 +1,6 @@
 import fetch, { Headers } from 'node-fetch';
 import { ProtocolRequest, ProtocolResponse } from 'electron';
-import { getRequestBody } from '../../electron';
+import { getRequestBody } from '../../../electron';
 
 const DEFAULT_API_GATEWAY = 'icp-api.io';
 const API_GATEWAYS = [
@@ -14,7 +14,7 @@ const API_GATEWAYS = [
  * Deteremines if the provided URL is an Internet Computer API call.
  *
  * @param url The URL to check.
- * @returns True if the provided URL is an Internet Computer API call, false otherwise.
+ * @returns `true` if the provided URL is an Internet Computer API call, `false` otherwise.
  */
 export function isIcApiRequest(url: string): boolean {
   const { pathname, hostname } = new URL(url);
@@ -27,13 +27,12 @@ export function isIcApiRequest(url: string): boolean {
 }
 
 /**
- * Forwards a [request]{@link Electron.ProtocolRequest} as an Internet Computer API request.
+ * Forwards a `ProtocolRequest` as an Internet Computer API request.
  * The URL will be rewritten so that the request is forwarded to an appropriate API gateway.
  * Response content type will be forced to be CBOR,
  * so that malicious responses cannot return JavaScript that will be automatically executed by the browser.
  *
- * @param url The original request [URL]{@link URL}.
- * @param request The original [request]{@link Electron.ProtocolRequest}.
+ * @param request The original `ProtocolRequest`.
  * @returns The response resulting from forwarding the request.
  */
 export async function forwardIcApiRequest(

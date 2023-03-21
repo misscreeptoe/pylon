@@ -8,12 +8,13 @@ import {
   streamingCallbackHttpResponse,
   isJsonObject,
 } from '../../http-gateway';
+import { Principal } from '@dfinity/principal';
 
 const MAX_CALLBACKS = 1000;
 
 async function streamRemainingChunks(
   agent: HttpAgent,
-  canisterId: string,
+  canisterId: Principal,
   streamingStrategy: StreamingStrategy,
 ): Promise<Uint8Array> {
   let remainingChunks = new Uint8Array(0);
@@ -63,7 +64,7 @@ async function streamRemainingChunks(
 async function queryNextChunk(
   token: Token,
   agent: HttpAgent,
-  canisterId: string,
+  canisterId: Principal,
   callBackFunc: string,
 ): Promise<QueryResponse> {
   const tokenType = token.type();
@@ -88,7 +89,7 @@ function isStreamingCallbackResponse(
 export async function streamBody(
   agent: HttpAgent,
   response: HttpResponse,
-  canisterId: string,
+  canisterId: Principal,
 ): Promise<Buffer> {
   let buffer = Buffer.alloc(0);
   buffer = Buffer.concat([buffer, new Uint8Array(response.body)]);
