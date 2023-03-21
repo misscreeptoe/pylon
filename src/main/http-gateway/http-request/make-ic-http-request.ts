@@ -127,6 +127,13 @@ export async function makeIcHttpRequest(
     return await makeHttpRequestUpdate(agent, actor, canisterId, httpRequest);
   }
 
+  if (httpResponse.status_code >= 300 && httpResponse.status_code < 400) {
+    return {
+      statusCode: 500,
+      data: 'Redirects not allowed',
+    };
+  }
+
   const body = await streamBody(agent, httpResponse, canisterId);
 
   const verificationResult = verifyResponse(

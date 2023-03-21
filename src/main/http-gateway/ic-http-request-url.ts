@@ -1,8 +1,6 @@
 import { Principal } from '@dfinity/principal';
 
 const canisterIdMapping = {
-  ['nfid.one']: '3y5ko-7qaaa-aaaal-aaaaq-cai',
-  ['dscvr.one']: 'h5aet-waaaa-aaaab-qaamq-cai',
   ['oc.app']: '6hsbt-vqaaa-aaaaf-aaafq-cai',
   ['nns.ic0.app']: 'qoctq-giaaa-aaaaa-aaaea-cai',
   ['identity.ic0.app']: 'rdmx6-jaaaa-aaaaa-aaadq-cai',
