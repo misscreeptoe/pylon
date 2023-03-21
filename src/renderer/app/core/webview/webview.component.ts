@@ -27,8 +27,8 @@ export class WebviewComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     this.webview = document.querySelector('webview');
 
-    // this.webview.addEventListener('dom-ready', () => {
-    //   this.webview.openDevTools();
-    // });
+    this.webview.addEventListener('dom-ready', () => {
+      this.webview.openDevTools();
+    });
   }
 }

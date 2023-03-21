@@ -1,3 +1,4 @@
+import { Principal } from '@dfinity/principal';
 import * as cheerio from 'cheerio';
 import { ProtocolRequest } from 'electron';
 import { getResponseBody } from '../../electron';
@@ -19,7 +20,8 @@ export async function fetchMetadata(
     return cacheEntry;
   }
 
-  const response = await makeIcHttpRequest(canisterId, {
+  const principal = Principal.fromText(canisterId);
+  const response = await makeIcHttpRequest(principal, {
     ...request,
     url: '/',
   });
@@ -28,7 +30,7 @@ export async function fetchMetadata(
   const $ = cheerio.load(responseBody);
 
   const metadata = parseMetadata($, canisterId);
-  const enrichedMetadata = await enrichMetadata(request, canisterId, metadata);
+  const enrichedMetadata = await enrichMetadata(request, principal, metadata);
 
   await insertMetadataCacheEntry(canisterId, enrichedMetadata);
 

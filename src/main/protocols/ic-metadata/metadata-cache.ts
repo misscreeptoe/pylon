@@ -1,3 +1,4 @@
+import { Principal } from '@dfinity/principal';
 import { CacheManager } from '../../cache';
 import { EnrichedMetadata } from './enrich-metadata';
 

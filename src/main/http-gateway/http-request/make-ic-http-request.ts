@@ -7,11 +7,7 @@ import {
   CertificationResult,
 } from '@dfinity/response-verification';
 import { ProtocolRequest, ProtocolResponse } from 'electron';
-import {
-  getRequestBody,
-  getResponseBody,
-  getResponseHeaders,
-} from '../../electron';
+import { getRequestBody, getResponseHeaders } from '../../electron';
 import {
   HeaderField,
   HttpRequest,
@@ -63,7 +59,7 @@ function getRequestHeaders(url: URL, request: ProtocolRequest): HeaderField[] {
 }
 
 function verifyResponse(
-  canisterId: string,
+  canisterId: Principal,
   rootKey: ArrayBuffer,
   request: HttpRequest,
   response: HttpResponse,
@@ -84,7 +80,7 @@ function verifyResponse(
       headers: response.headers,
       body: new Uint8Array(response.body),
     },
-    Principal.fromText(canisterId).toUint8Array(),
+    canisterId.toUint8Array(),
     currentTimeNs,
     maxCertOffsetNs,
     new Uint8Array(rootKey),
@@ -111,7 +107,7 @@ function getHttpRequest(
 }
 
 export async function makeIcHttpRequest(
-  canisterId: string,
+  canisterId: Principal,
   request: ProtocolRequest,
 ): Promise<ProtocolResponse> {
   const url = new URL(request.url, DEFAULT_HTTP_GATEWAY);

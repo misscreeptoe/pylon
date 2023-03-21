@@ -31,6 +31,16 @@ const DAPP_LISTINGS: DappListing[] = [
     name: 'Taggr',
     canisterId: '6qfxa-ryaaa-aaaai-qbhsq-cai',
   },
+  {
+    name: 'Open Chat',
+    canisterId: '6hsbt-vqaaa-aaaaf-aaafq-cai',
+    url: 'https://oc.app',
+  },
+  {
+    name: 'DSCVR',
+    canisterId: 'h5aet-waaaa-aaaab-qaamq-cai',
+    url: 'https://dscvr.one',
+  },
 ];
 
 @Component({
