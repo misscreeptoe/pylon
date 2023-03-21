@@ -36,11 +36,6 @@ const DAPP_LISTINGS: DappListing[] = [
     canisterId: '6hsbt-vqaaa-aaaaf-aaafq-cai',
     url: 'https://oc.app',
   },
-  {
-    name: 'DSCVR',
-    canisterId: 'h5aet-waaaa-aaaab-qaamq-cai',
-    url: 'https://dscvr.one',
-  },
 ];
 
 @Component({
