@@ -35,5 +35,29 @@ export class ElectronService {
         });
       },
     );
+
+    this.ipcRenderer.on(IpcEventType.nextTab, () => {
+      this.ngZone.run(() => {
+        this.tabsStore.nextTab();
+      });
+    });
+
+    this.ipcRenderer.on(IpcEventType.previousTab, () => {
+      this.ngZone.run(() => {
+        this.tabsStore.previousTab();
+      });
+    });
+
+    this.ipcRenderer.on(IpcEventType.addNewTab, () => {
+      this.ngZone.run(() => {
+        this.tabsStore.addTab({});
+      });
+    });
+
+    this.ipcRenderer.on(IpcEventType.closeCurrentTab, () => {
+      this.ngZone.run(() => {
+        this.tabsStore.removeCurrentTab();
+      });
+    });
   }
 }

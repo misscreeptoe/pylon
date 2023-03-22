@@ -40,6 +40,18 @@ export class TabsStore extends Store<TabState> {
 
   public addTab(createTab: CreateTab = {}): void {
     this.setState(({ tabs }) => {
+      const currentTab = this.getCurrentTab();
+      const currentTabIndex = this.getCurrentTabIndex();
+
+      if (!currentTab?.url && createTab?.url) {
+        return {
+          tabs: tabs.replaceByIndex(currentTabIndex, {
+            ...currentTab,
+            ...createTab,
+          }),
+        };
+      }
+
       const id = this.previousTabId++;
 
       return {
@@ -59,15 +71,56 @@ export class TabsStore extends Store<TabState> {
     }));
   }
 
+  public nextTab(): void {
+    let nextTabIndex = this.getCurrentTabIndex() + 1;
+    if (nextTabIndex >= this.state.tabs.length) {
+      nextTabIndex = 0;
+    }
+    const nextTabId = this.state.tabs.get(nextTabIndex).id;
+
+    this.setActiveTab(nextTabId);
+  }
+
+  public previousTab(): void {
+    let previousTabIndex = this.getCurrentTabIndex() - 1;
+    if (previousTabIndex < 0) {
+      previousTabIndex = this.state.tabs.length - 1;
+    }
+    const previousTabId = this.state.tabs.get(previousTabIndex).id;
+
+    this.setActiveTab(previousTabId);
+  }
+
   public removeTab(tab: Tab): void {
+    if (this.state.tabs.length <= 1) {
+      return;
+    }
+
     this.setState(({ tabs }) => {
       const indexToRemove = tabs.findIndex(({ id }) => id === tab.id);
-      const newActiveTab = tabs.get(indexToRemove - 1) ?? tabs.get(0);
+
+      const newActiveTab =
+        indexToRemove === 0
+          ? tabs.get(1)
+          : tabs.get(indexToRemove - 1) ?? tabs.get(0);
 
       return {
         active: newActiveTab.id,
         tabs: tabs.removeByIndex(indexToRemove),
       };
     });
+  }
+
+  public removeCurrentTab(): void {
+    const currentTab = this.getCurrentTab();
+    this.removeTab(currentTab);
+  }
+
+  private getCurrentTabIndex(): number {
+    return this.state.tabs.findIndex((tab) => tab.id === this.state.active);
+  }
+
+  private getCurrentTab(): Tab {
+    return this.state.tabs.find((tab) => tab.id === this.state.active);
   }
 }
