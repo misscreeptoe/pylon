@@ -6,10 +6,28 @@
   height: 100%;
 }
 
+.tabs-container {
+  width: 100%;
+  position: relative;
+  border-bottom: #{$nav-tabs-border-width} solid #{$nav-tabs-border-color};
+}
+
 .nav {
   height: calc(
     env(titlebar-area-height, var(--fallback-title-bar-height)) + #{$nav-tabs-border-width}
   );
+  width: calc(env(titlebar-area-width, var(--fallback-title-bar-width)));
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+
+  border-bottom: none;
 }
 
 .nav-item {

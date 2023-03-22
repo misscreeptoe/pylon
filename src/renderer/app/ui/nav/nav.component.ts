@@ -1,6 +1,7 @@
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   EventEmitter,
@@ -30,9 +31,12 @@ export class NavComponent implements AfterContentInit {
   public tabActiveStatus: Record<number, boolean> = {};
   public currentActiveTab: number | null = null;
 
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+
   @Input()
   public set activeTab(activeTab: number) {
     this.currentActiveTab = activeTab;
+    this.updateTabActiveStatus();
   }
 
   public ngAfterContentInit(): void {
@@ -40,6 +44,7 @@ export class NavComponent implements AfterContentInit {
 
     this.navItems.changes.subscribe(() => {
       this.updateTabActiveStatus();
+      this.changeDetectorRef.markForCheck();
     });
 
     this.updateTabActiveStatus();
@@ -56,6 +61,10 @@ export class NavComponent implements AfterContentInit {
   }
 
   private updateTabActiveStatus(): void {
+    if (!this.navItems) {
+      return;
+    }
+
     this.tabActiveStatus = {};
 
     this.navItems.forEach((navItem) => {

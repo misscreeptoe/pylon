@@ -1,6 +1,8 @@
 import {
   BrowserWindow,
+  Event,
   HandlerDetails,
+  Input,
   nativeTheme,
   screen,
   shell,
@@ -13,6 +15,10 @@ import {
 } from '../http-gateway';
 import { getThemeOptions } from './window-theme';
 import { getWindowUrl } from './window-url';
+import {
+  getKeyboardShortcutAction,
+  KeyboardShortcutAction,
+} from './keyboard-shortcut-mappings';
 
 type WindowOpenHandler = Parameters<WebContents['setWindowOpenHandler']>[0];
 
@@ -52,9 +58,16 @@ export class AppWindow {
       this.onWindowOpen.bind(this),
     );
     this.browserWindow.webContents.on(
+      'before-input-event',
+      this.onInputEvent.bind(this),
+    );
+
+    this.browserWindow.webContents.on(
       'did-attach-webview',
-      (_event, webcontents) =>
-        webcontents.setWindowOpenHandler(this.onWindowOpen.bind(this)),
+      (_event, webcontents) => {
+        webcontents.setWindowOpenHandler(this.onWindowOpen.bind(this));
+        webcontents.on('before-input-event', this.onInputEvent.bind(this));
+      },
     );
   }
 
@@ -63,6 +76,36 @@ export class AppWindow {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     this.browserWindow = null;
+  }
+
+  private onInputEvent(event: Event, input: Input): void {
+    const keyboardShortcutAction = getKeyboardShortcutAction(input);
+
+    switch (keyboardShortcutAction) {
+      case KeyboardShortcutAction.nextTab: {
+        this.browserWindow.webContents.send(IpcEventType.nextTab);
+        event.preventDefault();
+        break;
+      }
+
+      case KeyboardShortcutAction.previousTab: {
+        this.browserWindow.webContents.send(IpcEventType.previousTab);
+        event.preventDefault();
+        break;
+      }
+
+      case KeyboardShortcutAction.closeCurrentTab: {
+        this.browserWindow.webContents.send(IpcEventType.closeCurrentTab);
+        event.preventDefault();
+        break;
+      }
+
+      case KeyboardShortcutAction.addNewTab: {
+        this.browserWindow.webContents.send(IpcEventType.addNewTab);
+        event.preventDefault();
+        break;
+      }
+    }
   }
 
   private onThemeUpdated(): void {

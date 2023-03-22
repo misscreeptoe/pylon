@@ -20,12 +20,16 @@ export class ImmutableArray<T> implements Iterable<T> {
     return new ImmutableArray([...this.innerArray, item]);
   }
 
+  public find(findFn: (item: T) => boolean): T {
+    return this.innerArray.find(findFn);
+  }
+
   public findIndex(findFn: (item: T) => boolean): number {
     return this.innerArray.findIndex(findFn);
   }
 
   public removeByIndex(indexToRemove: number): ImmutableArray<T> {
-    if (indexToRemove > this.length - 1 || indexToRemove < 0) {
+    if (this.isOutOfBounds(indexToRemove)) {
       return new ImmutableArray(this.innerArray);
     }
 
@@ -33,5 +37,21 @@ export class ImmutableArray<T> implements Iterable<T> {
       ...this.innerArray.slice(0, indexToRemove),
       ...this.innerArray.slice(indexToRemove + 1),
     ]);
+  }
+
+  public replaceByIndex(indexToReplace: number, item: T): ImmutableArray<T> {
+    if (this.isOutOfBounds(indexToReplace)) {
+      return new ImmutableArray(this.innerArray);
+    }
+
+    return new ImmutableArray([
+      ...this.innerArray.slice(0, indexToReplace),
+      item,
+      ...this.innerArray.slice(indexToReplace + 1),
+    ]);
+  }
+
+  private isOutOfBounds(index: number): boolean {
+    return index > this.length - 1 || index < 0;
   }
 }
