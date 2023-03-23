@@ -23,12 +23,25 @@ const INITIAL_STATE: TabState = {
   tabs: new ImmutableArray(),
 };
 
+export interface TabStatus {
+  [key: Tab['id']]: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class TabsStore extends Store<TabState> {
   public tabs$ = this.select(({ tabs }) => tabs);
   public activeTab$ = this.select(({ active }) => active);
+  public tabStatus$ = this.select(({ active, tabs }) =>
+    tabs.reduce<TabStatus>(
+      (accum, item) => ({
+        ...accum,
+        [item.id]: item.id === active,
+      }),
+      {},
+    ),
+  );
 
   private previousTabId = 0;
 
