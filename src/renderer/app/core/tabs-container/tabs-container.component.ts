@@ -30,4 +30,8 @@ export class TabsContainerComponent implements OnInit {
   public onTabCloseClicked(tab: Tab): void {
     this.tabsStore.removeTab(tab);
   }
+
+  public onNewTabClicked(): void {
+    this.tabsStore.addTab();
+  }
 }

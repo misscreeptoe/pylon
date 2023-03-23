@@ -1,13 +1,14 @@
 {
   "root": true,
   "ignorePatterns": [
-    "app/**/*", // ignore nodeJs files
     "dist/**/*",
     "release/**/*"
   ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": [
+        "*.ts"
+      ],
       "parserOptions": {
         "project": [
           "./src/main/tsconfig.app.json",
@@ -32,12 +33,18 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "no-underscore-dangle": "off",
+        "@typescript-eslint/adjacent-overload-signatures": "off"
       }
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
       "rules": {}
     }
   ]
