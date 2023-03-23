@@ -1,0 +1,17 @@
+@import 'common';
+@import 'bootstrap/scss/buttons';
+
+$btn-icon-size: 36px;
+
+.btn-icon {
+  background: transparent;
+  border: transparent;
+  padding: 0;
+  border-radius: $btn-icon-size;
+  width: $btn-icon-size;
+  height: $btn-icon-size;
+
+  &:disabled {
+    background: transparent;
+  }
+}
