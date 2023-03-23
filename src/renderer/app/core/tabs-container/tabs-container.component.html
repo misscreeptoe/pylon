@@ -1,0 +1,6 @@
+<app-tabs
+  [tabs]="tabs$ | async"
+  [tabStatus]="tabStatus$ | async"
+  (tabClick)="onTabClicked($event)"
+  (tabCloseClick)="onTabClicked($event)"
+></app-tabs>

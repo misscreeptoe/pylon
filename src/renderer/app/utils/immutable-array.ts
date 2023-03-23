@@ -28,6 +28,10 @@ export class ImmutableArray<T> implements Iterable<T> {
     return this.innerArray.findIndex(findFn);
   }
 
+  public reduce<U>(reduceFn: (accum: U, item: T) => U, init: U): U {
+    return this.innerArray.reduce(reduceFn, init);
+  }
+
   public removeByIndex(indexToRemove: number): ImmutableArray<T> {
     if (this.isOutOfBounds(indexToRemove)) {
       return new ImmutableArray(this.innerArray);

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutTabsComponent } from '../layout-tabs';
+import { TabsContainerComponent } from '../tabs-container';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, LayoutTabsComponent],
+  imports: [CommonModule, TabsContainerComponent],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
