@@ -1,15 +1,12 @@
-import {
-  BrowserView,
-  BrowserWindow,
-  ipcMain,
-  IpcMainInvokeEvent,
-} from 'electron';
+import { BrowserView, BrowserWindow } from 'electron';
 import {
   BgAddTabIpcEvent,
+  BgUpdateTabTitleIpcEvent,
   BG_ADD_TAB,
   BG_NEXT_TAB,
   BG_PREV_TAB,
   BG_REMOVE_CURRENT_TAB,
+  BG_UPDATE_TAB_TITLE,
   FgRemoveTabIpcEvent,
   FgShowTabIpcEvent,
   FG_ADD_TAB,
@@ -25,29 +22,27 @@ export class TabManager {
   private tabs: Record<string, BrowserView | null> = {};
 
   constructor(private readonly browserWindow: BrowserWindow) {
-    ipcMain.handle(FG_LOADED, (event) => {
-      if (this.eventSentByWebContents(event)) {
-        this.addNewTab();
-      }
+    browserWindow.webContents.ipc.handle(FG_LOADED, (_event) => {
+      this.addNewTab();
     });
 
-    ipcMain.handle(FG_ADD_TAB, (event) => {
-      if (this.eventSentByWebContents(event)) {
-        this.addNewTab();
-      }
+    browserWindow.webContents.ipc.handle(FG_ADD_TAB, (_event) => {
+      this.addNewTab();
     });
 
-    ipcMain.handle(FG_REMOVE_TAB, (event, payload: FgRemoveTabIpcEvent) => {
-      if (this.eventSentByWebContents(event)) {
+    browserWindow.webContents.ipc.handle(
+      FG_REMOVE_TAB,
+      (_event, payload: FgRemoveTabIpcEvent) => {
         this.removeTab(payload.id);
-      }
-    });
+      },
+    );
 
-    ipcMain.handle(FG_SHOW_TAB, (event, payload: FgShowTabIpcEvent) => {
-      if (this.eventSentByWebContents(event)) {
+    browserWindow.webContents.ipc.handle(
+      FG_SHOW_TAB,
+      (_event, payload: FgShowTabIpcEvent) => {
         this.setCurrentTab(payload.id);
-      }
-    });
+      },
+    );
   }
 
   private get currentTab(): BrowserView | null {
@@ -105,6 +100,11 @@ export class TabManager {
   private setCurrentTabBrowserView(url: string): BrowserView {
     const browserView = createBrowserView(this.browserWindow, url);
 
+    const tabId = this.currentTabId;
+    browserView.webContents.on('page-title-updated', (_event, title) => {
+      this.sentUpdateTabTitleEvent(tabId, title);
+    });
+
     this.tabs[this.currentTabId] = browserView;
     this.browserWindow.setBrowserView(browserView);
 
@@ -131,9 +131,12 @@ export class TabManager {
     this.browserWindow.webContents.send(BG_REMOVE_CURRENT_TAB);
   }
 
-  private eventSentByWebContents(event: IpcMainInvokeEvent): boolean {
-    const { sender } = event;
+  private sentUpdateTabTitleEvent(id: string, title: string): void {
+    const payload: BgUpdateTabTitleIpcEvent = {
+      id,
+      title,
+    };
 
-    return sender === this.browserWindow.webContents;
+    this.browserWindow.webContents.send(BG_UPDATE_TAB_TITLE, payload);
   }
 }
