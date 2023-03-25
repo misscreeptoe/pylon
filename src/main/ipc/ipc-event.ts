@@ -1,11 +1,60 @@
-export enum IpcEventType {
-  openTab = 'open-tab',
-  nextTab = 'next-tab',
-  previousTab = 'previous-tab',
-  closeCurrentTab = 'close-current-tab',
-  addNewTab = 'add-new-tab',
+/**
+ * This file must be kept in sync with `src/renderer/ipc/ipc-event.ts`.
+ */
+
+/**
+ * Informs the background process that the foreground process has finished loading.
+ */
+export const FG_LOADED = 'fg:loaded';
+
+/**
+ * Informs the background process to create a new tab.
+ * Used when the "new tab" button has been clicked on the foreground process.
+ */
+export const FG_ADD_TAB = 'fg:add-tab';
+
+/**
+ * Informs the background process to remove a tab.
+ * Used when the "remove tab" button has been clicked on the foreground process.
+ */
+export const FG_REMOVE_TAB = 'fg:remove-tab';
+export interface FgRemoveTabIpcEvent {
+  id: string;
 }
 
-export interface OpenTabIpcEvent {
+/**
+ * Informs the background process to show a tab.
+ * Used when a tab has been clicked on the foreground process.
+ */
+export const FG_SHOW_TAB = 'fg:show-tab';
+export interface FgShowTabIpcEvent {
+  id: string;
+}
+
+/**
+ * Informs the foreground process to navigate to the "next" tab.
+ * Used when the keyboard combination is entered.
+ */
+export const BG_NEXT_TAB = 'bg:next-tab';
+
+/**
+ * Informs the foreground process to navigate to the "previous" tab.
+ * Used when the keyboard combination is entered.
+ */
+export const BG_PREV_TAB = 'bg:prev-tab';
+
+/**
+ * Informs the foreground process to add a new tab.
+ * Used when when the foreground process has finished loading or the keyboard combination is entered.
+ */
+export const BG_ADD_TAB = 'bg:add-tab';
+export interface BgAddTabIpcEvent {
+  id: string;
   url?: string;
 }
+
+/**
+ * Informs the foreground process to remove the current tab.
+ * Used when the keyboard combination is entered.
+ */
+export const BG_REMOVE_CURRENT_TAB = 'bg:remove-current-tab';

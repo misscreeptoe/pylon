@@ -3,79 +3,55 @@ import {
   Event,
   HandlerDetails,
   Input,
-  nativeTheme,
-  screen,
   shell,
   WebContents,
 } from 'electron';
-import { IpcEventType, OpenTabIpcEvent } from '../ipc';
 import {
   isInternetIdentityUrl,
   getCanisterIdFromDomain,
 } from '../http-gateway';
 import { getThemeOptions } from './window-theme';
-import { getWindowUrl } from './window-url';
 import {
   getKeyboardShortcutAction,
   KeyboardShortcutAction,
 } from './keyboard-shortcut-mappings';
+import { TypedEventEmitter } from '../util';
+import { TabManager } from './tab-manager';
+import { createBrowserWindow } from './browser-window';
 
 type WindowOpenHandler = Parameters<WebContents['setWindowOpenHandler']>[0];
 
-export class AppWindow {
-  private browserWindow: BrowserWindow | null = null;
+export type AppWindowEvents = {
+  closed: [];
+};
 
-  constructor() {
-    this.createWindow();
-  }
+export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
+  private readonly browserWindow: BrowserWindow;
+  private readonly tabManager: TabManager;
 
-  private createWindow(): void {
-    const size = screen.getPrimaryDisplay().workAreaSize;
-    const windowUrl = getWindowUrl();
+  constructor(private readonly id: string) {
+    super();
 
-    this.browserWindow = new BrowserWindow({
-      ...getThemeOptions(),
-      x: 0,
-      y: 0,
-      width: size.width,
-      height: size.height,
-      title: 'Pylon',
-      titleBarStyle: 'hidden',
-      webPreferences: {
-        webviewTag: true,
-        nodeIntegration: true,
-        allowRunningInsecureContent: windowUrl.insecure,
-        contextIsolation: false,
-      },
+    this.browserWindow = createBrowserWindow();
+    this.browserWindow.on('close', () => {
+      this.emit('closed');
     });
 
-    this.browserWindow.setMenuBarVisibility(false);
-    this.browserWindow.loadURL(windowUrl.href);
+    this.tabManager = new TabManager(this.browserWindow);
 
-    nativeTheme.on('updated', this.onThemeUpdated.bind(this));
-    this.browserWindow.on('close', this.onWindowClosed.bind(this));
-    this.browserWindow.webContents.setWindowOpenHandler(
-      this.onWindowOpen.bind(this),
-    );
-    this.browserWindow.webContents.on(
-      'before-input-event',
-      this.onInputEvent.bind(this),
-    );
-
-    this.browserWindow.webContents.on(
-      'did-attach-webview',
-      (_event, webcontents) => {
-        webcontents.setWindowOpenHandler(this.onWindowOpen.bind(this));
-        webcontents.on('before-input-event', this.onInputEvent.bind(this));
-      },
-    );
+    this.initWebContents(this.browserWindow.webContents);
   }
 
-  private onWindowClosed(): void {
-    // Dereference the window object, usually you would store window
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    this.browserWindow = null;
+  public updateTheme(): void {
+    const { backgroundColor, titleBarOverlay } = getThemeOptions();
+
+    this.browserWindow.setBackgroundColor(backgroundColor);
+    this.browserWindow.setTitleBarOverlay(titleBarOverlay);
+  }
+
+  private initWebContents(webContents: WebContents): void {
+    webContents.setWindowOpenHandler(this.onWindowOpen.bind(this));
+    webContents.on('before-input-event', this.onInputEvent.bind(this));
   }
 
   private onInputEvent(event: Event, input: Input): void {
@@ -83,36 +59,29 @@ export class AppWindow {
 
     switch (keyboardShortcutAction) {
       case KeyboardShortcutAction.nextTab: {
-        this.browserWindow.webContents.send(IpcEventType.nextTab);
+        this.tabManager.nextTab();
         event.preventDefault();
         break;
       }
 
       case KeyboardShortcutAction.previousTab: {
-        this.browserWindow.webContents.send(IpcEventType.previousTab);
+        this.tabManager.prevTab();
         event.preventDefault();
         break;
       }
 
       case KeyboardShortcutAction.closeCurrentTab: {
-        this.browserWindow.webContents.send(IpcEventType.closeCurrentTab);
+        this.tabManager.removeCurrentTab();
         event.preventDefault();
         break;
       }
 
       case KeyboardShortcutAction.addNewTab: {
-        this.browserWindow.webContents.send(IpcEventType.addNewTab);
+        this.tabManager.addNewTab();
         event.preventDefault();
         break;
       }
     }
-  }
-
-  private onThemeUpdated(): void {
-    const { backgroundColor, titleBarOverlay } = getThemeOptions();
-
-    this.browserWindow.setBackgroundColor(backgroundColor);
-    this.browserWindow.setTitleBarOverlay(titleBarOverlay);
   }
 
   private onWindowOpen(details: HandlerDetails): ReturnType<WindowOpenHandler> {
@@ -154,9 +123,7 @@ export class AppWindow {
       // open in a new tab
       case 'foreground-tab':
       case 'background-tab':
-        this.sendOpenTabEvent({
-          url: details.url,
-        });
+        this.openUrlInTab(details.url);
         return {
           action: 'deny',
         };
@@ -174,7 +141,8 @@ export class AppWindow {
     }
   }
 
-  private sendOpenTabEvent(openTabEvent: OpenTabIpcEvent): void {
-    this.browserWindow.webContents.send(IpcEventType.openTab, openTabEvent);
+  private openUrlInTab(url: string): void {
+    const browserView = this.tabManager.openUrlInTab(url);
+    this.initWebContents(browserView.webContents);
   }
 }
