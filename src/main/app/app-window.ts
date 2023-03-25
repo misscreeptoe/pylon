@@ -13,8 +13,13 @@ import {
 } from '../http-gateway';
 import { getThemeOptions } from './window-theme';
 import {
-  getKeyboardShortcutAction,
-  KeyboardShortcutAction,
+  isRemoveCurrentTab,
+  isNextTab,
+  isPrevTab,
+  isAddNewTab,
+  isReloadCurrentTab,
+  isHardReloadCurrentTab,
+  isToggleDevTools,
 } from './keyboard-shortcut-mappings';
 import { TypedEventEmitter, uuid } from '../util';
 import { createBrowserView, createBrowserWindow } from './browser-window';
@@ -102,32 +107,46 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
   }
 
   private onInputEvent(event: Event, input: Input): void {
-    const keyboardShortcutAction = getKeyboardShortcutAction(input);
+    if (isNextTab(input)) {
+      this.sendNextTabEvent();
+      event.preventDefault();
+      return;
+    }
 
-    switch (keyboardShortcutAction) {
-      case KeyboardShortcutAction.nextTab: {
-        this.sendNextTabEvent();
-        event.preventDefault();
-        break;
-      }
+    if (isPrevTab(input)) {
+      this.sendPrevTabEvent();
+      event.preventDefault();
+      return;
+    }
 
-      case KeyboardShortcutAction.previousTab: {
-        this.sendPrevTabEvent();
-        event.preventDefault();
-        break;
-      }
+    if (isReloadCurrentTab(input)) {
+      this.reloadCurrentTab();
+      event.preventDefault();
+      return;
+    }
 
-      case KeyboardShortcutAction.closeCurrentTab: {
-        this.sendRemoveCurrentTabEvent();
-        event.preventDefault();
-        break;
-      }
+    if (isHardReloadCurrentTab(input)) {
+      this.hardReloadCurrentTab();
+      event.preventDefault();
+      return;
+    }
 
-      case KeyboardShortcutAction.addNewTab: {
-        this.addNewTab();
-        event.preventDefault();
-        break;
-      }
+    if (isRemoveCurrentTab(input)) {
+      this.sendRemoveCurrentTabEvent();
+      event.preventDefault();
+      return;
+    }
+
+    if (isAddNewTab(input)) {
+      this.addNewTab();
+      event.preventDefault();
+      return;
+    }
+
+    if (isToggleDevTools(input)) {
+      this.toggleDevTools();
+      event.preventDefault();
+      return;
     }
   }
 
@@ -218,6 +237,47 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
   private setCurrentTab(id: string): void {
     this.currentTabId = id;
     this.browserWindow.setBrowserView(this.currentTab);
+  }
+
+  private reloadCurrentTab(): void {
+    const currentBrowserView = this.currentTab;
+
+    if (!currentBrowserView) {
+      return;
+    }
+
+    currentBrowserView.webContents.reload();
+  }
+
+  private hardReloadCurrentTab(): void {
+    const currentBrowserView = this.currentTab;
+
+    if (!currentBrowserView) {
+      return;
+    }
+
+    currentBrowserView.webContents.reloadIgnoringCache();
+  }
+
+  private toggleDevTools(): void {
+    const currentBrowserView = this.currentTab;
+
+    if (!currentBrowserView) {
+      this.toggleWebContentsDevTools(this.browserWindow.webContents);
+      return;
+    }
+
+    this.toggleWebContentsDevTools(currentBrowserView.webContents);
+  }
+
+  private toggleWebContentsDevTools(webContents: WebContents): void {
+    if (webContents.isDevToolsOpened()) {
+      webContents.closeDevTools();
+    } else {
+      webContents.openDevTools({
+        mode: 'right',
+      });
+    }
   }
 
   private setCurrentTabBrowserView(url: string): BrowserView {

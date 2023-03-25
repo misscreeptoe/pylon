@@ -4,49 +4,38 @@ import { platform } from 'node:os';
 const currentPlatform = platform();
 const isDarwin = currentPlatform === 'darwin';
 
-export enum KeyboardShortcutAction {
-  nextTab = 'nextTab',
-  previousTab = 'previousTab',
-  closeCurrentTab = 'closeCurrentTab',
-  addNewTab = 'addNewTab',
-}
-
 function isCtrl(input: Input): boolean {
   return (isDarwin && input.meta) || input.control;
 }
 
-export function getKeyboardShortcutAction(
-  input: Input,
-): KeyboardShortcutAction | null {
-  switch (input.key.toLowerCase()) {
-    case 'tab': {
-      if (isCtrl(input)) {
-        if (input.shift) {
-          return KeyboardShortcutAction.previousTab;
-        }
+function isKey(input: Input, key: string): boolean {
+  return input.key.toLowerCase() === key;
+}
 
-        return KeyboardShortcutAction.nextTab;
-      }
+export function isNextTab(input: Input): boolean {
+  return isKey(input, 'tab') && isCtrl(input) && !input.shift;
+}
 
-      break;
-    }
+export function isPrevTab(input: Input): boolean {
+  return isKey(input, 'tab') && isCtrl(input) && input.shift;
+}
 
-    case 'w': {
-      if (isCtrl) {
-        return KeyboardShortcutAction.closeCurrentTab;
-      }
+export function isReloadCurrentTab(input: Input): boolean {
+  return isKey(input, 'r') && isCtrl(input) && !input.shift;
+}
 
-      break;
-    }
+export function isHardReloadCurrentTab(input: Input): boolean {
+  return isKey(input, 'r') && isCtrl(input) && input.shift;
+}
 
-    case 't': {
-      if (isCtrl) {
-        return KeyboardShortcutAction.addNewTab;
-      }
+export function isRemoveCurrentTab(input: Input): boolean {
+  return isKey(input, 'w') && isCtrl(input);
+}
 
-      break;
-    }
-  }
+export function isAddNewTab(input: Input): boolean {
+  return isKey(input, 't') && isCtrl(input);
+}
 
-  return null;
+export function isToggleDevTools(input: Input): boolean {
+  return isKey(input, 'i') && isCtrl(input) && input.shift;
 }
