@@ -10,6 +10,8 @@ import {
   BG_REMOVE_CURRENT_TAB,
   FgShowTabIpcEvent,
   FG_SHOW_TAB,
+  BG_UPDATE_TAB_TITLE,
+  BgUpdateTabTitleIpcEvent,
 } from '../../../ipc';
 import { ElectronService } from '../electron';
 import { TabsStore } from './tabs-store.service';
@@ -43,6 +45,13 @@ export class TabsService {
       const newActiveTabId = this.tabsStore.removeCurrentTab();
       this.sendShowTabEvent(newActiveTabId);
     });
+
+    this.electronService.on<BgUpdateTabTitleIpcEvent>(
+      BG_UPDATE_TAB_TITLE,
+      (payload) => {
+        this.tabsStore.setTabTitle(payload.id, payload.title);
+      },
+    );
   }
 
   public addTab(): void {

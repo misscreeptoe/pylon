@@ -80,6 +80,18 @@ export class TabsStore extends Store<TabState> {
     }));
   }
 
+  public setTabTitle(id: string, title: string): void {
+    const tab = this.getTabById(id);
+    const tabIndex = this.getTabIndexById(id);
+
+    this.setState(({ tabs }) => ({
+      tabs: tabs.replaceByIndex(tabIndex, {
+        ...tab,
+        title,
+      }),
+    }));
+  }
+
   public nextTab(): string {
     let nextTabIndex = this.getCurrentTabIndex() + 1;
     if (nextTabIndex >= this.state.tabs.length) {
@@ -132,5 +144,13 @@ export class TabsStore extends Store<TabState> {
 
   private getCurrentTab(): Tab {
     return this.state.tabs.find((tab) => tab.id === this.state.active);
+  }
+
+  private getTabById(id: string): Tab {
+    return this.state.tabs.find((tab) => tab.id === id);
+  }
+
+  private getTabIndexById(id: string): number {
+    return this.state.tabs.findIndex((tab) => tab.id === id);
   }
 }

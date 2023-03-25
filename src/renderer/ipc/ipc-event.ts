@@ -58,3 +58,13 @@ export interface BgAddTabIpcEvent {
  * Used when the keyboard combination is entered.
  */
 export const BG_REMOVE_CURRENT_TAB = 'bg:remove-current-tab';
+
+/**
+ * Informs the foregroudn process to update a tab's title.
+ * Used when a browser view navigates and its title is updated.
+ */
+export const BG_UPDATE_TAB_TITLE = 'bg:update-tab-title';
+export interface BgUpdateTabTitleIpcEvent {
+  id: string;
+  title: string;
+}

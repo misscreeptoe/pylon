@@ -12,6 +12,7 @@
                 (click)="onTabClicked(tab)"
                 [id]="tab.id + '-tab'"
                 [class.active]="tabStatus[tab.id]"
+                [title]="tab.title"
                 [attr.aria-selected]="tabStatus[tab.id]"
                 [attr.aria-controls]="tab.id"
               >
