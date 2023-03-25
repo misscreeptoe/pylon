@@ -1,31 +1,32 @@
 import { EventEmitter } from 'events';
 
-interface EventMapRecord {
-  [key: string]: unknown[];
+interface EventMap {
+  [key: string]: (...args: unknown[]) => void;
 }
-type EventKey<T extends EventMapRecord> = keyof T & string;
+type EventKey<T extends EventMap> = Extract<keyof T, string>;
 
-type EventHandler<T> = (args: T) => void;
-
-export class TypedEventEmitter<E extends EventMapRecord> {
+export class TypedEventEmitter<E extends EventMap> {
   private emitter = new EventEmitter();
 
-  public emit<K extends EventKey<E>>(eventName: K, ...eventArg: E[K]) {
-    this.emitter.emit(eventName, ...eventArg);
-  }
-
-  public once<K extends EventKey<E>>(
+  public emit<K extends EventKey<E>>(
     eventName: K,
-    handler: EventHandler<E[K]>,
-  ) {
+    ...eventArg: Parameters<E[K]>
+  ): boolean {
+    return this.emitter.emit(eventName, ...eventArg);
+  }
+
+  public once<K extends EventKey<E>>(eventName: K, handler: E[K]): this {
     this.emitter.once(eventName, handler);
+    return this;
   }
 
-  public on<K extends EventKey<E>>(eventName: K, handler: EventHandler<E[K]>) {
+  public on<K extends EventKey<E>>(eventName: K, handler: E[K]): this {
     this.emitter.on(eventName, handler);
+    return this;
   }
 
-  public off<K extends EventKey<E>>(eventName: K, handler: EventHandler<E[K]>) {
+  public off<K extends EventKey<E>>(eventName: K, handler: E[K]): this {
     this.emitter.off(eventName, handler);
+    return this;
   }
 }
