@@ -3,23 +3,24 @@ import { ImmutableArray } from '../../utils';
 import { Store } from './store.service';
 
 export interface CreateTab {
+  id: string;
   url?: string;
   title?: string;
 }
 
 export interface Tab {
-  id: number;
+  id: string;
   url: string | null;
   title: string | null;
 }
 
 export type TabState = {
-  active: number;
+  active: string | null;
   tabs: ImmutableArray<Tab>;
 };
 
 const INITIAL_STATE: TabState = {
-  active: 0,
+  active: null,
   tabs: new ImmutableArray(),
 };
 
@@ -43,29 +44,24 @@ export class TabsStore extends Store<TabState> {
     ),
   );
 
-  private previousTabId = 0;
-
   constructor() {
     super(INITIAL_STATE);
-
-    this.addTab();
   }
 
-  public addTab(createTab: CreateTab = {}): void {
+  public addTab(createTab: CreateTab): void {
     this.setState(({ tabs }) => {
+      const { id, url } = createTab;
       const currentTab = this.getCurrentTab();
       const currentTabIndex = this.getCurrentTabIndex();
 
-      if (!currentTab?.url && createTab?.url) {
+      if (!currentTab?.url && url) {
         return {
           tabs: tabs.replaceByIndex(currentTabIndex, {
             ...currentTab,
-            ...createTab,
+            url,
           }),
         };
       }
-
-      const id = this.previousTabId++;
 
       return {
         active: id,
@@ -78,13 +74,13 @@ export class TabsStore extends Store<TabState> {
     });
   }
 
-  public setActiveTab(active: number): void {
+  public setActiveTab(active: string): void {
     this.setState(() => ({
       active,
     }));
   }
 
-  public nextTab(): void {
+  public nextTab(): string {
     let nextTabIndex = this.getCurrentTabIndex() + 1;
     if (nextTabIndex >= this.state.tabs.length) {
       nextTabIndex = 0;
@@ -92,9 +88,10 @@ export class TabsStore extends Store<TabState> {
     const nextTabId = this.state.tabs.get(nextTabIndex).id;
 
     this.setActiveTab(nextTabId);
+    return nextTabId;
   }
 
-  public previousTab(): void {
+  public previousTab(): string {
     let previousTabIndex = this.getCurrentTabIndex() - 1;
     if (previousTabIndex < 0) {
       previousTabIndex = this.state.tabs.length - 1;
@@ -102,31 +99,31 @@ export class TabsStore extends Store<TabState> {
     const previousTabId = this.state.tabs.get(previousTabIndex).id;
 
     this.setActiveTab(previousTabId);
+    return previousTabId;
   }
 
-  public removeTab(tab: Tab): void {
+  public removeTab(id: string): string {
     if (this.state.tabs.length <= 1) {
-      return;
+      return id;
     }
 
-    this.setState(({ tabs }) => {
-      const indexToRemove = tabs.findIndex(({ id }) => id === tab.id);
+    const indexToRemove = this.state.tabs.findIndex((tab) => tab.id === id);
+    const newActiveTab =
+      indexToRemove === 0
+        ? this.state.tabs.get(1)
+        : this.state.tabs.get(indexToRemove - 1) ?? this.state.tabs.get(0);
 
-      const newActiveTab =
-        indexToRemove === 0
-          ? tabs.get(1)
-          : tabs.get(indexToRemove - 1) ?? tabs.get(0);
+    this.setState(({ tabs }) => ({
+      active: newActiveTab.id,
+      tabs: tabs.removeByIndex(indexToRemove),
+    }));
 
-      return {
-        active: newActiveTab.id,
-        tabs: tabs.removeByIndex(indexToRemove),
-      };
-    });
+    return newActiveTab.id;
   }
 
-  public removeCurrentTab(): void {
+  public removeCurrentTab(): string {
     const currentTab = this.getCurrentTab();
-    this.removeTab(currentTab);
+    return this.removeTab(currentTab.id);
   }
 
   private getCurrentTabIndex(): number {

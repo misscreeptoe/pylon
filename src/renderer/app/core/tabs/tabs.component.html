@@ -50,13 +50,7 @@
         [class.active]="tabStatus[tab.id]"
         [attr.aria-labelledby]="tab.id + '-tab'"
       >
-        <ng-container *ngIf="!tab.url">
-          <app-dashboard></app-dashboard>
-        </ng-container>
-
-        <ng-container *ngIf="tab.url">
-          <app-webview [id]="tab.id" [src]="tab.url"></app-webview>
-        </ng-container>
+        <app-dashboard></app-dashboard>
       </div>
     </ng-container>
   </div>

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ImmutableArray } from '../../utils';
-import { Tab, TabsStore, TabStatus } from '../store';
+import { Tab, TabsService, TabsStore, TabStatus } from '../store';
 import { TabsComponent } from '../tabs';
 
 @Component({
@@ -16,7 +16,10 @@ export class TabsContainerComponent implements OnInit {
   public tabs$: Observable<ImmutableArray<Tab>>;
   public tabStatus$: Observable<TabStatus>;
 
-  constructor(private readonly tabsStore: TabsStore) {}
+  constructor(
+    private readonly tabsStore: TabsStore,
+    private readonly tabsService: TabsService,
+  ) {}
 
   public ngOnInit(): void {
     this.tabs$ = this.tabsStore.tabs$;
@@ -24,14 +27,14 @@ export class TabsContainerComponent implements OnInit {
   }
 
   public onTabClicked(tab: Tab): void {
-    this.tabsStore.setActiveTab(tab.id);
+    this.tabsService.showTab(tab.id);
   }
 
   public onTabCloseClicked(tab: Tab): void {
-    this.tabsStore.removeTab(tab);
+    this.tabsService.removeTab(tab.id);
   }
 
   public onNewTabClicked(): void {
-    this.tabsStore.addTab();
+    this.tabsService.addTab();
   }
 }

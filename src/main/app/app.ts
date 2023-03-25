@@ -1,16 +1,18 @@
-import { BrowserWindow, app, protocol } from 'electron';
+import { app, protocol } from 'electron';
 import { mkdir } from 'node:fs/promises';
 import {
   icProtocolScheme,
   registerIcMetadataProtocol,
   registerIcProtocol,
 } from '../protocols';
-import { AppWindow } from './app-window';
+import { AppWindowManager } from './app-window-manager';
 
 export class App {
-  private window: AppWindow;
+  private readonly appWindowManager: AppWindowManager;
 
   constructor() {
+    this.appWindowManager = new AppWindowManager();
+
     this.init();
   }
 
@@ -23,7 +25,7 @@ export class App {
     registerIcProtocol();
     registerIcMetadataProtocol();
 
-    this.window = new AppWindow();
+    this.appWindowManager.addNewWindow();
 
     app.on('activate', this.onAppActivate.bind(this));
     app.on('window-all-closed', this.onAllWindowClosed.bind(this));
@@ -44,8 +46,8 @@ export class App {
   private onAppActivate(): void {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-      this.window = new AppWindow();
+    if (this.appWindowManager.getNumWindows() === 0) {
+      this.appWindowManager.addNewWindow();
     }
   }
 

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FG_LOADED } from '../ipc';
 import { ElectronService, LayoutComponent } from './core';
+import { TabsService } from './core/store';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +11,13 @@ import { ElectronService, LayoutComponent } from './core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  constructor(private readonly electronService: ElectronService) {}
+  constructor(
+    private readonly electronService: ElectronService,
+    private readonly tabsService: TabsService,
+  ) {}
 
   public ngOnInit(): void {
-    this.electronService.initIpcEvents();
+    this.tabsService.initIpcEvents();
+    this.electronService.invoke(FG_LOADED);
   }
 }
