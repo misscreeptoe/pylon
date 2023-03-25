@@ -1,4 +1,5 @@
 import {
+  BrowserView,
   BrowserWindow,
   Event,
   HandlerDetails,
@@ -15,31 +16,53 @@ import {
   getKeyboardShortcutAction,
   KeyboardShortcutAction,
 } from './keyboard-shortcut-mappings';
-import { TypedEventEmitter } from '../util';
-import { TabManager } from './tab-manager';
-import { createBrowserWindow } from './browser-window';
+import { TypedEventEmitter, uuid } from '../util';
+import { createBrowserView, createBrowserWindow } from './browser-window';
+import {
+  BgAddTabIpcEvent,
+  BgUpdateTabTitleIpcEvent,
+  BG_ADD_TAB,
+  BG_NEXT_TAB,
+  BG_PREV_TAB,
+  BG_REMOVE_CURRENT_TAB,
+  BG_UPDATE_TAB_TITLE,
+  FgRemoveTabIpcEvent,
+  FgShowTabIpcEvent,
+  FG_ADD_TAB,
+  FG_LOADED,
+  FG_REMOVE_TAB,
+  FG_SHOW_TAB,
+} from '../ipc';
 
 type WindowOpenHandler = Parameters<WebContents['setWindowOpenHandler']>[0];
 
 export type AppWindowEvents = {
-  closed: [];
+  closed: () => void;
 };
 
 export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
   private readonly browserWindow: BrowserWindow;
-  private readonly tabManager: TabManager;
+  private currentTabId: string | null = null;
+  private tabs: Record<string, BrowserView | null> = {};
 
   constructor(private readonly id: string) {
     super();
 
     this.browserWindow = createBrowserWindow();
-    this.browserWindow.on('close', () => {
+    this.browserWindow.once('close', () => {
       this.emit('closed');
     });
 
-    this.tabManager = new TabManager(this.browserWindow);
-
     this.initWebContents(this.browserWindow.webContents);
+    this.setupIpcHandlers();
+  }
+
+  private get currentTab(): BrowserView | null {
+    return this.tabs[this.currentTabId] ?? null;
+  }
+
+  private get currentTabHasBrowserView(): boolean {
+    return this.currentTab !== null && this.currentTab instanceof BrowserView;
   }
 
   public updateTheme(): void {
@@ -47,6 +70,30 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
     this.browserWindow.setBackgroundColor(backgroundColor);
     this.browserWindow.setTitleBarOverlay(titleBarOverlay);
+  }
+
+  private setupIpcHandlers(): void {
+    this.browserWindow.webContents.ipc.handle(FG_LOADED, (_event) => {
+      this.addNewTab();
+    });
+
+    this.browserWindow.webContents.ipc.handle(FG_ADD_TAB, (_event) => {
+      this.addNewTab();
+    });
+
+    this.browserWindow.webContents.ipc.handle(
+      FG_REMOVE_TAB,
+      (_event, payload: FgRemoveTabIpcEvent) => {
+        this.removeTab(payload.id);
+      },
+    );
+
+    this.browserWindow.webContents.ipc.handle(
+      FG_SHOW_TAB,
+      (_event, payload: FgShowTabIpcEvent) => {
+        this.setCurrentTab(payload.id);
+      },
+    );
   }
 
   private initWebContents(webContents: WebContents): void {
@@ -59,25 +106,25 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
     switch (keyboardShortcutAction) {
       case KeyboardShortcutAction.nextTab: {
-        this.tabManager.nextTab();
+        this.sendNextTabEvent();
         event.preventDefault();
         break;
       }
 
       case KeyboardShortcutAction.previousTab: {
-        this.tabManager.prevTab();
+        this.sendPrevTabEvent();
         event.preventDefault();
         break;
       }
 
       case KeyboardShortcutAction.closeCurrentTab: {
-        this.tabManager.removeCurrentTab();
+        this.sendRemoveCurrentTabEvent();
         event.preventDefault();
         break;
       }
 
       case KeyboardShortcutAction.addNewTab: {
-        this.tabManager.addNewTab();
+        this.addNewTab();
         event.preventDefault();
         break;
       }
@@ -141,8 +188,79 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
   }
 
-  private openUrlInTab(url: string): void {
-    const browserView = this.tabManager.openUrlInTab(url);
+  private addNewTab(): string {
+    const id = uuid();
+    this.tabs[id] = null;
+
+    this.sendAddNewTabEvent(id);
+
+    return id;
+  }
+
+  private openUrlInTab(url: string): BrowserView {
+    if (this.currentTabHasBrowserView) {
+      const newTabId = this.addNewTab();
+      this.setCurrentTab(newTabId);
+    }
+
+    return this.setCurrentTabBrowserView(url);
+  }
+
+  private removeTab(id: string): void {
+    if (Object.keys(this.tabs).length >= 1) {
+      return;
+    }
+
+    delete this.tabs[id];
+    this.browserWindow.setBrowserView(null);
+  }
+
+  private setCurrentTab(id: string): void {
+    this.currentTabId = id;
+    this.browserWindow.setBrowserView(this.currentTab);
+  }
+
+  private setCurrentTabBrowserView(url: string): BrowserView {
+    const browserView = createBrowserView(this.browserWindow, url);
     this.initWebContents(browserView.webContents);
+
+    const tabId = this.currentTabId;
+    browserView.webContents.on('page-title-updated', (_event, title) => {
+      this.sentUpdateTabTitleEvent(tabId, title);
+    });
+
+    this.tabs[this.currentTabId] = browserView;
+    this.browserWindow.setBrowserView(browserView);
+
+    return browserView;
+  }
+
+  private sendAddNewTabEvent(id: string): void {
+    const payload: BgAddTabIpcEvent = {
+      id,
+    };
+
+    this.browserWindow.webContents.send(BG_ADD_TAB, payload);
+  }
+
+  private sendNextTabEvent(): void {
+    this.browserWindow.webContents.send(BG_NEXT_TAB);
+  }
+
+  private sendPrevTabEvent(): void {
+    this.browserWindow.webContents.send(BG_PREV_TAB);
+  }
+
+  private sendRemoveCurrentTabEvent(): void {
+    this.browserWindow.webContents.send(BG_REMOVE_CURRENT_TAB);
+  }
+
+  private sentUpdateTabTitleEvent(id: string, title: string): void {
+    const payload: BgUpdateTabTitleIpcEvent = {
+      id,
+      title,
+    };
+
+    this.browserWindow.webContents.send(BG_UPDATE_TAB_TITLE, payload);
   }
 }
