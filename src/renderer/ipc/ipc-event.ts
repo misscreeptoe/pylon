@@ -32,6 +32,24 @@ export interface FgShowTabIpcEvent {
 }
 
 /**
+ * Informs the background process to reload the current tab.
+ * Used when the reload button is clicked on the foreground process.
+ */
+export const FG_RELOAD = 'fg:reload';
+
+/**
+ * Informs the background process to navigate forward on the current tab.
+ * Used when the navigate forward button is clicked on the foreground process.
+ */
+export const FG_NAV_FORWARD = 'fg:navigate-forward';
+
+/**
+ * Informs the background process to navigate back on the current tab.
+ * Used when the navigate back button is clicked on the foreground process.
+ */
+export const FG_NAV_BACK = 'fg:navigate-back';
+
+/**
  * Informs the foreground process to navigate to the "next" tab.
  * Used when the keyboard combination is entered.
  */

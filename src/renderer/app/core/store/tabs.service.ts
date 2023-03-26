@@ -12,6 +12,9 @@ import {
   FG_SHOW_TAB,
   BG_UPDATE_TAB_TITLE,
   BgUpdateTabTitleIpcEvent,
+  FG_RELOAD,
+  FG_NAV_FORWARD,
+  FG_NAV_BACK,
 } from '../../../ipc';
 import { ElectronService } from '../electron';
 import { TabsStore } from './tabs-store.service';
@@ -68,6 +71,18 @@ export class TabsService {
   public showTab(id: string): void {
     this.tabsStore.setActiveTab(id);
     this.sendShowTabEvent(id);
+  }
+
+  public reload(): void {
+    this.electronService.invoke<void>(FG_RELOAD);
+  }
+
+  public navigateForward(): void {
+    this.electronService.invoke<void>(FG_NAV_FORWARD);
+  }
+
+  public navigateBack(): void {
+    this.electronService.invoke<void>(FG_NAV_BACK);
   }
 
   private sendShowTabEvent(id: string): void {

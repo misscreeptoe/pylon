@@ -9,7 +9,7 @@ function isCtrl(input: Input): boolean {
 }
 
 function isKey(input: Input, key: string): boolean {
-  return input.key.toLowerCase() === key;
+  return input.key.toLowerCase() === key && input.type === 'keyDown';
 }
 
 export function isNextTab(input: Input): boolean {
@@ -29,7 +29,7 @@ export function isHardReloadCurrentTab(input: Input): boolean {
 }
 
 export function isRemoveCurrentTab(input: Input): boolean {
-  return isKey(input, 'w') && isCtrl(input);
+  return isKey(input, 'w') && isCtrl(input) && !input.shift;
 }
 
 export function isAddNewTab(input: Input): boolean {
@@ -38,4 +38,12 @@ export function isAddNewTab(input: Input): boolean {
 
 export function isToggleDevTools(input: Input): boolean {
   return isKey(input, 'i') && isCtrl(input) && input.shift;
+}
+
+export function isNavigateForward(input: Input): boolean {
+  return isKey(input, 'arrowright') && input.alt;
+}
+
+export function isNavigateBack(input: Input): boolean {
+  return isKey(input, 'arrowleft') && input.alt;
 }

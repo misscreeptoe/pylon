@@ -11,6 +11,7 @@ import { Tab, TabStatus } from '../store';
 import { ButtonComponent, CloseButtonComponent } from '../../ui';
 import { DashboardComponent } from '../dashboard';
 import { WebviewComponent } from '../webview';
+import { ToolbarComponent } from '../toolbar';
 
 @Component({
   selector: 'app-tabs',
@@ -21,6 +22,7 @@ import { WebviewComponent } from '../webview';
     DashboardComponent,
     WebviewComponent,
     ButtonComponent,
+    ToolbarComponent,
   ],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],

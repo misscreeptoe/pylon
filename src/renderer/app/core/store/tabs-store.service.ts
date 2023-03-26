@@ -4,13 +4,10 @@ import { Store } from './store.service';
 
 export interface CreateTab {
   id: string;
-  url?: string;
-  title?: string;
 }
 
 export interface Tab {
   id: string;
-  url: string | null;
   title: string | null;
 }
 
@@ -50,25 +47,13 @@ export class TabsStore extends Store<TabState> {
 
   public addTab(createTab: CreateTab): void {
     this.setState(({ tabs }) => {
-      const { id, url } = createTab;
-      const currentTab = this.getCurrentTab();
-      const currentTabIndex = this.getCurrentTabIndex();
-
-      if (!currentTab?.url && url) {
-        return {
-          tabs: tabs.replaceByIndex(currentTabIndex, {
-            ...currentTab,
-            url,
-          }),
-        };
-      }
+      const { id } = createTab;
 
       return {
         active: id,
         tabs: tabs.push({
           id,
-          url: createTab.url ?? null,
-          title: createTab.title ?? 'New Tab',
+          title: 'New Tab',
         }),
       };
     });

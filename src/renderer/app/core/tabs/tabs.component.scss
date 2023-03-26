@@ -9,15 +9,12 @@
 
 .tab-bar {
   width: 100%;
-  height: calc(
-    env(titlebar-area-height, var(--fallback-title-bar-height)) + #{$nav-tabs-border-width}
-  );
-
-  border-bottom: #{$nav-tabs-border-width} solid #{$nav-tabs-border-color};
+  height: env(titlebar-area-height);
+  background-color: var(--#{$prefix}tertiary-bg);
 }
 
 .tab-bar-inner {
-  width: calc(env(titlebar-area-width, var(--fallback-title-bar-width)));
+  width: env(titlebar-area-width);
   height: 100%;
 
   display: flex;

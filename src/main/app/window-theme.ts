@@ -1,6 +1,7 @@
 import { nativeTheme, TitleBarOverlayOptions } from 'electron';
 
 export const TITLE_BAR_HEIGHT = 40;
+export const TOOLBAR_HEIGHT = 40;
 
 export interface ThemeOptions {
   backgroundColor: string;
@@ -12,15 +13,15 @@ export function getThemeOptions(): ThemeOptions {
     ? {
         backgroundColor: '#212529',
         titleBarOverlay: {
-          color: '#212529',
+          color: '#2b3035',
           symbolColor: '#adb5bd',
           height: TITLE_BAR_HEIGHT,
         },
       }
     : {
-        backgroundColor: '#fff',
+        backgroundColor: '#e9ecef',
         titleBarOverlay: {
-          color: '#fff',
+          color: '#e9ecef',
           symbolColor: '#212529',
           height: TITLE_BAR_HEIGHT,
         },

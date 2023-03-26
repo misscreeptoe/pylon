@@ -20,6 +20,8 @@ import {
   isReloadCurrentTab,
   isHardReloadCurrentTab,
   isToggleDevTools,
+  isNavigateBack,
+  isNavigateForward,
 } from './keyboard-shortcut-mappings';
 import { TypedEventEmitter, uuid } from '../util';
 import { createBrowserView, createBrowserWindow } from './browser-window';
@@ -35,6 +37,9 @@ import {
   FgShowTabIpcEvent,
   FG_ADD_TAB,
   FG_LOADED,
+  FG_NAV_BACK,
+  FG_NAV_FORWARD,
+  FG_RELOAD,
   FG_REMOVE_TAB,
   FG_SHOW_TAB,
 } from '../ipc';
@@ -75,14 +80,22 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
     this.browserWindow.setBackgroundColor(backgroundColor);
     this.browserWindow.setTitleBarOverlay(titleBarOverlay);
+
+    for (const [id, browserView] of Object.entries(this.tabs)) {
+      if (browserView === null) {
+        return;
+      }
+
+      browserView.setBackgroundColor(backgroundColor);
+    }
   }
 
   private setupIpcHandlers(): void {
-    this.browserWindow.webContents.ipc.handle(FG_LOADED, (_event) => {
+    this.browserWindow.webContents.ipc.handle(FG_LOADED, () => {
       this.addNewTab();
     });
 
-    this.browserWindow.webContents.ipc.handle(FG_ADD_TAB, (_event) => {
+    this.browserWindow.webContents.ipc.handle(FG_ADD_TAB, () => {
       this.addNewTab();
     });
 
@@ -99,6 +112,18 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
         this.setCurrentTab(payload.id);
       },
     );
+
+    this.browserWindow.webContents.ipc.handle(FG_RELOAD, () => {
+      this.reloadCurrentTab();
+    });
+
+    this.browserWindow.webContents.ipc.handle(FG_NAV_BACK, () => {
+      this.navigateBack();
+    });
+
+    this.browserWindow.webContents.ipc.handle(FG_NAV_FORWARD, () => {
+      this.navigateForward();
+    });
   }
 
   private initWebContents(webContents: WebContents): void {
@@ -145,6 +170,18 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
     if (isToggleDevTools(input)) {
       this.toggleDevTools();
+      event.preventDefault();
+      return;
+    }
+
+    if (isNavigateBack(input)) {
+      this.navigateBack();
+      event.preventDefault();
+      return;
+    }
+
+    if (isNavigateForward(input)) {
+      this.navigateForward();
       event.preventDefault();
       return;
     }
@@ -236,7 +273,40 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
   private setCurrentTab(id: string): void {
     this.currentTabId = id;
-    this.browserWindow.setBrowserView(this.currentTab);
+    const currentBrowserView = this.currentTab;
+
+    // this is okay, if currentBrowserView is null
+    // this will show the "new tab" page
+    this.browserWindow.setBrowserView(currentBrowserView);
+
+    if (currentBrowserView) {
+      // make sure to shift focus to the new browser view
+      // or keyboard shortcuts won't work anymore
+      this.currentTab.webContents.focus();
+    } else {
+      // if there is no browser view then we need to focus the window
+      this.browserWindow.webContents.focus();
+    }
+  }
+
+  private navigateBack(): void {
+    const currentBrowserView = this.currentTab;
+
+    if (!currentBrowserView) {
+      return;
+    }
+
+    currentBrowserView.webContents.goBack();
+  }
+
+  private navigateForward(): void {
+    const currentBrowserView = this.currentTab;
+
+    if (!currentBrowserView) {
+      return;
+    }
+
+    currentBrowserView.webContents.goForward();
   }
 
   private reloadCurrentTab(): void {
@@ -275,7 +345,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
       webContents.closeDevTools();
     } else {
       webContents.openDevTools({
-        mode: 'right',
+        mode: 'detach',
       });
     }
   }
