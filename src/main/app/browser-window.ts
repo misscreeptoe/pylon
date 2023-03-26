@@ -1,5 +1,9 @@
 import { BrowserView, BrowserWindow, screen, WebPreferences } from 'electron';
-import { getThemeOptions, TITLE_BAR_HEIGHT } from './window-theme';
+import {
+  getThemeOptions,
+  TITLE_BAR_HEIGHT,
+  TOOLBAR_HEIGHT,
+} from './window-theme';
 import { getWindowUrl } from './window-url';
 
 const commonWebPreferences: WebPreferences = {
@@ -41,8 +45,9 @@ export function createBrowserView(
   browserWindow: BrowserWindow,
   url: string,
 ): BrowserView {
-  const toolbarHeight = TITLE_BAR_HEIGHT;
+  const toolbarHeight = TITLE_BAR_HEIGHT + TOOLBAR_HEIGHT;
   const [width, height] = browserWindow.getContentSize();
+  const { backgroundColor } = getThemeOptions();
 
   const browserView = new BrowserView({
     webPreferences: {
@@ -59,6 +64,7 @@ export function createBrowserView(
     height: true,
     width: true,
   });
+  browserView.setBackgroundColor(backgroundColor);
   browserView.webContents.loadURL(url);
 
   return browserView;

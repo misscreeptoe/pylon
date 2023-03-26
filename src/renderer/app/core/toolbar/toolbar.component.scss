@@ -1,0 +1,9 @@
+@import 'common';
+
+.toolbar {
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: #{$nav-tabs-border-width} solid #{$nav-tabs-border-color};
+}
