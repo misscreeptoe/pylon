@@ -4,7 +4,6 @@
 
 :host {
   height: 100%;
-  position: relative;
 }
 
 .tab-bar {
@@ -14,8 +13,11 @@
 }
 
 .tab-bar-inner {
+  position: fixed;
+  top: env(titlebar-area-y);
+  left: env(titlebar-area-x);
   width: env(titlebar-area-width);
-  height: 100%;
+  height: env(titlebar-area-height);
 
   display: flex;
   flex-direction: row;
