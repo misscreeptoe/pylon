@@ -13,20 +13,5 @@
       "from": "../dist/renderer",
       "filter": ["**/*"]
     }
-  ],
-  "win": {
-    "icon": "dist/renderer/assets/icons",
-    "target": ["portable"]
-  },
-  "portable": {
-    "splashImage": "dist/renderer/assets/icons/electron.bmp"
-  },
-  "mac": {
-    "icon": "dist/renderer/assets/icons",
-    "target": ["dmg"]
-  },
-  "linux": {
-    "icon": "dist/renderer/assets/icons",
-    "target": ["AppImage"]
-  }
+  ]
 }
