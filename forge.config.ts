@@ -8,9 +8,7 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {},
   rebuildConfig: {},
-  makers: [
-    new MakerZIP({}, ['linux', 'win32', 'darwin', 'mas']),
-  ],
+  makers: [new MakerZIP({}, ['linux', 'win32', 'darwin', 'mas'])],
   plugins: [
     {
       name: '@electron-forge/plugin-electronegativity',

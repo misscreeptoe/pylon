@@ -22,7 +22,7 @@ export async function forwardWeb2Request(
 
   return {
     statusCode: response.status,
-    data: await response.buffer(),
+    data: Buffer.from(await response.arrayBuffer()),
     headers: response.headers.raw(),
   };
 }

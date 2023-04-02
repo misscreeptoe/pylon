@@ -23,7 +23,7 @@ export function isIcApiRequest(url: string): boolean {
     return false;
   }
 
-  return API_GATEWAYS.some((apiGateway) => hostname.endsWith(apiGateway));
+  return API_GATEWAYS.some(apiGateway => hostname.endsWith(apiGateway));
 }
 
 /**
@@ -60,7 +60,7 @@ export async function forwardIcApiRequest(
 
   return {
     statusCode: response.status,
-    data: await response.buffer(),
+    data: Buffer.from(await response.arrayBuffer()),
     headers: sanitizedHeaders.raw(),
   };
 }

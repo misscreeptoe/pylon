@@ -37,7 +37,7 @@ export interface Request {
 
 function requestHasHeader(headers: string[], headerName: string): boolean {
   return Object.keys(headers).some(
-    (header) => header.toLowerCase() === headerName.toLowerCase(),
+    header => header.toLowerCase() === headerName.toLowerCase(),
   );
 }
 

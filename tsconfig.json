@@ -13,6 +13,7 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "preserveConstEnums": true,
     "paths": {
       "*": ["node_modules/*"]
     }
