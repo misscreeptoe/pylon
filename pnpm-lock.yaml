@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@dfinity/agent': 0.15.4
-  '@dfinity/candid': 0.15.4
+  '@dfinity/candid': 0.15.5
   '@dfinity/principal': 0.15.4
   '@dfinity/response-verification': 0.1.0
   '@electron-forge/cli': 6.1.0
@@ -46,8 +46,8 @@ specifiers:
   zustand: 4.3.7
 
 dependencies:
-  '@dfinity/agent': 0.15.4_62nyc666nl6opxpmd5l5weouyy
-  '@dfinity/candid': 0.15.4_pj3xut33gta66wns5w7rs6cilm
+  '@dfinity/agent': 0.15.4_j3pxnjt25zooxbkcrbxihptcga
+  '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/principal': 0.15.4_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/response-verification': 0.1.0
   '@fontsource/roboto': 4.5.8
@@ -247,13 +247,13 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  /@dfinity/agent/0.15.4_62nyc666nl6opxpmd5l5weouyy:
+  /@dfinity/agent/0.15.4_j3pxnjt25zooxbkcrbxihptcga:
     resolution: {integrity: sha512-JuWaLUUtdGJx2DwHgnGrtTNwF5bC6a+izMbcHeN2M0RSaukeVNkRdYz4Bfxg7yTwdFxQRfQWcXcwvKF8/R2IEg==}
     peerDependencies:
       '@dfinity/candid': ^0.15.4
       '@dfinity/principal': ^0.15.4
     dependencies:
-      '@dfinity/candid': 0.15.4_pj3xut33gta66wns5w7rs6cilm
+      '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
       '@dfinity/principal': 0.15.4_pj3xut33gta66wns5w7rs6cilm
       base64-arraybuffer: 0.2.0
       bignumber.js: 9.1.1
@@ -268,8 +268,8 @@ packages:
       - typescript
     dev: false
 
-  /@dfinity/candid/0.15.4_pj3xut33gta66wns5w7rs6cilm:
-    resolution: {integrity: sha512-ImoZ18i95DDstn+EXm/Y1ms7RqF1KVS7+KqZLNvpHFTlcOgfAQc5Bq8W6l1nfkOqeh7wcehDYdjFJwLxBoeTlw==}
+  /@dfinity/candid/0.15.5_pj3xut33gta66wns5w7rs6cilm:
+    resolution: {integrity: sha512-SWf70AuFJ+SphvOHPiyCXE2s5b63c8U/UVGIRhnxSR/xi8iiP3tjPL6Cfe+TPsuXQShX8pPJBJhKC9O20cua2Q==}
     dependencies:
       ts-node: 10.9.1_pj3xut33gta66wns5w7rs6cilm
     transitivePeerDependencies:
