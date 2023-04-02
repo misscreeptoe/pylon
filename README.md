@@ -117,6 +117,71 @@ Enable execution for unsigned scripts by opening Powershell with administrator p
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 ```
 
+### Linux / MacOS
+
+First, install global dependencies:
+
+- [Git](https://git-scm.com/)
+- [pnpm](https://pnpm.io/installation):
+  - Set PNPM version: `export PNPM_VERSION=7.21.0`
+  - Install PNPM:
+    - With `curl`: `curl -fsSL https://get.pnpm.io/install.sh | sh -`
+    - Or `wget`: `wget -qO- https://get.pnpm.io/install.sh | sh -`
+
+Then, open a terminal and clone the repo:
+
+```shell
+git clone https://github.com/nathanosdev/pylon.git
+```
+
+Change directory into the root of the repository:
+
+```shell
+cd ./pylon/
+```
+
+Now, install project dependencies:
+
+```shell
+pnpm i --frozen-lockfile
+```
+
+Build the project and distributable:
+
+```shell
+pnpm make
+```
+
+The steps now deviate slightly for Linux and MacOS.
+
+#### Linux
+
+Unzip the resulting archive:
+
+```shell
+unzip ./out/make/zip/linux/x64/pylon-linux-x64-0.0.0.zip -d ./out/make/zip/linux/x64/pylon-linux-x64-0.0.0/
+```
+
+Calculate the hash of the unzipped files:
+
+```shell
+find ./out/make/zip/linux/x64/pylon-linux-x64-0.0.0/pylon-linux-x64 -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum
+```
+
+#### MacOS
+
+Unzip the resulting archive:
+
+```shell
+unzip ./out/make/zip/macos/x64/pylon-macos-x64-0.0.0.zip -d ./out/make/zip/macos/x64/pylon-macos-x64-0.0.0/
+```
+
+Calculate the hash of the unzipped files:
+
+```shell
+find ./out/make/zip/macos/x64/pylon-macos-x64-0.0.0/pylon-macos-x64 -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum
+```
+
 ## Contributing
 
 If you're interested in contributing to this project, you can get started by reading the [contributing guidelines](./CONTRIBUTING.md).
