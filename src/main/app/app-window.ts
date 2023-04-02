@@ -4,6 +4,7 @@ import {
   Event,
   HandlerDetails,
   Input,
+  IpcMainEvent,
   shell,
   WebContents,
 } from 'electron';
@@ -26,23 +27,13 @@ import {
 import { TypedEventEmitter, uuid } from '../util';
 import { createBrowserView, createBrowserWindow } from './browser-window';
 import {
-  BgAddTabIpcEvent,
-  BgUpdateTabTitleIpcEvent,
-  BG_ADD_TAB,
-  BG_NEXT_TAB,
-  BG_PREV_TAB,
-  BG_REMOVE_CURRENT_TAB,
-  BG_UPDATE_TAB_TITLE,
-  FgRemoveTabIpcEvent,
-  FgShowTabIpcEvent,
-  FG_ADD_TAB,
-  FG_LOADED,
-  FG_NAV_BACK,
-  FG_NAV_FORWARD,
-  FG_RELOAD,
-  FG_REMOVE_TAB,
-  FG_SHOW_TAB,
-} from '../ipc';
+  MainEventType,
+  MainOpenNewTab,
+  MainSetTabTitle,
+  RendererCloseTab,
+  RendererEventType,
+  RendererSwitchToTab,
+} from '../../ipc';
 
 type WindowOpenHandler = Parameters<WebContents['setWindowOpenHandler']>[0];
 
@@ -58,7 +49,10 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
   constructor(private readonly id: string) {
     super();
 
-    this.browserWindow = createBrowserWindow();
+    this.browserWindow = createBrowserWindow(
+      MAIN_WINDOW_WEBPACK_ENTRY,
+      MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    );
     this.browserWindow.once('close', () => {
       this.emit('closed');
     });
@@ -68,6 +62,10 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
   }
 
   private get currentTab(): BrowserView | null {
+    if (!this.currentTabId) {
+      return null;
+    }
+
     return this.tabs[this.currentTabId] ?? null;
   }
 
@@ -81,7 +79,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     this.browserWindow.setBackgroundColor(backgroundColor);
     this.browserWindow.setTitleBarOverlay(titleBarOverlay);
 
-    for (const [id, browserView] of Object.entries(this.tabs)) {
+    for (const [_id, browserView] of Object.entries(this.tabs)) {
       if (browserView === null) {
         return;
       }
@@ -90,39 +88,46 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
   }
 
+  private subscribeToRendererEvent<U>(
+    type: RendererEventType,
+    listener: (event: IpcMainEvent, ...args: U[]) => void,
+  ): void {
+    this.browserWindow.webContents.ipc.on(type, listener);
+  }
+
   private setupIpcHandlers(): void {
-    this.browserWindow.webContents.ipc.handle(FG_LOADED, () => {
-      this.addNewTab();
+    this.subscribeToRendererEvent(RendererEventType.Loaded, () => {
+      this.openNewTab();
     });
 
-    this.browserWindow.webContents.ipc.handle(FG_ADD_TAB, () => {
-      this.addNewTab();
+    this.subscribeToRendererEvent(RendererEventType.OpenNewTab, () => {
+      this.openNewTab();
     });
 
-    this.browserWindow.webContents.ipc.handle(
-      FG_REMOVE_TAB,
-      (_event, payload: FgRemoveTabIpcEvent) => {
-        this.removeTab(payload.id);
+    this.subscribeToRendererEvent<RendererCloseTab>(
+      RendererEventType.CloseTab,
+      (_event, { id }) => {
+        this.closeTab(id);
       },
     );
 
-    this.browserWindow.webContents.ipc.handle(
-      FG_SHOW_TAB,
-      (_event, payload: FgShowTabIpcEvent) => {
-        this.setCurrentTab(payload.id);
+    this.subscribeToRendererEvent<RendererSwitchToTab>(
+      RendererEventType.SwitchToTab,
+      (_event, { id }) => {
+        this.switchToTab(id);
       },
     );
 
-    this.browserWindow.webContents.ipc.handle(FG_RELOAD, () => {
-      this.reloadCurrentTab();
+    this.subscribeToRendererEvent(RendererEventType.CurrentTabReload, () => {
+      this.currentTabReload();
     });
 
-    this.browserWindow.webContents.ipc.handle(FG_NAV_BACK, () => {
-      this.navigateBack();
+    this.subscribeToRendererEvent(RendererEventType.CurrentTabGoBack, () => {
+      this.currentTabGoback();
     });
 
-    this.browserWindow.webContents.ipc.handle(FG_NAV_FORWARD, () => {
-      this.navigateForward();
+    this.subscribeToRendererEvent(RendererEventType.CurrentTabGoForward, () => {
+      this.currentTabGoForward();
     });
   }
 
@@ -133,19 +138,19 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
   private onInputEvent(event: Event, input: Input): void {
     if (isNextTab(input)) {
-      this.sendNextTabEvent();
+      this.sendSwitchToNextTabEvent();
       event.preventDefault();
       return;
     }
 
     if (isPrevTab(input)) {
-      this.sendPrevTabEvent();
+      this.sendSwitichToPreviousTabEvent();
       event.preventDefault();
       return;
     }
 
     if (isReloadCurrentTab(input)) {
-      this.reloadCurrentTab();
+      this.currentTabReload();
       event.preventDefault();
       return;
     }
@@ -157,13 +162,13 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
 
     if (isRemoveCurrentTab(input)) {
-      this.sendRemoveCurrentTabEvent();
+      this.sendCloseCurrentTabEvent();
       event.preventDefault();
       return;
     }
 
     if (isAddNewTab(input)) {
-      this.addNewTab();
+      this.openNewTab();
       event.preventDefault();
       return;
     }
@@ -175,13 +180,13 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
 
     if (isNavigateBack(input)) {
-      this.navigateBack();
+      this.currentTabGoback();
       event.preventDefault();
       return;
     }
 
     if (isNavigateForward(input)) {
-      this.navigateForward();
+      this.currentTabGoForward();
       event.preventDefault();
       return;
     }
@@ -244,34 +249,38 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
   }
 
-  private addNewTab(): string {
+  private openNewTab(): string {
     const id = uuid();
-    this.tabs[id] = null;
+    this.currentTabId = id;
 
-    this.sendAddNewTabEvent(id);
+    this.setCurrentTabBrowserView(NEW_TAB_WEBPACK_ENTRY);
+    this.sendOpenNewTabEvent(id);
 
     return id;
   }
 
   private openUrlInTab(url: string): BrowserView {
     if (this.currentTabHasBrowserView) {
-      const newTabId = this.addNewTab();
-      this.setCurrentTab(newTabId);
+      const newTabId = this.openNewTab();
+      this.switchToTab(newTabId);
     }
 
     return this.setCurrentTabBrowserView(url);
   }
 
-  private removeTab(id: string): void {
+  private closeTab(id: string): void {
     if (Object.keys(this.tabs).length >= 1) {
       return;
     }
 
     delete this.tabs[id];
-    this.browserWindow.setBrowserView(null);
+
+    if (id === this.currentTabId) {
+      this.browserWindow.setBrowserView(null);
+    }
   }
 
-  private setCurrentTab(id: string): void {
+  private switchToTab(id: string): void {
     this.currentTabId = id;
     const currentBrowserView = this.currentTab;
 
@@ -280,6 +289,10 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     this.browserWindow.setBrowserView(currentBrowserView);
 
     if (currentBrowserView) {
+      if (!this.currentTab) {
+        return;
+      }
+
       // make sure to shift focus to the new browser view
       // or keyboard shortcuts won't work anymore
       this.currentTab.webContents.focus();
@@ -289,7 +302,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
   }
 
-  private navigateBack(): void {
+  private currentTabGoback(): void {
     const currentBrowserView = this.currentTab;
 
     if (!currentBrowserView) {
@@ -299,7 +312,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     currentBrowserView.webContents.goBack();
   }
 
-  private navigateForward(): void {
+  private currentTabGoForward(): void {
     const currentBrowserView = this.currentTab;
 
     if (!currentBrowserView) {
@@ -309,7 +322,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     currentBrowserView.webContents.goForward();
   }
 
-  private reloadCurrentTab(): void {
+  private currentTabReload(): void {
     const currentBrowserView = this.currentTab;
 
     if (!currentBrowserView) {
@@ -356,41 +369,45 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
     const tabId = this.currentTabId;
     browserView.webContents.on('page-title-updated', (_event, title) => {
-      this.sentUpdateTabTitleEvent(tabId, title);
+      if (!tabId) {
+        return;
+      }
+
+      this.sendSetTabTitleEvent(tabId, title);
     });
 
-    this.tabs[this.currentTabId] = browserView;
+    if (this.currentTabId) {
+      this.tabs[this.currentTabId] = browserView;
+    }
     this.browserWindow.setBrowserView(browserView);
 
     return browserView;
   }
 
-  private sendAddNewTabEvent(id: string): void {
-    const payload: BgAddTabIpcEvent = {
-      id,
-    };
-
-    this.browserWindow.webContents.send(BG_ADD_TAB, payload);
+  private sendMainEvent<U>(type: MainEventType, payload?: U): void {
+    this.browserWindow.webContents.send(type, payload);
   }
 
-  private sendNextTabEvent(): void {
-    this.browserWindow.webContents.send(BG_NEXT_TAB);
+  private sendSwitchToNextTabEvent(): void {
+    this.sendMainEvent(MainEventType.SwitchToNextTab);
   }
 
-  private sendPrevTabEvent(): void {
-    this.browserWindow.webContents.send(BG_PREV_TAB);
+  private sendSwitichToPreviousTabEvent(): void {
+    this.sendMainEvent(MainEventType.SwitchToPreviousTab);
   }
 
-  private sendRemoveCurrentTabEvent(): void {
-    this.browserWindow.webContents.send(BG_REMOVE_CURRENT_TAB);
+  private sendOpenNewTabEvent(id: string): void {
+    this.sendMainEvent<MainOpenNewTab>(MainEventType.OpenNewTab, { id });
   }
 
-  private sentUpdateTabTitleEvent(id: string, title: string): void {
-    const payload: BgUpdateTabTitleIpcEvent = {
+  private sendCloseCurrentTabEvent(): void {
+    this.sendMainEvent(MainEventType.CloseCurrentTab);
+  }
+
+  private sendSetTabTitleEvent(id: string, title: string): void {
+    this.sendMainEvent<MainSetTabTitle>(MainEventType.SetTabTitle, {
       id,
       title,
-    };
-
-    this.browserWindow.webContents.send(BG_UPDATE_TAB_TITLE, payload);
+    });
   }
 }

@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import { IDL } from '@dfinity/candid';
 
 const Token = IDL.Unknown;
@@ -10,7 +7,7 @@ export const streamingCallbackHttpResponse = IDL.Record({
   body: IDL.Vec(IDL.Nat8),
 });
 
-export const idlFactory = ({ IDL }) => {
+export const idlFactory: IDL.InterfaceFactory = ({ IDL }) => {
   const HeaderField = IDL.Tuple(IDL.Text, IDL.Text);
 
   const HttpRequest = IDL.Record({
@@ -45,5 +42,3 @@ export const idlFactory = ({ IDL }) => {
     http_request_update: IDL.Func([HttpRequest], [HttpResponse], []),
   });
 };
-
-export const init = ({ IDL }) => [];

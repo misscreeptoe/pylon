@@ -12,7 +12,7 @@ interface Cache<T> {
 }
 
 export class CacheManager<T> {
-  private cache: Cache<T>;
+  private cache: Cache<T> | null = null;
   private readonly cacheDir: string;
   private readonly cacheFile: string;
 
@@ -33,6 +33,10 @@ export class CacheManager<T> {
   }
 
   public async insert(key: string, expiry: number, data: T): Promise<void> {
+    if (!this.cache) {
+      throw new Error('Cache must be initialized before use');
+    }
+
     this.cache.entries[key] = {
       expiry,
       data,
@@ -42,6 +46,10 @@ export class CacheManager<T> {
   }
 
   public get(key: string): T | null {
+    if (!this.cache) {
+      throw new Error('Cache must be initialized before use');
+    }
+
     const currentTimestamp = Date.now();
     const entry = this.cache.entries[key];
 
@@ -61,6 +69,10 @@ export class CacheManager<T> {
   }
 
   public async remove(key: string): Promise<void> {
+    if (!this.cache) {
+      throw new Error('Cache must be initialized before use');
+    }
+
     delete this.cache.entries[key];
 
     await this.writeCacheToFile();

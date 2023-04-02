@@ -1,6 +1,7 @@
 import { app, protocol } from 'electron';
 import { mkdir } from 'node:fs/promises';
 import {
+  icMetadataProtocolSchema,
   icProtocolScheme,
   registerIcMetadataProtocol,
   registerIcProtocol,
@@ -17,7 +18,14 @@ export class App {
   }
 
   private async init(): Promise<void> {
-    protocol.registerSchemesAsPrivileged([icProtocolScheme]);
+    if (require('electron-squirrel-startup')) {
+      app.quit();
+    }
+
+    protocol.registerSchemesAsPrivileged([
+      icProtocolScheme,
+      icMetadataProtocolSchema,
+    ]);
 
     await this.setAppSessionDirectory();
     await app.whenReady();

@@ -22,12 +22,17 @@ export async function icMetadataRequestHandler(
   switch (parsedIcMetadataRequestUrl.method) {
     case 'icon':
       return {
-        data: Buffer.from(metadata.icon),
+        data: metadata?.icon ? Buffer.from(metadata.icon) : '',
       };
 
     case 'title':
       return {
-        data: Buffer.from(metadata.title),
+        data: metadata?.title ? Buffer.from(metadata.title) : '',
       };
+
+    default:
+      throw new Error(
+        `Requested a metadata type that is not supported: ${parsedIcMetadataRequestUrl.method}`,
+      );
   }
 }

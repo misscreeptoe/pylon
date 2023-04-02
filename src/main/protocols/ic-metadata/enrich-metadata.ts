@@ -5,7 +5,7 @@ import { makeIcHttpRequest } from '../../http-gateway';
 import { Metadata } from './metadata-parser';
 
 export interface EnrichedMetadata extends Metadata {
-  icon: Buffer;
+  icon: Buffer | null;
 }
 
 export async function enrichMetadata(

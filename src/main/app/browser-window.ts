@@ -4,7 +4,6 @@ import {
   TITLE_BAR_HEIGHT,
   TOOLBAR_HEIGHT,
 } from './window-theme';
-import { getWindowUrl } from './window-url';
 
 const commonWebPreferences: WebPreferences = {
   webviewTag: false,
@@ -14,9 +13,11 @@ const commonWebPreferences: WebPreferences = {
   allowRunningInsecureContent: false,
 };
 
-export function createBrowserWindow(): BrowserWindow {
+export function createBrowserWindow(
+  url: string,
+  preload?: string,
+): BrowserWindow {
   const size = screen.getPrimaryDisplay().workAreaSize;
-  const windowUrl = getWindowUrl();
 
   const browserWindow = new BrowserWindow({
     ...getThemeOptions(),
@@ -28,15 +29,12 @@ export function createBrowserWindow(): BrowserWindow {
     titleBarStyle: 'hidden',
     webPreferences: {
       ...commonWebPreferences,
-      nodeIntegration: true,
-      contextIsolation: false,
-      sandbox: false,
-      allowRunningInsecureContent: windowUrl.insecure,
+      preload,
     },
   });
 
   browserWindow.setMenuBarVisibility(false);
-  browserWindow.loadURL(windowUrl.href);
+  browserWindow.loadURL(url);
 
   return browserWindow;
 }

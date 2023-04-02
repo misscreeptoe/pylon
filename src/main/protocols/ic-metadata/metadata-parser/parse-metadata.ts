@@ -7,7 +7,7 @@ import { parseTitle } from './parse-title';
 export interface Metadata {
   title: string | null;
   description: string | null;
-  iconUrl: string | null;
+  iconUrl: string;
   imageUrl: string | null;
 }
 

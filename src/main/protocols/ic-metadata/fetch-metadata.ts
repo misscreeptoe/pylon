@@ -13,7 +13,7 @@ import { parseMetadata } from './metadata-parser';
 export async function fetchMetadata(
   request: ProtocolRequest,
   canisterId: string,
-): Promise<EnrichedMetadata> {
+): Promise<EnrichedMetadata | null> {
   const cacheEntry = await getMetadataCacheEntry(canisterId);
 
   if (cacheEntry) {
@@ -27,6 +27,10 @@ export async function fetchMetadata(
   });
 
   const responseBody = getResponseBody(response);
+  if (!responseBody) {
+    return null;
+  }
+
   const $ = cheerio.load(responseBody);
 
   const metadata = parseMetadata($, canisterId);

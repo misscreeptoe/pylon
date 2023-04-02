@@ -1,6 +1,6 @@
 import { Principal } from '@dfinity/principal';
 
-const canisterIdMapping = {
+const canisterIdMapping: Record<string, string> = {
   ['oc.app']: '6hsbt-vqaaa-aaaaf-aaafq-cai',
   ['nns.ic0.app']: 'qoctq-giaaa-aaaaa-aaaea-cai',
   ['identity.ic0.app']: 'rdmx6-jaaaa-aaaaa-aaadq-cai',

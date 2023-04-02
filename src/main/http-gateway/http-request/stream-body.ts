@@ -18,7 +18,7 @@ async function streamRemainingChunks(
   streamingStrategy: StreamingStrategy,
 ): Promise<Uint8Array> {
   let remainingChunks = new Uint8Array(0);
-  let tokenOpt = streamingStrategy.Callback.token;
+  let tokenOpt: Token | null = streamingStrategy.Callback.token;
   const [, callBackFunc] = streamingStrategy.Callback.callback;
 
   let currentCallback = 1;

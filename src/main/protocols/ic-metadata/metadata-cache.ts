@@ -1,4 +1,3 @@
-import { Principal } from '@dfinity/principal';
 import { CacheManager } from '../../cache';
 import { EnrichedMetadata } from './enrich-metadata';
 
@@ -54,6 +53,6 @@ export async function insertMetadataCacheEntry(
 
   await cache.insert(canisterId, expiry, {
     ...metadata,
-    icon: metadata.icon.toString('base64'),
+    icon: metadata.icon?.toString('base64') ?? '',
   });
 }

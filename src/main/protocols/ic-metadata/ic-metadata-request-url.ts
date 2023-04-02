@@ -16,7 +16,7 @@ export interface IcMetadataRequestUrl {
  */
 export function tryParseIcMetadataRequestUrl(
   url: string,
-): IcMetadataRequestUrl {
+): IcMetadataRequestUrl | null {
   const { pathname } = new URL(url);
 
   const [canisterId, method] = pathname.split('/', 2);

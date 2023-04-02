@@ -11,18 +11,18 @@ export interface ThemeOptions {
 export function getThemeOptions(): ThemeOptions {
   return nativeTheme.shouldUseDarkColors
     ? {
-        backgroundColor: '#212529',
+        backgroundColor: '#131316',
         titleBarOverlay: {
-          color: '#2b3035',
-          symbolColor: '#adb5bd',
+          color: '#131316',
+          symbolColor: '#fff',
           height: TITLE_BAR_HEIGHT,
         },
       }
     : {
-        backgroundColor: '#e9ecef',
+        backgroundColor: '#e0e0e3',
         titleBarOverlay: {
-          color: '#e9ecef',
-          symbolColor: '#212529',
+          color: '#e0e0e3',
+          symbolColor: '#212121',
           height: TITLE_BAR_HEIGHT,
         },
       };

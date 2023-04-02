@@ -6,6 +6,7 @@ export const icProtocolScheme: CustomScheme = {
   privileges: {
     secure: true,
     standard: true,
+    allowServiceWorkers: true,
   },
 };
 
