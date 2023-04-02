@@ -1,0 +1,55 @@
+name: Create Release PR
+
+on: workflow_dispatch
+
+jobs:
+  bump_version:
+    name: Bump version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7.21.0'
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+          cache: pnpm
+
+      - name: Bump Version
+        id: cz
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          commit: false
+          push: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print Version
+        run: echo "Bumping to version ${{ steps.cz.outputs.version }}"
+
+      - name: Update package-lock.json
+        run: pnpm i --lockfile-only
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: 'Release ${{ steps.cz.outputs.version }}'
+          body: |
+            After merging this PR, tag the merge commit with:
+            ```shell
+              git tag ${{ steps.cz.outputs.version }}
+              git push origin ${{ steps.cz.outputs.version }}
+            ```
+          commit-message: 'chore: release ${{ steps.cz.outputs.version }}'
+          branch: 'release/${{ steps.cz.outputs.version }}'
+          add-paths: |
+            .cz.yaml
+            CHANGELOG.md
+            package.json
+            package-lock.json

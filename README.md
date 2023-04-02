@@ -51,6 +51,8 @@ Pylon aims to become an Internet Computer homepage, providing a browsing experie
 
 ## Build Verification
 
+It's not possible to deterministically verify the distributed archives directly because the hash changes depending on the time that the archive was created. So, for now, the best we can do is verify the files that go into the archive.
+
 ### Windows
 
 Build verification on Windows must be run directly on Windows using Powershell, not on WSL.
@@ -80,22 +82,16 @@ Now, install project dependencies:
 pnpm i --frozen-lockfile
 ```
 
-Build the project and distributable:
+Build the project:
 
 ```powershell
-pnpm make
+pnpm package
 ```
 
-Unzip the resulting archive:
+Calculate the hash:
 
 ```powershell
-Expand-Archive -Path .\out\make\zip\win32\x64\pylon-win32-x64-0.0.0.zip -DestinationPath .\out\make\zip\win32\x64\pylon-win32-x64-0.0.0
-```
-
-Calculate the hash of the unzipped files:
-
-```powershell
-.\scripts\check-folder-hash.ps1 .\out\make\zip\win32\x64\pylon-win32-x64-0.0.0
+.\scripts\check-folder-hash.ps1 .\out\pylon-win32-x64
 ```
 
 If the previous command fails with an error message like the following:
@@ -146,40 +142,28 @@ Now, install project dependencies:
 pnpm i --frozen-lockfile
 ```
 
-Build the project and distributable:
+Build the project:
 
 ```shell
-pnpm make
+pnpm package
 ```
 
 The steps now deviate slightly for Linux and MacOS.
 
 #### Linux
 
-Unzip the resulting archive:
-
-```shell
-unzip ./out/make/zip/linux/x64/pylon-linux-x64-0.0.0.zip -d ./out/make/zip/linux/x64/pylon-linux-x64-0.0.0/
-```
-
 Calculate the hash of the unzipped files:
 
 ```shell
-find ./out/make/zip/linux/x64/pylon-linux-x64-0.0.0/pylon-linux-x64 -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum
+./scripts/check-folder-hash.sh ./out/pylon-linux-x64
 ```
 
 #### MacOS
 
-Unzip the resulting archive:
-
-```shell
-unzip ./out/make/zip/macos/x64/pylon-macos-x64-0.0.0.zip -d ./out/make/zip/macos/x64/pylon-macos-x64-0.0.0/
-```
-
 Calculate the hash of the unzipped files:
 
 ```shell
-find ./out/make/zip/macos/x64/pylon-macos-x64-0.0.0/pylon-macos-x64 -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum
+./scripts/check-folder-hash.sh ./out/pylon-darwin-x64
 ```
 
 ## Contributing
