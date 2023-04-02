@@ -6,7 +6,7 @@
   "author": "NathanosDev",
   "engines": {
     "node": "18.15.0",
-    "pnpm": "7.x"
+    "pnpm": "7.21.0"
   },
   "browserslist": [
     "chrome 100"
