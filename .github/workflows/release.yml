@@ -1,0 +1,142 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  create_windows_distributable:
+    name: Create Windows Distributable
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7.21.0'
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+          cache: pnpm
+
+      - name: Install Node Modules
+        run: pnpm i --frozen-lockfile
+
+      - name: Create Distributable
+        run: pnpm make
+
+      - name: Calculate Hash
+        shell: pwsh
+        run: .\scripts\check-folder-hash.ps1 .\out\pylon-win32-x64 | Out-File .\out\make\zip\win32\x64\win32-x64-hash.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows_distributable
+          path: out/make/zip/win32/x64/
+
+  create_linux_distributable:
+    name: Create Linux Distributable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7.21.0'
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+          cache: pnpm
+
+      - name: Install Node Modules
+        run: pnpm i --frozen-lockfile
+
+      - name: Create Distributable
+        run: pnpm make
+
+      - name: Calculate Hash
+        run: ./scripts/check-folder-hash.sh ./out/pylon-linux-x64 > ./out/make/zip/linux/x64/linux-x64-hash.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: linux_distributable
+          path: out/make/zip/linux/x64/
+
+  create_macos_distributable:
+    name: Create MacOS Distributable
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7.21.0'
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+          cache: pnpm
+
+      - name: Install Node Modules
+        run: pnpm i --frozen-lockfile
+
+      - name: Create Distributable
+        run: pnpm make
+
+      - name: Calculate Hash
+        run: ./scripts/check-folder-hash.sh ./out/pylon-darwin-x64 > ./out/make/zip/darwin/x64/darwin-x64-hash.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: macos_distributable
+          path: out/make/zip/darwin/x64/
+
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs:
+      [
+        create_windows_distributable,
+        create_linux_distributable,
+        create_macos_distributable,
+      ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Commitzen
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U Commitizen
+
+      - name: Generate release notes
+        run: cz changelog ${{ github.ref_name }} --file-name RELEASE_NOTES.md
+
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Create Github release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: >
+            artifacts/windows_distributable/win32-x64-hash.txt
+            artifacts/windows_distributable/pylon-win32-x64-${{ github.ref_name }}.zip
+            artifacts/linux_distributable/linux-x64-hash.txt
+            artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}.zip
+            artifacts/macos_distributable/darwin-x64-hash.txt
+            artifacts/macos_distributable/pylon-darwin-x64-${{ github.ref_name }}.zip
+          bodyFile: 'RELEASE_NOTES.md'
+          tag: '${{ github.ref_name }}'
+          commit: 'main'
