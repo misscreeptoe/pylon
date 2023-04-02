@@ -49,6 +49,53 @@ Pylon aims to become an Internet Computer homepage, providing a browsing experie
 - Decentralized news feeds
 - Wallet integrations
 
+## Build Verification
+
+### Windows
+
+Build verification on Windows must be run directly on Windows using Powershell, not on WSL.
+
+First, install global dependencies:
+
+- [Git](https://git-scm.com/)
+- [pnpm](https://pnpm.io/installation) - Use the standalone script
+
+Then, open a Powershell terminal and clone the repo:
+
+```powershell
+git clone https://github.com/nathanosdev/pylon.git
+```
+
+Change directory into the root of the repository:
+
+```powershell
+cd .\pylon\
+```
+
+Now, install project dependencies:
+
+```powershell
+pnpm i
+```
+
+Build the project and distributable:
+
+```powershell
+pnpm make
+```
+
+Unzip the resulting archive:
+
+```powershell
+Expand-Archive -Path .\out\make\zip\win32\x64\pylon-win32-x64-0.0.0.zip -DestinationPath .\out\make\zip\win32\x64\pylon-win32-x64-0.0.0
+```
+
+Calculate the hash of the unzipped files:
+
+```powershell
+.\scripts .\out\make\zip\win32\x64\pylon-win32-x64-0.0.0
+```
+
 ## Contributing
 
 If you're interested in contributing to this project, you can get started by reading the [contributing guidelines](./CONTRIBUTING.md).
