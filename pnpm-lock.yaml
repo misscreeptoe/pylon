@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@dfinity/agent': 0.15.4
   '@dfinity/candid': 0.15.5
-  '@dfinity/principal': 0.15.4
+  '@dfinity/principal': 0.15.5
   '@dfinity/response-verification': 0.1.0
   '@electron-forge/cli': 6.1.0
   '@electron-forge/maker-zip': 6.1.0
@@ -46,9 +46,9 @@ specifiers:
   zustand: 4.3.7
 
 dependencies:
-  '@dfinity/agent': 0.15.4_j3pxnjt25zooxbkcrbxihptcga
+  '@dfinity/agent': 0.15.4_koloj3yan2ii5rwus2jjwubnuy
   '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
-  '@dfinity/principal': 0.15.4_pj3xut33gta66wns5w7rs6cilm
+  '@dfinity/principal': 0.15.5_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/response-verification': 0.1.0
   '@fontsource/roboto': 4.5.8
   '@mui/base': 5.0.0-alpha.123_6hfup3cnntiu7o7txcf7sadj7u
@@ -247,14 +247,14 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  /@dfinity/agent/0.15.4_j3pxnjt25zooxbkcrbxihptcga:
+  /@dfinity/agent/0.15.4_koloj3yan2ii5rwus2jjwubnuy:
     resolution: {integrity: sha512-JuWaLUUtdGJx2DwHgnGrtTNwF5bC6a+izMbcHeN2M0RSaukeVNkRdYz4Bfxg7yTwdFxQRfQWcXcwvKF8/R2IEg==}
     peerDependencies:
       '@dfinity/candid': ^0.15.4
       '@dfinity/principal': ^0.15.4
     dependencies:
       '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
-      '@dfinity/principal': 0.15.4_pj3xut33gta66wns5w7rs6cilm
+      '@dfinity/principal': 0.15.5_pj3xut33gta66wns5w7rs6cilm
       base64-arraybuffer: 0.2.0
       bignumber.js: 9.1.1
       borc: 2.1.2
@@ -279,8 +279,8 @@ packages:
       - typescript
     dev: false
 
-  /@dfinity/principal/0.15.4_pj3xut33gta66wns5w7rs6cilm:
-    resolution: {integrity: sha512-ZH0InIXaIQqXfUDgkSa0S+9VlkAduhu2JJ984KtRs3BSHUyxG32OGnRcvxfJDdm6GHXWndTWoQUraHPoA3RplQ==}
+  /@dfinity/principal/0.15.5_pj3xut33gta66wns5w7rs6cilm:
+    resolution: {integrity: sha512-K+oIH/zAuZf6JxQAZrPzkkGL+hPn96/CnFzjWNqwHADZjBShr9m1n2Sv/68hKoND5p/uMNVIAV0km39A03Se6g==}
     dependencies:
       js-sha256: 0.9.0
       ts-node: 10.9.1_pj3xut33gta66wns5w7rs6cilm
