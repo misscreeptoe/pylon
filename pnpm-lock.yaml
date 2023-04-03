@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@dfinity/agent': 0.15.4
+  '@dfinity/agent': 0.15.5
   '@dfinity/candid': 0.15.5
   '@dfinity/principal': 0.15.5
   '@dfinity/response-verification': 0.1.0
@@ -45,7 +45,7 @@ specifiers:
   zustand: 4.3.7
 
 dependencies:
-  '@dfinity/agent': 0.15.4_koloj3yan2ii5rwus2jjwubnuy
+  '@dfinity/agent': 0.15.5_koloj3yan2ii5rwus2jjwubnuy
   '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/principal': 0.15.5_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/response-verification': 0.1.0
@@ -245,11 +245,11 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  /@dfinity/agent/0.15.4_koloj3yan2ii5rwus2jjwubnuy:
-    resolution: {integrity: sha512-JuWaLUUtdGJx2DwHgnGrtTNwF5bC6a+izMbcHeN2M0RSaukeVNkRdYz4Bfxg7yTwdFxQRfQWcXcwvKF8/R2IEg==}
+  /@dfinity/agent/0.15.5_koloj3yan2ii5rwus2jjwubnuy:
+    resolution: {integrity: sha512-Ytn8eo0Gk8QkaCX2X+CS1NYOdCr0ZjanqFyKbR5rY7LGQoVaNzdVHJufzheuTFMhTZs6i/OtaG2BQug4cNIocw==}
     peerDependencies:
-      '@dfinity/candid': ^0.15.4
-      '@dfinity/principal': ^0.15.4
+      '@dfinity/candid': ^0.15.5
+      '@dfinity/principal': ^0.15.5
     dependencies:
       '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
       '@dfinity/principal': 0.15.5_pj3xut33gta66wns5w7rs6cilm

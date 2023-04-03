@@ -48,7 +48,7 @@
     "webpack": "5.77.0"
   },
   "dependencies": {
-    "@dfinity/agent": "0.15.4",
+    "@dfinity/agent": "0.15.5",
     "@dfinity/candid": "0.15.5",
     "@dfinity/principal": "0.15.5",
     "@dfinity/response-verification": "0.1.0",
