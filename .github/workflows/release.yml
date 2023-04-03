@@ -29,6 +29,9 @@ jobs:
       - name: Create Distributable
         run: pnpm make
 
+      - name: Print output directory structure
+        run: Get-ChildItem -Path .\out\ -Recurse
+
       - name: Calculate Hash
         shell: pwsh
         run: .\scripts\check-folder-hash.ps1 .\out\pylon-win32-x64 | Out-File .\out\make\zip\win32\x64\win32-x64-hash.txt
