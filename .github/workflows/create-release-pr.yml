@@ -12,29 +12,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v2
+      - name: Install Python
+        uses: actions/setup-python@v4
         with:
-          version: '7.21.0'
+          python-version: '3.10'
 
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.15.0'
-          cache: pnpm
+      - name: Install Commitzen
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U Commitizen
 
       - name: Bump Version
-        id: cz
-        uses: commitizen-tools/commitizen-action@master
-        with:
-          commit: false
-          push: false
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cz bump --files-only --changelog --yes
+          echo "version=$(cz version --project)" >> "$GITHUB_OUTPUT"
 
       - name: Print Version
         run: echo "Bumping to version ${{ steps.cz.outputs.version }}"
 
-      - name: Update package-lock.json
-        run: pnpm i --lockfile-only
+      - name: Stage Changed Files
+        run: |
+          git add .
+          git status
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
@@ -52,4 +51,3 @@ jobs:
             .cz.yaml
             CHANGELOG.md
             package.json
-            package-lock.json
