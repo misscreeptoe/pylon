@@ -23,6 +23,7 @@ jobs:
           pip install -U Commitizen
 
       - name: Bump Version
+        id: cz
         run: |
           cz bump --files-only --changelog --yes
           echo "version=$(cz version --project)" >> "$GITHUB_OUTPUT"
