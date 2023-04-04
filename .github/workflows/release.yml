@@ -79,6 +79,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install Dependencies
+        run: |
+          brew update
+          brew install coreutils
+
       - uses: pnpm/action-setup@v2
         with:
           version: '7.21.0'
@@ -93,15 +98,15 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Create Distributable
-        run: pnpm make
+        run: pnpm make --arch=universal
 
       - name: Calculate Hash
-        run: ./scripts/check-folder-hash.sh ./out/pylon-darwin-x64 > ./out/make/zip/darwin/x64/darwin-x64-hash.txt
+        run: ./scripts/check-folder-hash.sh ./out/pylon-darwin-universal > ./out/make/zip/darwin/universal/darwin-universal-hash.txt
 
       - uses: actions/upload-artifact@v3
         with:
           name: macos_distributable
-          path: out/make/zip/darwin/x64/
+          path: out/make/zip/darwin/universal/
 
   create_release:
     name: Create Release
@@ -134,12 +139,12 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: >
-            artifacts/windows_distributable/win32-x64-hash.txt
-            artifacts/windows_distributable/pylon-win32-x64-${{ github.ref_name }}.zip
-            artifacts/linux_distributable/linux-x64-hash.txt
-            artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}.zip
-            artifacts/macos_distributable/darwin-x64-hash.txt
-            artifacts/macos_distributable/pylon-darwin-x64-${{ github.ref_name }}.zip
+            artifacts/windows_distributable/win32-x64-hash.txt,
+            artifacts/windows_distributable/pylon-win32-x64-${{ github.ref_name }}.zip,
+            artifacts/linux_distributable/linux-x64-hash.txt,
+            artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}.zip,
+            artifacts/macos_distributable/darwin-universal-hash.txt,
+            artifacts/macos_distributable/pylon-darwin-universal-${{ github.ref_name }}.zip
           bodyFile: 'RELEASE_NOTES.md'
           tag: '${{ github.ref_name }}'
           commit: 'main'

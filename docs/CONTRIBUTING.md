@@ -1,4 +1,6 @@
-## Development
+# Contributing
+
+## Dependencies
 
 - [Install NodeJS](https://nodejs.org/)
 - [Install pnpm](https://pnpm.io/installation)
