@@ -1,4 +1,4 @@
-## 0.1.0 (2023-04-03)
+## Unreleased
 
 ### Feat
 
@@ -36,6 +36,7 @@
 
 ### Fix
 
+- issue with preload.js file not working on packaged apps
 - const enums are not preserved and files malformatted
 - node-fetch version and app build
 - use fixed position for toolbar
