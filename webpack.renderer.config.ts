@@ -1,8 +1,6 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import type { Configuration } from 'webpack';
 
 import { rules } from './webpack.rules';
-import { plugins } from './webpack.plugins';
 
 export const rendererConfig: Configuration = {
   module: {
@@ -14,7 +12,6 @@ export const rendererConfig: Configuration = {
       },
     ],
   },
-  plugins: [...plugins, new HtmlWebpackPlugin()],
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     alias: {
