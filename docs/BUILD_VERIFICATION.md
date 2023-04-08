@@ -15,6 +15,7 @@ Build verification on Windows must be run directly on Windows using Powershell, 
 First, install global dependencies:
 
 - [Git](https://git-scm.com/)
+- [NodeJS](https://nodejs.org/)
 - [pnpm](https://pnpm.io/installation):
   - Set PNPM version: `$Env:PNPM_VERSION = "7.21.0"`
   - Install PNPM: `iwr https://get.pnpm.io/install.ps1 -useb | iex`
@@ -40,32 +41,13 @@ pnpm i --frozen-lockfile
 Build the project:
 
 ```powershell
-pnpm package
+pnpm make
 ```
 
 Calculate the hash:
 
 ```powershell
-.\scripts\check-folder-hash.ps1 .\out\pylon-win32-x64
-```
-
-If the previous command fails with an error message like the following:
-
-```powershell
-.\scripts\check-folder-hash.ps1 : File C:\pylon\scripts\check-folder-hash.ps1 cannot be loaded because running scripts
-is disabled on this system. For more information, see about_Execution_Policies at
-https:/go.microsoft.com/fwlink/?LinkID=135170.
-At line:1 char:1
-+ .\scripts\check-folder-hash.ps1 .\out\make\zip\win32\x64\pylon-win32- ...
-+ ~~~~~~~~~~~
-    + CategoryInfo          : SecurityError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : UnauthorizedAccess
-```
-
-Enable execution for unsigned scripts by opening Powershell with administrator privileges and running the following:
-
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+Get-FileHash .\out\make\zip\win32\x64\pylon-win32-x64-0.1.0.zip
 ```
 
 ## MacOS
@@ -73,6 +55,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 First, install global dependencies:
 
 - [Git](https://git-scm.com/)
+- [NodeJS](https://nodejs.org/)
 - [pnpm](https://pnpm.io/installation):
   - Set PNPM version: `export PNPM_VERSION=7.21.0`
   - Install PNPM:
@@ -100,13 +83,13 @@ pnpm i --frozen-lockfile
 Build the project:
 
 ```shell
-pnpm package --arch=universal
+pnpm make --arch=universal
 ```
 
 Calculate the hash of the unzipped files:
 
 ```shell
-./scripts/check-folder-hash.sh ./out/pylon-darwin-x64
+sha256sum ./out/make/zip/darwin/universal/pylon-darwin-universal-0.1.0.zip
 ```
 
 If you get an error about `sha256sum` not being installed, then install [Homebrew](https://brew.sh/) if you do not already have it:
@@ -126,6 +109,7 @@ brew install coreutils
 First, install global dependencies:
 
 - [Git](https://git-scm.com/)
+- [NodeJS](https://nodejs.org/)
 - [pnpm](https://pnpm.io/installation):
   - Set PNPM version: `export PNPM_VERSION=7.21.0`
   - Install PNPM:
@@ -153,11 +137,11 @@ pnpm i --frozen-lockfile
 Build the project:
 
 ```shell
-pnpm package
+pnpm make
 ```
 
 Calculate the hash of the unzipped files:
 
 ```shell
-./scripts/check-folder-hash.sh ./out/pylon-linux-x64
+sha256sum ./out/make/zip/linux/x64/pylon-linux-x64-0.1.0.zip
 ```
