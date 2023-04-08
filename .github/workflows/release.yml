@@ -34,7 +34,7 @@ jobs:
 
       - name: Calculate Hash
         shell: pwsh
-        run: .\scripts\check-folder-hash.ps1 .\out\pylon-win32-x64 | Out-File .\out\make\zip\win32\x64\win32-x64-hash.txt
+        run: Get-FileHash .\out\make\zip\win32\x64\pylon-win32-x64-${{ github.ref_name }}.zip | Out-File .\out\make\zip\win32\x64\pylon-win32-x64-${{ github.ref_name }}-hash.txt
 
       - uses: actions/upload-artifact@v3
         with:
@@ -65,7 +65,7 @@ jobs:
         run: pnpm make
 
       - name: Calculate Hash
-        run: ./scripts/check-folder-hash.sh ./out/pylon-linux-x64 > ./out/make/zip/linux/x64/linux-x64-hash.txt
+        run: sha256sum ./out/make/zip/linux/x64/pylon-linux-x64-${{ github.ref_name }}.zip > ./out/make/zip/linux/x64/pylon-linux-x64-${{ github.ref_name }}-hash.txt
 
       - uses: actions/upload-artifact@v3
         with:
@@ -101,7 +101,7 @@ jobs:
         run: pnpm make --arch=universal
 
       - name: Calculate Hash
-        run: ./scripts/check-folder-hash.sh ./out/pylon-darwin-universal > ./out/make/zip/darwin/universal/darwin-universal-hash.txt
+        run: sha256sum ./out/make/zip/darwin/universal/pylon-darwin-universal-${{ github.ref_name }}.zip > ./out/make/zip/darwin/universal/pylon-darwin-universal-${{ github.ref_name }}-hash.txt
 
       - uses: actions/upload-artifact@v3
         with:
@@ -139,11 +139,11 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: >
-            artifacts/windows_distributable/win32-x64-hash.txt,
+            artifacts/windows_distributable/pylon-win32-x64-${{ github.ref_name }}-hash.txt,
             artifacts/windows_distributable/pylon-win32-x64-${{ github.ref_name }}.zip,
-            artifacts/linux_distributable/linux-x64-hash.txt,
+            artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}-hash.txt,
             artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}.zip,
-            artifacts/macos_distributable/darwin-universal-hash.txt,
+            artifacts/macos_distributable/pylon-darwin-universal-${{ github.ref_name }}-hash.txt,
             artifacts/macos_distributable/pylon-darwin-universal-${{ github.ref_name }}.zip
           bodyFile: 'RELEASE_NOTES.md'
           tag: '${{ github.ref_name }}'

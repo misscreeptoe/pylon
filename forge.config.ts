@@ -1,6 +1,6 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerZIP } from '@electron-forge/maker-zip';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
+import { DeterministicZipMaker } from 'deterministic-electron-forge-zip-maker';
 
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
@@ -8,7 +8,7 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {},
   rebuildConfig: {},
-  makers: [new MakerZIP({}, ['linux', 'win32', 'darwin', 'mas'])],
+  makers: [new DeterministicZipMaker({}, ['linux', 'win32', 'darwin', 'mas'])],
   plugins: [
     {
       name: '@electron-forge/plugin-electronegativity',
