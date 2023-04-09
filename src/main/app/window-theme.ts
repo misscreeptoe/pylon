@@ -1,6 +1,6 @@
 import { nativeTheme, TitleBarOverlayOptions } from 'electron';
 
-export const TITLE_BAR_HEIGHT = 40;
+export const TITLE_BAR_HEIGHT = 40 - 1; // -1 accounts for window border
 export const TOOLBAR_HEIGHT = 40;
 
 export interface ThemeOptions {
