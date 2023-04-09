@@ -37,6 +37,7 @@
 
 ### Fix
 
+- browser view y position on macos
 - issue with preload.js file not working on packaged apps
 - const enums are not preserved and files malformatted
 - node-fetch version and app build
