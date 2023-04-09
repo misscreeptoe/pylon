@@ -1,8 +1,5 @@
 import { Input } from 'electron';
-import { platform } from 'node:os';
-
-const currentPlatform = platform();
-const isDarwin = currentPlatform === 'darwin';
+import { isDarwin } from './platform';
 
 function isCtrl(input: Input): boolean {
   return (isDarwin && input.meta) || input.control;
