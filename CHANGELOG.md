@@ -2,6 +2,7 @@
 
 ### Feat
 
+- make published zip files determinstic
 - add toolbar with navigation buttons
 - add reload and devtools shortcuts
 - update tab title
