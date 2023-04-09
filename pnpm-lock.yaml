@@ -24,7 +24,7 @@ specifiers:
   cheerio: 1.0.0-rc.12
   css-loader: 6.7.3
   deterministic-electron-forge-zip-maker: ^0.1.2
-  electron: 23.2.1
+  electron: 24.0.0
   electron-squirrel-startup: 1.0.0
   eslint: 8.37.0
   eslint-plugin-import: 2.27.5
@@ -79,7 +79,7 @@ devDependencies:
   '@vercel/webpack-asset-relocator-loader': 1.7.3
   css-loader: 6.7.3_webpack@5.77.0
   deterministic-electron-forge-zip-maker: 0.1.2
-  electron: 23.2.1
+  electron: 24.0.0
   eslint: 8.37.0
   eslint-plugin-import: 2.27.5_2niwd2uqke2jpnohndnwvllrkm
   node-loader: 2.0.0_webpack@5.77.0
@@ -1297,10 +1297,6 @@ packages:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: true
     optional: true
-
-  /@types/node/16.18.11:
-    resolution: {integrity: sha512-3oJbGBUWuS6ahSnEq1eN2XrCyf4YsWI8OyCvo7c64zQJNplk3mO84t53o8lfTk+2ji59g5ycfc6qQ3fdHliHuA==}
-    dev: true
 
   /@types/node/18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
@@ -2884,14 +2880,14 @@ packages:
     resolution: {integrity: sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==}
     dev: true
 
-  /electron/23.2.1:
-    resolution: {integrity: sha512-rPxETyl0u1zxgPzVTtmJZ+en3NjbrqTF7iO4olvmwUnK98Dsp/HFvvzRPb79DrRu+pyFg0A197WiMqPWH2WvvQ==}
+  /electron/24.0.0:
+    resolution: {integrity: sha512-QmL8L53fQ+xOAp8m2mSGNewhDvJqQttCxrcesf0cqndKQDsIq4QvR35wGJqHg7MyPQKcBErLhZj9QvRheO5qnA==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
     requiresBuild: true
     dependencies:
       '@electron/get': 2.0.2
-      '@types/node': 16.18.11
+      '@types/node': 18.15.11
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color

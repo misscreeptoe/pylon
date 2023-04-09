@@ -1,4 +1,5 @@
 import { BrowserView, BrowserWindow, screen, WebPreferences } from 'electron';
+import { isDarwin } from './platform';
 import {
   getThemeOptions,
   TITLE_BAR_HEIGHT,
@@ -39,11 +40,24 @@ export function createBrowserWindow(
   return browserWindow;
 }
 
+function getBrowserViewYPos(
+  browserWindow: BrowserWindow,
+  heightOffset: number,
+) {
+  const [_windowWidth, windowHeight] = browserWindow.getSize();
+
+  // on MacOS if `y` is set to `0` then Electron sets it to be `windowHeight`,
+  // so if `y` is set to `heightOffset` then Electron sets it to be `windowHeight + heightOffset`,
+  // so `y` should be set to `heightOffset - windowHeight` to compensate.
+  // See: https://github.com/electron/electron/issues/35994
+  return isDarwin ? heightOffset - windowHeight : heightOffset;
+}
+
 export function createBrowserView(
   browserWindow: BrowserWindow,
   url: string,
 ): BrowserView {
-  const toolbarHeight = TITLE_BAR_HEIGHT + TOOLBAR_HEIGHT;
+  const heightOffset = TITLE_BAR_HEIGHT + TOOLBAR_HEIGHT;
   const [width, height] = browserWindow.getContentSize();
   const { backgroundColor } = getThemeOptions();
 
@@ -54,9 +68,9 @@ export function createBrowserView(
   });
   browserView.setBounds({
     x: 0,
-    y: toolbarHeight,
+    y: getBrowserViewYPos(browserWindow, heightOffset),
     width,
-    height: height - toolbarHeight,
+    height: height - heightOffset,
   });
   browserView.setAutoResize({
     height: true,

@@ -238,7 +238,6 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
       // fail anything else
       case 'default':
-      case 'save-to-disk':
       case 'other':
       default: {
         // [TODO] - handle error
