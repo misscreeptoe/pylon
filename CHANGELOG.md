@@ -2,6 +2,7 @@
 
 ### Feat
 
+- make published zip files determinstic
 - add toolbar with navigation buttons
 - add reload and devtools shortcuts
 - update tab title
@@ -36,6 +37,7 @@
 
 ### Fix
 
+- browser view y position on macos
 - issue with preload.js file not working on packaged apps
 - const enums are not preserved and files malformatted
 - node-fetch version and app build
