@@ -10,10 +10,11 @@ import { IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import { Tab } from '../model';
+import { isLinux } from '../utils';
 
 const TabBarWrapper = styled.div`
   width: 100%;
-  height: calc(env(titlebar-area-height) + 1px);
+  height: ${isLinux ? '40px' : 'env(titlebar-area-height)'};
   background-color: ${props =>
     props.theme.palette.mode === 'dark'
       ? props.theme.palette.tertiary.dark
@@ -22,10 +23,10 @@ const TabBarWrapper = styled.div`
 
 const TabBarInner = styled.div`
   position: fixed;
-  top: env(titlebar-area-y);
-  left: env(titlebar-area-x);
-  width: env(titlebar-area-width);
-  height: calc(env(titlebar-area-height) + 1px);
+  top: ${isLinux ? '0' : 'env(titlebar-area-y)'};
+  left: ${isLinux ? '0' : 'env(titlebar-area-x)'};
+  width: ${isLinux ? '100%' : 'env(titlebar-area-width)'};
+  height: ${isLinux ? '40px' : 'env(titlebar-area-height)'};
 
   display: flex;
   flex-direction: row;

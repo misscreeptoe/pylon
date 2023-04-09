@@ -4,6 +4,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
+import { isLinux } from '../utils';
 
 const NavigationBarWapper = styled.div`
   position: fixed;
@@ -11,9 +12,9 @@ const NavigationBarWapper = styled.div`
   flex-direction: row;
   align-items: center;
 
-  top: calc(env(titlebar-area-height) + 1px);
+  top: ${isLinux ? '40px' : 'env(titlebar-area-height)'};
   width: 100%;
-  height: env(titlebar-area-height);
+  height: ${isLinux ? '40px' : 'env(titlebar-area-height)'};
   padding: 0 ${props => props.theme.spacing(0.5)};
 
   background-color: ${props =>
