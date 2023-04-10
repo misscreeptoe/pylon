@@ -97,16 +97,27 @@ jobs:
       - name: Install Node Modules
         run: pnpm i --frozen-lockfile
 
-      - name: Create Distributable
-        run: pnpm make --arch=universal
+      - name: Create x64 Distributable
+        run: pnpm make --arch=x64
 
-      - name: Calculate Hash
-        run: sha256sum ./out/make/zip/darwin/universal/pylon-darwin-universal-${{ github.ref_name }}.zip > ./out/make/zip/darwin/universal/pylon-darwin-universal-${{ github.ref_name }}-hash.txt
+      - name: Calculate x64 Hash
+        run: sha256sum ./out/make/zip/darwin/x64/pylon-darwin-x64-${{ github.ref_name }}.zip > ./out/make/zip/darwin/x64/pylon-darwin-x64-${{ github.ref_name }}-hash.txt
+
+      - name: Create arm64 Distributable
+        run: pnpm make --arch=arm64
+
+      - name: Calculate arm64 Hash
+        run: sha256sum ./out/make/zip/darwin/arm64/pylon-darwin-arm64-${{ github.ref_name }}.zip > ./out/make/zip/darwin/arm64/pylon-darwin-arm64-${{ github.ref_name }}-hash.txt
 
       - uses: actions/upload-artifact@v3
         with:
-          name: macos_distributable
-          path: out/make/zip/darwin/universal/
+          name: macos_x64_distributable
+          path: out/make/zip/darwin/x64/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: macos_arm64_distributable
+          path: out/make/zip/darwin/arm64/
 
   create_release:
     name: Create Release
@@ -143,8 +154,10 @@ jobs:
             artifacts/windows_distributable/pylon-win32-x64-${{ github.ref_name }}.zip,
             artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}-hash.txt,
             artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}.zip,
-            artifacts/macos_distributable/pylon-darwin-universal-${{ github.ref_name }}-hash.txt,
-            artifacts/macos_distributable/pylon-darwin-universal-${{ github.ref_name }}.zip
+            artifacts/macos_x64_distributable/pylon-darwin-x64-${{ github.ref_name }}-hash.txt,
+            artifacts/macos_x64_distributable/pylon-darwin-x64-${{ github.ref_name }}.zip
+            artifacts/macos_arm64_distributable/pylon-darwin-arm64-${{ github.ref_name }}-hash.txt,
+            artifacts/macos_arm64_distributable/pylon-darwin-arm64-${{ github.ref_name }}.zip
           bodyFile: 'RELEASE_NOTES.md'
           tag: '${{ github.ref_name }}'
           commit: 'main'
