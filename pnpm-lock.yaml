@@ -4,7 +4,7 @@ specifiers:
   '@dfinity/agent': 0.15.5
   '@dfinity/candid': 0.15.5
   '@dfinity/principal': 0.15.5
-  '@dfinity/response-verification': 0.1.0
+  '@dfinity/response-verification': 0.1.1
   '@electron-forge/cli': 6.1.0
   '@electron-forge/plugin-electronegativity': 6.1.0
   '@electron-forge/plugin-webpack': 6.1.0
@@ -48,7 +48,7 @@ dependencies:
   '@dfinity/agent': 0.15.5_koloj3yan2ii5rwus2jjwubnuy
   '@dfinity/candid': 0.15.5_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/principal': 0.15.5_pj3xut33gta66wns5w7rs6cilm
-  '@dfinity/response-verification': 0.1.0
+  '@dfinity/response-verification': 0.1.1
   '@fontsource/roboto': 4.5.8
   '@mui/base': 5.0.0-alpha.123_zn3vyfk3tbnwebg5ldvieekjaq
   '@mui/icons-material': 5.11.11_qvn7gklc3nivno6qdfiyqqkjfe
@@ -289,8 +289,8 @@ packages:
       - typescript
     dev: false
 
-  /@dfinity/response-verification/0.1.0:
-    resolution: {integrity: sha512-ZEycXyK6ruygRyfolrjGzU0PVs68soikE3PjbLGDZ1iTYVMT/vc9kQgEpkZRYZlDanxnD4OoAJE7fHKJhf4/bA==}
+  /@dfinity/response-verification/0.1.1:
+    resolution: {integrity: sha512-QVSB/oempRHv30GxDfXLZTXeKmjVkGiMNyVrflr0XZA0Io64qE5umbwXDAchekW/77T3woTdBBzODsIKGTcq5g==}
     dev: false
 
   /@doyensec/csp-evaluator/1.0.3:
