@@ -2,6 +2,7 @@
 
 ### Fix
 
+- mac os distributables and enable compression
 - linux toolbar alignment
 
 ## 0.2.0 (2023-04-09)
