@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fix
+
+- linux toolbar alignment
+
 ## 0.2.0 (2023-04-09)
 
 ### Feat
