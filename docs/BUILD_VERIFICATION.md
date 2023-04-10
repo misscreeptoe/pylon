@@ -1,7 +1,5 @@
 # Build Verification
 
-It's not possible to deterministically verify the distributed archives directly because the hash changes depending on the time that the archive was created. So, for now, the best we can do is verify the files that go into the archive.
-
 ## Contents
 
 1. [Windows](#windows)

@@ -9,8 +9,9 @@ Pylon is an [Internet Computer](https://internetcomputer.org/) HTTP Gateway that
 1. [Introduction](#introduction)
 2. [Technical Introduction](#technical-introduction)
 3. [Roadmap](#roadmap)
-4. [Build Verification](./docs/BUILD_VERIFICATION.md)
-5. [Contributing](./docs/CONTRIBUTING.md)
+4. [Installation](./docs/INSTALLATION.md)
+5. [Build Verification](./docs/BUILD_VERIFICATION.md)
+6. [Contributing](./docs/CONTRIBUTING.md)
 
 ## Introduction
 
