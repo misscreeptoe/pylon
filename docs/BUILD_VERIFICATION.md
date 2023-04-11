@@ -30,6 +30,24 @@ Change directory into the root of the repository:
 cd .\pylon\
 ```
 
+Set the Pylon version to verify (check the [release page](https://github.com/nathanosdev/pylon/releases) to get the latest version):
+
+```powershell
+$Env:PYLON_VERSION = "0.2.1"
+```
+
+Fetch git tags:
+
+```powershell
+git fetch --all --tags
+```
+
+Check out the git tag for the release:
+
+```powershell
+git checkout tags/$env:PYLON_VERSION
+```
+
 Now, install project dependencies:
 
 ```powershell
@@ -42,10 +60,16 @@ Build the project:
 pnpm make
 ```
 
-Calculate the hash:
+Download the release file:
 
 ```powershell
-Get-FileHash .\out\make\zip\win32\x64\pylon-win32-x64-0.1.0.zip
+Invoke-WebRequest -Uri https://github.com/nathanosdev/pylon/releases/download/$env:PYLON_VERSION/pylon-win32-x64-$env:PYLON_VERSION.zip -OutFile .\out\make\zip\win32\x64\pylon-win32-x64-$env:PYLON_VERSION-release.zip
+```
+
+Calculate and compare hashes:
+
+```powershell
+Get-FileHash -Path .\out\make\zip\win32\x64\pylon-win32-x64-$env:PYLON_VERSION.zip,.\out\make\zip\win32\x64\pylon-win32-x64-$env:PYLON_VERSION-release.zip
 ```
 
 ## MacOS
@@ -72,6 +96,24 @@ Change directory into the root of the repository:
 cd ./pylon/
 ```
 
+Set the Pylon version to verify (check the [release page](https://github.com/nathanosdev/pylon/releases) to get the latest version):
+
+```powershell
+export PYLON_VERSION="0.2.1"
+```
+
+Fetch git tags:
+
+```powershell
+git fetch --all --tags
+```
+
+Check out the git tag for the release:
+
+```powershell
+git checkout tags/$PYLON_VERSION
+```
+
 Now, install project dependencies:
 
 ```shell
@@ -81,25 +123,35 @@ pnpm i --frozen-lockfile
 Build the project:
 
 ```shell
-pnpm make --arch=universal
+pnpm make
 ```
 
-Calculate the hash of the unzipped files:
+### For M1 or later
+
+Download the release file:
 
 ```shell
-sha256sum ./out/make/zip/darwin/universal/pylon-darwin-universal-0.1.0.zip
+curl -L https://github.com/nathanosdev/pylon/releases/download/$PYLON_VERSION/pylon-darwin-arm64-$PYLON_VERSION.zip -o ./out/make/zip/darwin/arm64/pylon-darwin-arm64-$PYLON_VERSION-release.zip
 ```
 
-If you get an error about `sha256sum` not being installed, then install [Homebrew](https://brew.sh/) if you do not already have it:
+Calculate and compare hashes:
 
 ```shell
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+sha256sum ./out/make/zip/darwin/arm64/pylon-darwin-arm64-$PYLON_VERSION.zip ./out/make/zip/darwin/arm64/pylon-darwin-arm64-$PYLON_VERSION-release.zip
 ```
 
-and then install [coreutils](https://formulae.brew.sh/formula/coreutils):
+### For pre-M1
+
+Download the release file:
 
 ```shell
-brew install coreutils
+curl -L https://github.com/nathanosdev/pylon/releases/download/$PYLON_VERSION/pylon-darwin-x64-$PYLON_VERSION.zip -o ./out/make/zip/darwin/x64/pylon-darwin-x64-$PYLON_VERSION-release.zip
+```
+
+Calculate and compare hashes:
+
+```shell
+sha256sum ./out/make/zip/darwin/x64/pylon-darwin-x64-$PYLON_VERSION.zip ./out/make/zip/darwin/x64/pylon-darwin-x64-$PYLON_VERSION-release.zip
 ```
 
 ## Linux
@@ -126,6 +178,24 @@ Change directory into the root of the repository:
 cd ./pylon/
 ```
 
+Set the Pylon version to verify (check the [release page](https://github.com/nathanosdev/pylon/releases) to get the latest version):
+
+```powershell
+export PYLON_VERSION="0.2.1"
+```
+
+Fetch git tags:
+
+```powershell
+git fetch --all --tags
+```
+
+Check out the git tag for the release:
+
+```powershell
+git checkout tags/$PYLON_VERSION
+```
+
 Now, install project dependencies:
 
 ```shell
@@ -138,8 +208,14 @@ Build the project:
 pnpm make
 ```
 
-Calculate the hash of the unzipped files:
+Download the release file:
 
 ```shell
-sha256sum ./out/make/zip/linux/x64/pylon-linux-x64-0.1.0.zip
+curl -L https://github.com/nathanosdev/pylon/releases/download/$PYLON_VERSION/pylon-linux-x64-$PYLON_VERSION.zip -o ./out/make/zip/linux/x64/pylon-linux-x64-$PYLON_VERSION-release.zip
+```
+
+Calculate and compare hashes:
+
+```shell
+sha256sum ./out/make/zip/linux/x64/pylon-linux-x64-$PYLON_VERSION.zip ./out/make/zip/linux/x64/pylon-linux-x64-$PYLON_VERSION-release.zip
 ```

@@ -1,8 +1,10 @@
 # Pylon
 
+> Pylon, the gateway to the inner part of an Ancient Egyptian temple or Christian cathedral - Wikipedia
+
 Pylon is an [Internet Computer](https://internetcomputer.org/) HTTP Gateway that provides a more _trustless_ and _decentralized_ way to access the Internet Computer blockchain.
 
-[Internet Computer HTTP Gateways](https://internetcomputer.org/docs/current/references/ic-interface-spec#http-gateway) translate Internet Computer API calls into standard HTTP calls that a browser can understood. Without an HTTP Gateway, a browser is not able to interact with the Internet Computer network.
+[Internet Computer HTTP Gateways](https://internetcomputer.org/docs/current/references/ic-interface-spec#http-gateway) translate Internet Computer API calls into standard HTTP calls that a browser can understand. Without an HTTP Gateway, a browser is unable to interact with the Internet Computer network.
 
 ## Contents
 

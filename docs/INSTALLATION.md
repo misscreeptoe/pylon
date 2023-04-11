@@ -8,11 +8,11 @@ pylon-${platform}-${architecture}-${version}.zip
 
 - `${platform}` corresponds to your operating system, possible values are:
   - `win32` for Windows 7/10/11
-  - `darwin` for Mac OS X (Intel or M1/M2)
+  - `darwin` for Mac OS X (both pre-M1 and M1 or later)
   - `linux` for Linux
 - `${platform}` corresponds to your system architecture, possible values are:
-  - `x64` for Windows, Linux and Intel Mac OS X
-  - `arm64` for M1/M2 Mac OS X
+  - `x64` for Windows, Linux and pre-M1 Mac OS X
+  - `arm64` for M1 or later Mac OS X
 - `${version}` corresponds to the application version and will be a number, such as `0.1.0`.
 
 All platforms may show a security warning when running Pylon for the first time. This happens because the executable is not _signed_. Executable signing is a security protocol that operating systems can use to verify that an executable has not been maliciously altered.
@@ -105,8 +105,8 @@ First step is to open the Start Menu folder. This can by done in a few different
 ### Install
 
 1. Head over to the [release page](https://github.com/nathanosdev/pylon/releases) and download the release file from the latest release for your architecture:
-   - `pylon-darwin-x64-${version}.zip` file for Intel Macs.
-   - `pylon-darwin-arm64-${version}.zip` file for M1/M2 Macs.
+   - `pylon-darwin-x64-${version}.zip` file for pre-M1 Macs.
+   - `pylon-darwin-arm64-${version}.zip` file for M1 or later Macs.
    - `${version}` will be a version number, such as `0.1.0`.
 2. Once downloaded, double-click the file to extract it.
 3. The application can be started by double clicking the `pylon` file.
