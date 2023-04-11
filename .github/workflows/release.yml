@@ -155,7 +155,7 @@ jobs:
             artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}-hash.txt,
             artifacts/linux_distributable/pylon-linux-x64-${{ github.ref_name }}.zip,
             artifacts/macos_x64_distributable/pylon-darwin-x64-${{ github.ref_name }}-hash.txt,
-            artifacts/macos_x64_distributable/pylon-darwin-x64-${{ github.ref_name }}.zip
+            artifacts/macos_x64_distributable/pylon-darwin-x64-${{ github.ref_name }}.zip,
             artifacts/macos_arm64_distributable/pylon-darwin-arm64-${{ github.ref_name }}-hash.txt,
             artifacts/macos_arm64_distributable/pylon-darwin-arm64-${{ github.ref_name }}.zip
           bodyFile: 'RELEASE_NOTES.md'
