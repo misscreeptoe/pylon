@@ -6,7 +6,7 @@ import { makeIcHttpRequest } from '../../http-gateway';
 import { EnrichedMetadata, enrichMetadata } from './enrich-metadata';
 import {
   getMetadataCacheEntry,
-  insertMetadataCacheEntry,
+  upsertMetadataCacheEntry,
 } from './metadata-cache';
 import { parseMetadata } from './metadata-parser';
 
@@ -36,7 +36,7 @@ export async function fetchMetadata(
   const metadata = parseMetadata($, canisterId);
   const enrichedMetadata = await enrichMetadata(request, principal, metadata);
 
-  await insertMetadataCacheEntry(canisterId, enrichedMetadata);
+  await upsertMetadataCacheEntry(canisterId, enrichedMetadata);
 
   return enrichedMetadata;
 }

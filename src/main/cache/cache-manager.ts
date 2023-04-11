@@ -1,14 +1,13 @@
 import { app } from 'electron';
 import { writeFile, readFile, mkdir } from 'node:fs/promises';
 
-interface Cache<T> {
+export interface CacheEntries<T> {
+  [key: string]: T;
+}
+
+export interface Cache<T> {
   version: number;
-  entries: {
-    [key: string]: {
-      expiry: number;
-      data: T;
-    };
-  };
+  entries: CacheEntries<T>;
 }
 
 export class CacheManager<T> {
@@ -32,15 +31,12 @@ export class CacheManager<T> {
     return cacheManager;
   }
 
-  public async insert(key: string, expiry: number, data: T): Promise<void> {
+  public async upsert(key: string, data: T): Promise<void> {
     if (!this.cache) {
       throw new Error('Cache must be initialized before use');
     }
 
-    this.cache.entries[key] = {
-      expiry,
-      data,
-    };
+    this.cache.entries[key] = data;
 
     await this.writeCacheToFile();
   }
@@ -50,7 +46,6 @@ export class CacheManager<T> {
       throw new Error('Cache must be initialized before use');
     }
 
-    const currentTimestamp = Date.now();
     const entry = this.cache.entries[key];
 
     // if the cache entry is missing
@@ -58,14 +53,15 @@ export class CacheManager<T> {
       return null;
     }
 
-    // if any of the cache entry's properties are missing (it is corrupt),
-    // or the expiry date is in the past
-    if (!entry.expiry || !entry.data || entry.expiry < currentTimestamp) {
-      this.remove(key);
-      return null;
+    return entry;
+  }
+
+  public getAll(): CacheEntries<T> {
+    if (!this.cache) {
+      throw new Error('Cache must be initialized before use');
     }
 
-    return entry.data;
+    return this.cache.entries;
   }
 
   public async remove(key: string): Promise<void> {

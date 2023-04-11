@@ -1,5 +1,4 @@
 import {
-  BrowserView,
   BrowserWindow,
   Event,
   HandlerDetails,
@@ -24,7 +23,7 @@ import {
   isNavigateBack,
   isNavigateForward,
 } from './keyboard-shortcut-mappings';
-import { TypedEventEmitter, uuid } from '../util';
+import { TypedEventEmitter } from '../util';
 import { createBrowserView, createBrowserWindow } from './browser-window';
 import {
   MainEventType,
@@ -34,6 +33,7 @@ import {
   RendererEventType,
   RendererSwitchToTab,
 } from '../../ipc';
+import { TabManager } from './tab-manager';
 
 type WindowOpenHandler = Parameters<WebContents['setWindowOpenHandler']>[0];
 
@@ -43,8 +43,7 @@ export type AppWindowEvents = {
 
 export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
   private readonly browserWindow: BrowserWindow;
-  private currentTabId: string | null = null;
-  private tabs: Record<string, BrowserView | null> = {};
+  private readonly tabManager: TabManager;
 
   constructor(private readonly id: string) {
     super();
@@ -56,21 +55,13 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     this.browserWindow.once('close', () => {
       this.emit('closed');
     });
+    this.tabManager = new TabManager();
 
-    this.initWebContents(this.browserWindow.webContents);
+    this.browserWindow.webContents.on(
+      'before-input-event',
+      this.onInputEvent.bind(this),
+    );
     this.setupIpcHandlers();
-  }
-
-  private get currentTab(): BrowserView | null {
-    if (!this.currentTabId) {
-      return null;
-    }
-
-    return this.tabs[this.currentTabId] ?? null;
-  }
-
-  private get currentTabHasBrowserView(): boolean {
-    return this.currentTab !== null && this.currentTab instanceof BrowserView;
   }
 
   public updateTheme(): void {
@@ -79,13 +70,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     this.browserWindow.setBackgroundColor(backgroundColor);
     this.browserWindow.setTitleBarOverlay(titleBarOverlay);
 
-    for (const [_id, browserView] of Object.entries(this.tabs)) {
-      if (browserView === null) {
-        return;
-      }
-
-      browserView.setBackgroundColor(backgroundColor);
-    }
+    this.tabManager.updateTheme();
   }
 
   private subscribeToRendererEvent<U>(
@@ -97,43 +82,39 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
 
   private setupIpcHandlers(): void {
     this.subscribeToRendererEvent(RendererEventType.Loaded, () => {
-      this.openNewTab();
+      this.openNewTabAndNotify(NEW_TAB_WEBPACK_ENTRY);
     });
 
     this.subscribeToRendererEvent(RendererEventType.OpenNewTab, () => {
-      this.openNewTab();
+      this.openNewTab(NEW_TAB_WEBPACK_ENTRY);
     });
 
     this.subscribeToRendererEvent<RendererCloseTab>(
       RendererEventType.CloseTab,
       (_event, { id }) => {
-        this.closeTab(id);
+        this.tabManager.closeTab(id);
       },
     );
 
     this.subscribeToRendererEvent<RendererSwitchToTab>(
       RendererEventType.SwitchToTab,
       (_event, { id }) => {
-        this.switchToTab(id);
+        const browserView = this.tabManager.switchToTab(id);
+        this.browserWindow.setBrowserView(browserView);
       },
     );
 
     this.subscribeToRendererEvent(RendererEventType.CurrentTabReload, () => {
-      this.currentTabReload();
+      this.tabManager.currentTabReload();
     });
 
     this.subscribeToRendererEvent(RendererEventType.CurrentTabGoBack, () => {
-      this.currentTabGoback();
+      this.tabManager.currentTabGoback();
     });
 
     this.subscribeToRendererEvent(RendererEventType.CurrentTabGoForward, () => {
-      this.currentTabGoForward();
+      this.tabManager.currentTabGoForward();
     });
-  }
-
-  private initWebContents(webContents: WebContents): void {
-    webContents.setWindowOpenHandler(this.onWindowOpen.bind(this));
-    webContents.on('before-input-event', this.onInputEvent.bind(this));
   }
 
   private onInputEvent(event: Event, input: Input): void {
@@ -150,13 +131,13 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
 
     if (isReloadCurrentTab(input)) {
-      this.currentTabReload();
+      this.tabManager.currentTabReload();
       event.preventDefault();
       return;
     }
 
     if (isHardReloadCurrentTab(input)) {
-      this.hardReloadCurrentTab();
+      this.tabManager.hardReloadCurrentTab();
       event.preventDefault();
       return;
     }
@@ -168,25 +149,25 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
 
     if (isAddNewTab(input)) {
-      this.openNewTab();
+      this.openNewTab(NEW_TAB_WEBPACK_ENTRY);
       event.preventDefault();
       return;
     }
 
     if (isToggleDevTools(input)) {
-      this.toggleDevTools();
+      this.tabManager.toggleCurrentTabDevTools();
       event.preventDefault();
       return;
     }
 
     if (isNavigateBack(input)) {
-      this.currentTabGoback();
+      this.tabManager.currentTabGoback();
       event.preventDefault();
       return;
     }
 
     if (isNavigateForward(input)) {
-      this.currentTabGoForward();
+      this.tabManager.currentTabGoForward();
       event.preventDefault();
       return;
     }
@@ -231,7 +212,7 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
       // open in a new tab
       case 'foreground-tab':
       case 'background-tab':
-        this.openUrlInTab(details.url);
+        this.openNewTabAndNotify(details.url);
         return {
           action: 'deny',
         };
@@ -248,139 +229,25 @@ export class AppWindow extends TypedEventEmitter<AppWindowEvents> {
     }
   }
 
-  private openNewTab(): string {
-    const id = uuid();
-    this.currentTabId = id;
-
-    this.setCurrentTabBrowserView(NEW_TAB_WEBPACK_ENTRY);
-    this.sendOpenNewTabEvent(id);
-
-    return id;
-  }
-
-  private openUrlInTab(url: string): BrowserView {
-    if (this.currentTabHasBrowserView) {
-      const newTabId = this.openNewTab();
-      this.switchToTab(newTabId);
-    }
-
-    return this.setCurrentTabBrowserView(url);
-  }
-
-  private closeTab(id: string): void {
-    if (Object.keys(this.tabs).length >= 1) {
-      return;
-    }
-
-    delete this.tabs[id];
-
-    if (id === this.currentTabId) {
-      this.browserWindow.setBrowserView(null);
-    }
-  }
-
-  private switchToTab(id: string): void {
-    this.currentTabId = id;
-    const currentBrowserView = this.currentTab;
-
-    // this is okay, if currentBrowserView is null
-    // this will show the "new tab" page
-    this.browserWindow.setBrowserView(currentBrowserView);
-
-    if (currentBrowserView) {
-      if (!this.currentTab) {
-        return;
-      }
-
-      // make sure to shift focus to the new browser view
-      // or keyboard shortcuts won't work anymore
-      this.currentTab.webContents.focus();
-    } else {
-      // if there is no browser view then we need to focus the window
-      this.browserWindow.webContents.focus();
-    }
-  }
-
-  private currentTabGoback(): void {
-    const currentBrowserView = this.currentTab;
-
-    if (!currentBrowserView) {
-      return;
-    }
-
-    currentBrowserView.webContents.goBack();
-  }
-
-  private currentTabGoForward(): void {
-    const currentBrowserView = this.currentTab;
-
-    if (!currentBrowserView) {
-      return;
-    }
-
-    currentBrowserView.webContents.goForward();
-  }
-
-  private currentTabReload(): void {
-    const currentBrowserView = this.currentTab;
-
-    if (!currentBrowserView) {
-      return;
-    }
-
-    currentBrowserView.webContents.reload();
-  }
-
-  private hardReloadCurrentTab(): void {
-    const currentBrowserView = this.currentTab;
-
-    if (!currentBrowserView) {
-      return;
-    }
-
-    currentBrowserView.webContents.reloadIgnoringCache();
-  }
-
-  private toggleDevTools(): void {
-    const currentBrowserView = this.currentTab;
-
-    if (!currentBrowserView) {
-      this.toggleWebContentsDevTools(this.browserWindow.webContents);
-      return;
-    }
-
-    this.toggleWebContentsDevTools(currentBrowserView.webContents);
-  }
-
-  private toggleWebContentsDevTools(webContents: WebContents): void {
-    if (webContents.isDevToolsOpened()) {
-      webContents.closeDevTools();
-    } else {
-      webContents.openDevTools({
-        mode: 'detach',
-      });
-    }
-  }
-
-  private setCurrentTabBrowserView(url: string): BrowserView {
+  private openNewTab(url: string): string {
     const browserView = createBrowserView(this.browserWindow, url);
-    this.initWebContents(browserView.webContents);
+    const tabId = this.tabManager.openNewTab(browserView);
 
-    const tabId = this.currentTabId;
+    browserView.webContents.setWindowOpenHandler(this.onWindowOpen.bind(this));
+    browserView.webContents.on(
+      'before-input-event',
+      this.onInputEvent.bind(this),
+    );
     browserView.webContents.on('page-title-updated', (_event, title) => {
-      if (!tabId) {
-        return;
-      }
-
       this.sendSetTabTitleEvent(tabId, title);
     });
 
-    if (this.currentTabId) {
-      this.tabs[this.currentTabId] = browserView;
-    }
-    this.browserWindow.setBrowserView(browserView);
+    return tabId;
+  }
 
-    return browserView;
+  private openNewTabAndNotify(url: string): void {
+    const tabId = this.openNewTab(url);
+    this.sendOpenNewTabEvent(tabId);
   }
 
   private sendMainEvent<U>(type: MainEventType, payload?: U): void {
