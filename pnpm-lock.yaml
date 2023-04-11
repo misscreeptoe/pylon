@@ -10,7 +10,7 @@ specifiers:
   '@electron-forge/plugin-webpack': 6.1.0
   '@fontsource/roboto': 4.5.8
   '@mui/base': 5.0.0-alpha.125
-  '@mui/icons-material': 5.11.11
+  '@mui/icons-material': 5.11.16
   '@mui/material': 5.11.16
   '@mui/styled-engine-sc': 5.11.11
   '@types/node': 18.15.11
@@ -51,7 +51,7 @@ dependencies:
   '@dfinity/response-verification': 0.1.1
   '@fontsource/roboto': 4.5.8
   '@mui/base': 5.0.0-alpha.125_zn3vyfk3tbnwebg5ldvieekjaq
-  '@mui/icons-material': 5.11.11_qvn7gklc3nivno6qdfiyqqkjfe
+  '@mui/icons-material': 5.11.16_qvn7gklc3nivno6qdfiyqqkjfe
   '@mui/material': 5.11.16_zn3vyfk3tbnwebg5ldvieekjaq
   '@mui/styled-engine-sc': 5.11.11_6b2pycadepqgijxzbazcxwr4ly
   cheerio: 1.0.0-rc.12
@@ -972,8 +972,8 @@ packages:
     resolution: {integrity: sha512-1hoFIdlLI0sG+mkJgm70FjgIVpfLcE1vxPtNolg1tLFXrvbXGUYp9NHy3d6c41nDkg2OajuVS+Mn6A8UirFuMw==}
     dev: false
 
-  /@mui/icons-material/5.11.11_qvn7gklc3nivno6qdfiyqqkjfe:
-    resolution: {integrity: sha512-Eell3ADmQVE8HOpt/LZ3zIma8JSvPh3XgnhwZLT0k5HRqZcd6F/QDHc7xsWtgz09t+UEFvOYJXjtrwKmLdwwpw==}
+  /@mui/icons-material/5.11.16_qvn7gklc3nivno6qdfiyqqkjfe:
+    resolution: {integrity: sha512-oKkx9z9Kwg40NtcIajF9uOXhxiyTZrrm9nmIJ4UjkU2IdHpd4QVLbCc/5hZN/y0C6qzi2Zlxyr9TGddQx2vx2A==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
