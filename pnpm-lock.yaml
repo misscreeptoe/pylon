@@ -9,7 +9,7 @@ specifiers:
   '@electron-forge/plugin-electronegativity': 6.1.0
   '@electron-forge/plugin-webpack': 6.1.0
   '@fontsource/roboto': 4.5.8
-  '@mui/base': 5.0.0-alpha.123
+  '@mui/base': 5.0.0-alpha.125
   '@mui/icons-material': 5.11.11
   '@mui/material': 5.11.16
   '@mui/styled-engine-sc': 5.11.11
@@ -50,7 +50,7 @@ dependencies:
   '@dfinity/principal': 0.15.5_pj3xut33gta66wns5w7rs6cilm
   '@dfinity/response-verification': 0.1.1
   '@fontsource/roboto': 4.5.8
-  '@mui/base': 5.0.0-alpha.123_zn3vyfk3tbnwebg5ldvieekjaq
+  '@mui/base': 5.0.0-alpha.125_zn3vyfk3tbnwebg5ldvieekjaq
   '@mui/icons-material': 5.11.11_qvn7gklc3nivno6qdfiyqqkjfe
   '@mui/material': 5.11.16_zn3vyfk3tbnwebg5ldvieekjaq
   '@mui/styled-engine-sc': 5.11.11_6b2pycadepqgijxzbazcxwr4ly
@@ -920,8 +920,8 @@ packages:
       make-plural: 7.2.0
     dev: true
 
-  /@mui/base/5.0.0-alpha.123_zn3vyfk3tbnwebg5ldvieekjaq:
-    resolution: {integrity: sha512-pxzcAfET3I6jvWqS4kijiLMn1OmdMw+mGmDa0SqmDZo3bXXdvLhpCCPqCkULG3UykhvFCOcU5HclOX3JCA+Zhg==}
+  /@mui/base/5.0.0-alpha.124_zn3vyfk3tbnwebg5ldvieekjaq:
+    resolution: {integrity: sha512-I6M+FrjRCybQCr8I8JTu6L2MkUobSQFgNIpOJyDNKL5zq/73LvZIQXvsKumAzthVGvI1PYaarM9vGDrDYbumKA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
@@ -944,8 +944,8 @@ packages:
       react-is: 18.2.0
     dev: false
 
-  /@mui/base/5.0.0-alpha.124_zn3vyfk3tbnwebg5ldvieekjaq:
-    resolution: {integrity: sha512-I6M+FrjRCybQCr8I8JTu6L2MkUobSQFgNIpOJyDNKL5zq/73LvZIQXvsKumAzthVGvI1PYaarM9vGDrDYbumKA==}
+  /@mui/base/5.0.0-alpha.125_zn3vyfk3tbnwebg5ldvieekjaq:
+    resolution: {integrity: sha512-hAHJJ97SATu6SrkLH/HsAayK1zMZt89lrWyKuAInBKVyn363H78d1MnwyZwre9vDK5MrPoDL/NnZxtAXhwTnBA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
@@ -957,8 +957,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.21.0
       '@emotion/is-prop-valid': 1.2.0
-      '@mui/types': 7.2.3_@types+react@18.0.33
-      '@mui/utils': 5.11.13_react@18.2.0
+      '@mui/types': 7.2.4_@types+react@18.0.33
+      '@mui/utils': 5.12.0_react@18.2.0
       '@popperjs/core': 2.11.7
       '@types/react': 18.0.33
       clsx: 1.2.1
