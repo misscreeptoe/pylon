@@ -8,6 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { AppLayout } from './components/AppLayout';
 import { Theme } from '../theme';
 import { useAppEffects, useTabEffects } from './store';
+import { GlobalStyle } from './GlobalStyle';
 
 export const App: FunctionComponent = () => {
   useAppEffects();
@@ -16,6 +17,7 @@ export const App: FunctionComponent = () => {
   return (
     <Theme>
       <CssBaseline />
+      <GlobalStyle />
       <AppLayout />
     </Theme>
   );
