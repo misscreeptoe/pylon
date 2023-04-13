@@ -7,6 +7,10 @@ import styled from 'styled-components';
 import { isLinux } from '../utils';
 
 const NavigationBarWapper = styled.div`
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+
   position: fixed;
   display: flex;
   flex-direction: row;
