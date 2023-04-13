@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Feat
+
+- allow window to be dragged
+
 ## 0.2.1 (2023-04-11)
 
 ### Fix
