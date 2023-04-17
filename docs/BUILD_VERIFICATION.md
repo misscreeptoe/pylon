@@ -160,6 +160,7 @@ First, install global dependencies:
 
 - [Git](https://git-scm.com/)
 - [NodeJS](https://nodejs.org/)
+- [Docker](https://www.docker.com/)
 - [pnpm](https://pnpm.io/installation):
   - Set PNPM version: `export PNPM_VERSION=7.21.0`
   - Install PNPM:
@@ -196,16 +197,22 @@ Check out the git tag for the release:
 git checkout tags/$PYLON_VERSION
 ```
 
-Now, install project dependencies:
+Build the Docker container:
 
 ```shell
-pnpm i --frozen-lockfile
+docker build -t pylon .
 ```
 
-Build the project:
+Create the output directory:
 
 ```shell
-pnpm make
+mkdir -p ./out/make/zip/linux/x64
+```
+
+Extract the build artifact:
+
+```shell
+docker run --rm --entrypoint cat pylon /app/out/make/zip/linux/x64/pylon-linux-x64-$PYLON_VERSION.zip > ./out/make/zip/linux/x64/pylon-linux-x64-$PYLON_VERSION.zip
 ```
 
 Download the release file:
