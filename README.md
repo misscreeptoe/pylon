@@ -56,6 +56,8 @@ Pylon aims to become an Internet Computer homepage, providing a browsing experie
   - [Internet Identity](https://identity.ic0.app/)
   - [Metamask](https://metamask.io/)
   - [NFID](https://nfid.one/)
-- Decentralized search providers
-- Decentralized news feeds
-- Wallet integrations
+- Decentralized integrations:
+  - Search providers
+  - News feeds
+  - Notifications inbox
+  - Crypto wallets
