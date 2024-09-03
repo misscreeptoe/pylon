@@ -142,7 +142,7 @@ jobs:
       - name: Generate release notes
         run: cz changelog ${{ github.ref_name }} --file-name RELEASE_NOTES.md
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           path: artifacts
 
